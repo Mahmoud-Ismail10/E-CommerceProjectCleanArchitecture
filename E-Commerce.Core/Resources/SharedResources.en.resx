@@ -216,6 +216,12 @@
   <data name="UserNameIsNotExist" xml:space="preserve">
     <value>This UserName does not exists</value>
   </data>
+  <data name="EmailIsNotConfirmed" xml:space="preserve">
+    <value>Your Email is not confirmed</value>
+  </data>
+  <data name="RoleName" xml:space="preserve">
+    <value>RoleName</value>
+  </data>
   <data name="UpdateFailed" xml:space="preserve">
     <value>Update Opetation is Failed</value>
   </data>
@@ -248,5 +254,11 @@
   </data>
   <data name="Token Is Expired" xml:space="preserve">
     <value>Token Is Expired</value>
+  </data>
+  <data name="RoleId" xml:space="preserve">
+    <value>RoleId</value>
+  </data>
+  <data name="RoleIsUsed" xml:space="preserve">
+    <value>The Role is used by users</value>
   </data>
 </root>

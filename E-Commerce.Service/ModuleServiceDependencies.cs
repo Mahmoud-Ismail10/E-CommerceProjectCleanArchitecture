@@ -12,6 +12,7 @@ namespace E_Commerce.Service
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IReviewService, ReviewService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IAuthorizationService, AuthorizationService>();
             return services;
         }
     }

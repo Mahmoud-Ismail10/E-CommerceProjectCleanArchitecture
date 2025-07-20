@@ -17,10 +17,13 @@ namespace E_Commerce.Core.Features.Categories.Queries.Handlers
         , IRequestHandler<GetCategoryByIdQuery, ApiResponse<GetSingleCategoryResponse>>
         , IRequestHandler<GetCategoryPaginatedListQuery, PaginatedResult<GetCategoryPaginatedListResponse>>
     {
+        #region Fields
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public CategoryQueryHandler(ICategoryService categoryService,
             IMapper mapper,
             IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
@@ -29,7 +32,9 @@ namespace E_Commerce.Core.Features.Categories.Queries.Handlers
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
         }
+        #endregion
 
+        #region Handle Functions
         public async Task<ApiResponse<List<GetCategoryListResponse>>> Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
             var categoryList = await _categoryService.GetCategoryListAsync();
@@ -53,5 +58,6 @@ namespace E_Commerce.Core.Features.Categories.Queries.Handlers
             paginatedList.Meta = new { Count = paginatedList.Data.Count() };
             return paginatedList;
         }
+        #endregion
     }
 }

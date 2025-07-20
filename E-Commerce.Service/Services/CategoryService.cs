@@ -8,12 +8,16 @@ namespace E_Commerce.Service.Services
 {
     public class CategoryService : ICategoryService
     {
+        #region Fields
         private readonly ICategoryRepository _categoryRepository;
+        #endregion
 
+        #region Contructors
         public CategoryService(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
+        #endregion
 
         public async Task<string> AddCategoryAsync(Category category)
         {
@@ -21,6 +25,7 @@ namespace E_Commerce.Service.Services
             return "Success";
         }
 
+        #region Handle Functions
         public async Task<string> DeleteCategoryAsync(Category category)
         {
             var transaction = _categoryRepository.BeginTransaction();
@@ -56,7 +61,6 @@ namespace E_Commerce.Service.Services
 
         public async Task<IReadOnlyList<Category>> GetCategoryListAsync()
         {
-            //return await _categoryRepository.GetAllCategoriesAsync();
             return await _categoryRepository.GetAllAsync();
         }
 
@@ -97,5 +101,6 @@ namespace E_Commerce.Service.Services
             return await _categoryRepository.GetTableNoTracking()
                                   .AnyAsync(c => c.Id.Equals(id));
         }
+        #endregion
     }
 }

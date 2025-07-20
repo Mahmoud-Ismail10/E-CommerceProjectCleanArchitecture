@@ -7,12 +7,18 @@ namespace E_Commerce.Service.Services
 {
     public class ReviewService : IReviewService
     {
+        #region Fields
         private readonly IReviewRepository _reviewRepository;
+        #endregion
 
+        #region Constructors
         public ReviewService(IReviewRepository reviewRepository)
         {
             _reviewRepository = reviewRepository;
         }
+        #endregion
+
+        #region Handle Functions
         public IQueryable<Review> GetReviewsByProductIdQueryable(Guid productId)
         {
             return _reviewRepository.GetTableNoTracking()
@@ -20,5 +26,6 @@ namespace E_Commerce.Service.Services
                 .Include(r => r.Customer)
                 .AsQueryable();
         }
+        #endregion
     }
 }

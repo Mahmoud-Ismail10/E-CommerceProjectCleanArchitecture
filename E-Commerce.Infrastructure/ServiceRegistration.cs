@@ -27,7 +27,7 @@ namespace E_Commerce.Infrastructure
             // SQL Server connection
             services.AddDbContext<E_CommerceContext>(options => options.UseSqlServer(sqlConnectionString));
 
-            services.AddIdentity<User, IdentityRole<Guid>>(option =>
+            services.AddIdentity<User, Domain.Entities.Identity.Role>(option =>
             {
                 // Password settings.
                 option.Password.RequireDigit = true;

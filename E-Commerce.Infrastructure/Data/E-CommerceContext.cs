@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace E_Commerce.Infrastructure.Data
 {
-    public class E_CommerceContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
+    public class E_CommerceContext : IdentityDbContext<User, Role, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
         public E_CommerceContext(DbContextOptions<E_CommerceContext> options) : base(options) { }
 

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Presentation.Controllers
 {
-    [Authorize]
     public class CategoryController : AppControllerBase
     {
+        [Authorize(Roles = "Admin")]
         [HttpGet(Router.CategoryRouting.GetAll)]
         public async Task<IActionResult> GetCategoryList()
         {
@@ -17,7 +17,7 @@ namespace E_Commerce.Presentation.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Employee")]
         [HttpGet(Router.CategoryRouting.Paginated)]
         public async Task<IActionResult> GetCategoryPaginatedList([FromQuery] GetCategoryPaginatedListQuery query)
         {

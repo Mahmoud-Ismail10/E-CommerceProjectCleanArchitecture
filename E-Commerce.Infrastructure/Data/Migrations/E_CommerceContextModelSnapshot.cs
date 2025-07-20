@@ -39,7 +39,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.DeliveryMethod", b =>
@@ -65,7 +65,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryMethods");
+                    b.ToTable("DeliveryMethods", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Identity.User", b =>
@@ -192,7 +192,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRefreshToken");
+                    b.ToTable("UserRefreshToken", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Order", b =>
@@ -238,7 +238,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.HasIndex("ShippingAddressId")
                         .IsUnique();
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.OrderItem", b =>
@@ -259,7 +259,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Payment", b =>
@@ -287,7 +287,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Product", b =>
@@ -327,7 +327,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Review", b =>
@@ -354,7 +354,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.ShippingAddress", b =>
@@ -395,16 +395,14 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("ShippingAddresses");
+                    b.ToTable("ShippingAddresses", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -584,84 +582,6 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("user");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("E_Commerce.Domain.Entities.Admin", b =>
-                {
-                    b.HasBaseType("E_Commerce.Domain.Entities.Identity.User");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.ToTable("Admins", (string)null);
-                });
-
-            modelBuilder.Entity("E_Commerce.Domain.Entities.Customer", b =>
-                {
-                    b.HasBaseType("E_Commerce.Domain.Entities.Identity.User");
-
-                    b.ToTable("Customers", (string)null);
-                });
-
-            modelBuilder.Entity("E_Commerce.Domain.Entities.Employee", b =>
-                {
-                    b.HasBaseType("E_Commerce.Domain.Entities.Identity.User");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<DateTime>("HireDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Order", b =>

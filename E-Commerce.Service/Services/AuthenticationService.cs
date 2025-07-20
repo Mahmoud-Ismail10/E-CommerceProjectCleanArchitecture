@@ -2,6 +2,7 @@
 using E_Commerce.Domain.Helpers;
 using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,13 +15,15 @@ namespace E_Commerce.Service.Services
     public class AuthenticationService : IAuthenticationService
     {
         #region Fields
+        private readonly UserManager<User> _userManager;
         private readonly JwtSettings _jwtSettings;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         #endregion
 
         #region Constructors
-        public AuthenticationService(JwtSettings jwtSettings, IRefreshTokenRepository refreshTokenRepository)
+        public AuthenticationService(UserManager<User> userManager, JwtSettings jwtSettings, IRefreshTokenRepository refreshTokenRepository)
         {
+            _userManager = userManager;
             _jwtSettings = jwtSettings;
             _refreshTokenRepository = refreshTokenRepository;
         }
@@ -54,27 +57,33 @@ namespace E_Commerce.Service.Services
             return response;
         }
 
-        private Task<(JwtSecurityToken, string)> GenerateJwtToken(User user)
+        private async Task<(JwtSecurityToken, string)> GenerateJwtToken(User user)
         {
-            var claims = GetClaims(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = GetClaims(user, roles.ToList());
             var jwtToken = new JwtSecurityToken(_jwtSettings.Issuer,
                                                    _jwtSettings.Audience,
                                                    claims,
                                                    expires: DateTime.UtcNow.AddDays(_jwtSettings.AccessTokenExpireDate),
                                                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature));
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            return Task.FromResult((jwtToken, accessToken));
+            return (jwtToken, accessToken);
         }
 
-        private List<Claim> GetClaims(User user)
+        private List<Claim> GetClaims(User user, List<string> roles)
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName),
                 new Claim(nameof(UserClaimModel.Id), user.Id.ToString()),
-                new Claim(nameof(UserClaimModel.UserName), user.UserName),
-                new Claim(nameof(UserClaimModel.Email), user.Email),
                 new Claim(nameof(UserClaimModel.PhoneNumber), user.PhoneNumber)
             };
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             return claims;
         }
 

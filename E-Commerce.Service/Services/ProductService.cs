@@ -8,13 +8,18 @@ namespace E_Commerce.Service.Services
 {
     public class ProductService : IProductService
     {
+        #region Fields
         private readonly IProductRepository _productRepository;
+        #endregion
 
+        #region Constructors
         public ProductService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
+        #endregion
 
+        #region Handle Functions
         public async Task<string> AddProductAsync(Product product)
         {
             await _productRepository.AddAsync(product);
@@ -92,5 +97,6 @@ namespace E_Commerce.Service.Services
             if (product != null) return true;
             return false;
         }
+        #endregion
     }
 }

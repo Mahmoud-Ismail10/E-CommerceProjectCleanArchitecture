@@ -14,10 +14,13 @@ namespace E_Commerce.Core.Features.Categories.Commands.Handlers
        , IRequestHandler<EditCategoryCommand, ApiResponse<string>>
        , IRequestHandler<DeleteCategoryCommand, ApiResponse<string>>
     {
+        #region Fields
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public CategoryCommandHandler(ICategoryService categoryService,
             IMapper mapper,
             IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
@@ -26,7 +29,9 @@ namespace E_Commerce.Core.Features.Categories.Commands.Handlers
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
         }
+        #endregion
 
+        #region Handle Functions
         public async Task<ApiResponse<string>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
             var categoryMapper = _mapper.Map<Category>(request);
@@ -55,5 +60,6 @@ namespace E_Commerce.Core.Features.Categories.Commands.Handlers
             if (result == "Success") return Deleted<string>();
             else return BadRequest<string>();
         }
+        #endregion
     }
 }

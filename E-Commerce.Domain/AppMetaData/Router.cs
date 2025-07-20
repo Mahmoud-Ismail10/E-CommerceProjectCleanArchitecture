@@ -10,11 +10,21 @@
 
         public static class Authentication
         {
-            public const string Prefix = Rule + "auth/";
+            public const string Prefix = Rule + "authenticate/";
             public const string Register = Prefix + "register";
             public const string SignIn = Prefix + "signIn";
             public const string RefreshToken = Prefix + "refreshToken";
             public const string ValidateToken = Prefix + "validateToken";
+        }
+
+        public static class Authorization
+        {
+            public const string Prefix = Rule + "authorize/";
+            public const string CreateRole = Prefix + "role/create";
+            public const string EditRole = Prefix + "role/edit";
+            public const string DeleteRole = Prefix + "role/" + SingleRoute;
+            public const string GetAllRoles = Prefix + "role/getAll";
+            public const string GetRoleById = Prefix + "role/" + SingleRoute;
         }
 
         public static class UserRouting

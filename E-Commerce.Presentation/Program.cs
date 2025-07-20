@@ -1,7 +1,10 @@
 using E_Commerce.Core;
 using E_Commerce.Core.Middleware;
+using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Infrastructure;
+using E_Commerce.Infrastructure.Seeder;
 using E_Commerce.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -10,7 +13,7 @@ namespace E_Commerce.Presentation
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +76,16 @@ namespace E_Commerce.Presentation
             #endregion
 
             var app = builder.Build();
+
+            #region Data Seeder
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+                await RoleSeeder.SeedAsync(roleManager); // Role Seed First
+                await UserSeeder.SeedAsync(userManager);
+            }
+            #endregion
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
