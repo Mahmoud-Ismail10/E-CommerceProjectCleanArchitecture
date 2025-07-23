@@ -8,6 +8,7 @@ using E_Commerce.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using System.Security.Claims;
 
 namespace E_Commerce.Core.Features.Employees.Commands.Handlers
 {
@@ -39,6 +40,21 @@ namespace E_Commerce.Core.Features.Employees.Commands.Handlers
             var createResult = await _userManager.CreateAsync(identityUser, request.Password);
             if (!createResult.Succeeded)
                 return BadRequest<string>(createResult.Errors.FirstOrDefault().Description);
+
+            //Add default role "Employee"
+            var addToRoleResult = await _userManager.AddToRoleAsync(identityUser, "Employee");
+            if (!addToRoleResult.Succeeded)
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewRoles]);
+
+            //Add default employee policies
+            var claims = new List<Claim>
+            {
+                new Claim("Edit Employee", "True"),
+                new Claim("Get Employee", "True")
+            };
+            var addDefaultClaimsResult = await _userManager.AddClaimsAsync(identityUser, claims);
+            if (!addDefaultClaimsResult.Succeeded)
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewClaims]);
 
             return Created("");
         }

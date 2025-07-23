@@ -2,10 +2,12 @@
 using E_Commerce.Core.Features.Employees.Queries.Models;
 using E_Commerce.Domain.AppMetaData;
 using E_Commerce.Presentation.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Presentation.Controllers
 {
+    [Authorize(Roles = "Admin, Employee")]
     public class EmployeeController : AppControllerBase
     {
         [HttpGet(Router.EmployeeRouting.GetById)]

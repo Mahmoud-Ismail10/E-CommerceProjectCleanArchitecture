@@ -77,9 +77,7 @@ namespace E_Commerce.Infrastructure
            });
 
             //Swagger Gn
-
             services.AddEndpointsApiExplorer();
-
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -129,6 +127,69 @@ namespace E_Commerce.Infrastructure
                     Format = "time",
                     Nullable = true,
                     Example = new OpenApiString("14:30:00")
+                });
+            });
+
+            // Authorization policies
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("EditCustomer", policy =>
+                {
+                    policy.RequireClaim("Edit Customer", "True");
+                });
+                option.AddPolicy("GetCustomer", policy =>
+                {
+                    policy.RequireClaim("Get Customer", "True");
+                });
+                option.AddPolicy("GetAllCustomer", policy =>
+                {
+                    policy.RequireClaim("Get All Customer", "True");
+                });
+                option.AddPolicy("DeleteCustomer", policy =>
+                {
+                    policy.RequireClaim("Delete Customer", "True");
+                });
+
+                option.AddPolicy("CreateAdmin", policy =>
+                {
+                    policy.RequireClaim("Create Admin", "True");
+                });
+                option.AddPolicy("EditAdmin", policy =>
+                {
+                    policy.RequireClaim("Edit Admin", "True");
+                });
+                option.AddPolicy("GetAdmin", policy =>
+                {
+                    policy.RequireClaim("Get Admin", "True");
+                });
+                option.AddPolicy("GetAllAdmin", policy =>
+                {
+                    policy.RequireClaim("Get All Admin", "True");
+                });
+                option.AddPolicy("DeleteAdmin", policy =>
+                {
+                    policy.RequireClaim("Delete Admin", "True");
+                });
+
+                option.AddPolicy("CreateEmployee", policy =>
+                {
+                    policy.RequireClaim("Create Employee", "True");
+                });
+                option.AddPolicy("EditEmployee", policy =>
+                {
+                    policy.RequireClaim("Edit Employee", "True");
+                });
+                option.AddPolicy("GetEmployee", policy =>
+                {
+                    policy.RequireClaim("Get Employee", "True");
+                });
+                option.AddPolicy("GetAllEmployee", policy =>
+                {
+                    policy.RequireClaim("Get All Employee", "True");
+                });
+                option.AddPolicy("DeleteEmployee", policy =>
+                {
+                    policy.RequireClaim("Delete Employee", "True");
                 });
             });
 

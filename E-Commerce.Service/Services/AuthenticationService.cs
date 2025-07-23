@@ -59,8 +59,7 @@ namespace E_Commerce.Service.Services
 
         private async Task<(JwtSecurityToken, string)> GenerateJwtToken(User user)
         {
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = GetClaims(user, roles.ToList());
+            var claims = await GetClaims(user);
             var jwtToken = new JwtSecurityToken(_jwtSettings.Issuer,
                                                    _jwtSettings.Audience,
                                                    claims,
@@ -70,8 +69,9 @@ namespace E_Commerce.Service.Services
             return (jwtToken, accessToken);
         }
 
-        private List<Claim> GetClaims(User user, List<string> roles)
+        private async Task<List<Claim>> GetClaims(User user)
         {
+            var userRoles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
@@ -80,10 +80,12 @@ namespace E_Commerce.Service.Services
                 new Claim(nameof(UserClaimModel.Id), user.Id.ToString()),
                 new Claim(nameof(UserClaimModel.PhoneNumber), user.PhoneNumber)
             };
-            foreach (var role in roles)
+            foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            claims.AddRange(userClaims);
             return claims;
         }
 

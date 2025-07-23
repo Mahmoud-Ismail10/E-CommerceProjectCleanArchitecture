@@ -99,15 +99,21 @@ namespace E_Commerce.Service.Services
         public async Task<ManageUserRolesResponse> ManageUserRolesData(User user)
         {
             var response = new ManageUserRolesResponse();
-            var userRoles = await _userManager.GetRolesAsync(user);
             var roles = await _roleManager.Roles.ToListAsync();
             response.UserId = user.Id;
-            response.UserRoles = roles.Select(role => new UserRoles
+            response.UserRoles = new List<UserRoles>();
+
+            foreach (var role in roles)
             {
-                Id = role.Id,
-                Name = role.Name,
-                HasRole = userRoles.Contains(role.Name)
-            }).ToList();
+                // We don't use .Contant() because it returns invalid data (If we have SuperAdmin, Admin Roles)
+                var hasRole = await _userManager.IsInRoleAsync(user, role.Name);
+                response.UserRoles.Add(new UserRoles
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    HasRole = hasRole
+                });
+            }
             return response;
         }
 

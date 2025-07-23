@@ -9,6 +9,7 @@ using E_Commerce.Service.Services.Contract;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using System.Security.Claims;
 
 namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
 {
@@ -67,6 +68,21 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
 
             if (!createResult.Succeeded)
                 return BadRequest<string>(createResult.Errors.FirstOrDefault().Description);
+
+            //Add default role "Customer"
+            var addToRoleResult = await _userManager.AddToRoleAsync(identityUser, "Customer");
+            if (!addToRoleResult.Succeeded)
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewRoles]);
+
+            //Add default customer policies
+            var claims = new List<Claim>
+            {
+                new Claim("Edit Customer", "True"),
+                new Claim("Get Customer", "True")
+            };
+            var addDefaultClaimsResult = await _userManager.AddClaimsAsync(identityUser, claims);
+            if (!addDefaultClaimsResult.Succeeded)
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewClaims]);
 
             return Created("");
         }
