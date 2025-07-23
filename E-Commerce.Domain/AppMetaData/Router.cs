@@ -20,11 +20,17 @@
         public static class Authorization
         {
             public const string Prefix = Rule + "authorize/";
-            public const string CreateRole = Prefix + "role/create";
-            public const string EditRole = Prefix + "role/edit";
-            public const string DeleteRole = Prefix + "role/" + SingleRoute;
-            public const string GetAllRoles = Prefix + "role/getAll";
-            public const string GetRoleById = Prefix + "role/" + SingleRoute;
+            public const string Role = Prefix + "role/";
+            public const string Claim = Prefix + "claim/";
+            public const string CreateRole = Role + "create";
+            public const string EditRole = Role + "edit";
+            public const string DeleteRole = Role + SingleRoute;
+            public const string GetAllRoles = Role + "getAll";
+            public const string GetRoleById = Role + SingleRoute;
+            public const string ManageUserRoles = Role + "manageUserRoles/" + SingleRoute;
+            public const string UpdateUserRoles = Role + "updateUserRoles";
+            public const string ManageUserClaims = Claim + "manageUserClaims/" + SingleRoute;
+            public const string UpdateUserClaims = Claim + "updateUserClaims";
         }
 
         public static class UserRouting

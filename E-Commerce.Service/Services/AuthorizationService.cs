@@ -1,7 +1,12 @@
 ﻿using E_Commerce.Domain.Entities.Identity;
+using E_Commerce.Domain.Helpers;
+using E_Commerce.Domain.Requests;
+using E_Commerce.Domain.Responses;
+using E_Commerce.Infrastructure.Data;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace E_Commerce.Service.Services
 {
@@ -10,13 +15,15 @@ namespace E_Commerce.Service.Services
         #region Fields
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
+        private readonly E_CommerceContext _dbContext;
         #endregion
 
         #region Constructors
-        public AuthorizationService(RoleManager<Role> roleManager, UserManager<User> userManager)
+        public AuthorizationService(RoleManager<Role> roleManager, UserManager<User> userManager, E_CommerceContext dbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _dbContext = dbContext;
         }
         #endregion
 
@@ -87,6 +94,95 @@ namespace E_Commerce.Service.Services
         {
             var roles = await _roleManager.Roles.ToListAsync();
             return roles;
+        }
+
+        public async Task<ManageUserRolesResponse> ManageUserRolesData(User user)
+        {
+            var response = new ManageUserRolesResponse();
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var roles = await _roleManager.Roles.ToListAsync();
+            response.UserId = user.Id;
+            response.UserRoles = roles.Select(role => new UserRoles
+            {
+                Id = role.Id,
+                Name = role.Name,
+                HasRole = userRoles.Contains(role.Name)
+            }).ToList();
+            return response;
+        }
+
+        public async Task<ManageUserClaimsResponse> ManageUserClaimsData(User user)
+        {
+            var response = new ManageUserClaimsResponse();
+            var userClaimList = new List<UserClaims>();
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            response.UserId = user.Id;
+            response.UserClaims = ClaimsStore.claims.Select(claim => new UserClaims
+            {
+                Type = claim.Type,
+                Value = userClaims.Any(x => x.Type == claim.Type)
+            }).ToList();
+            return response;
+        }
+
+        public async Task<string> UpdateUserRoles(UpdateUserRolesRequest request)
+        {
+            var transact = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+                if (user == null)
+                    return "UserIsNull";
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                //Delete Old Roles
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+                if (!removeResult.Succeeded)
+                    return "FailedToRemoveOldRoles";
+                var selectedRoles = request.UserRoles.Where(x => x.HasRole == true).Select(x => x.Name);
+
+                //Add the Roles HasRole = True
+                var addRolesresult = await _userManager.AddToRolesAsync(user, selectedRoles);
+                if (!addRolesresult.Succeeded)
+                    return "FailedToAddNewRoles";
+                await transact.CommitAsync();
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                await transact.RollbackAsync();
+                return "FailedToUpdateUserRoles";
+            }
+        }
+
+        public async Task<string> UpdateUserClaims(UpdateUserClaimsRequest request)
+        {
+            var transact = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+                if (user == null)
+                    return "UserIsNull";
+                var userClaims = await _userManager.GetClaimsAsync(user);
+
+                //Delete Old Claims
+                var removeResult = await _userManager.RemoveClaimsAsync(user, userClaims);
+                if (!removeResult.Succeeded)
+                    return "FailedToRemoveOldClaims";
+                var selectedClaims = request.UserClaims.Where(x => x.Value == true).Select(x => new Claim(x.Type, x.Value.ToString()));
+
+                //Add the Claims Value = True
+                var addClaimsresult = await _userManager.AddClaimsAsync(user, selectedClaims);
+                if (!addClaimsresult.Succeeded)
+                    return "FailedToAddNewClaims";
+                await transact.CommitAsync();
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                await transact.RollbackAsync();
+                return "FailedToUpdateUserClaims";
+            }
         }
         #endregion
     }

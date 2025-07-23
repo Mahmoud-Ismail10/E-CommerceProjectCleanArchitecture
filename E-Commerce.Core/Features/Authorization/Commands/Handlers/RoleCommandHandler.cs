@@ -10,7 +10,8 @@ namespace E_Commerce.Core.Features.Authorization.Commands.Handlers
     public class RoleCommandHandler : ApiResponseHandler,
         IRequestHandler<AddRoleCommand, ApiResponse<string>>,
         IRequestHandler<EditRoleCommand, ApiResponse<string>>,
-        IRequestHandler<DeleteRoleCommand, ApiResponse<string>>
+        IRequestHandler<DeleteRoleCommand, ApiResponse<string>>,
+        IRequestHandler<UpdateUserRolesCommand, ApiResponse<string>>
     {
         #region Fields
         private readonly IAuthorizationService _authorizationService;
@@ -48,6 +49,19 @@ namespace E_Commerce.Core.Features.Authorization.Commands.Handlers
             else if (result == "Success") return Deleted<string>();
             else if (result == "Used") return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.RoleIsUsed]);
             return BadRequest<string>(result);
+        }
+
+        public async Task<ApiResponse<string>> Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _authorizationService.UpdateUserRoles(request);
+            switch (result)
+            {
+                case "UserIsNull": return NotFound<string>();
+                case "FailedToRemoveOldRoles": return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToRemoveOldRoles]);
+                case "FailedToAddNewRoles": return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewRoles]);
+                case "FailedToUpdateUserRoles": return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToUpdateUserRoles]);
+            }
+            return Edit("");
         }
         #endregion
     }

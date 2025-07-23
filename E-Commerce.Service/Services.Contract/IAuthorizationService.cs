@@ -1,4 +1,6 @@
 ﻿using E_Commerce.Domain.Entities.Identity;
+using E_Commerce.Domain.Requests;
+using E_Commerce.Domain.Responses;
 
 namespace E_Commerce.Service.Services.Contract
 {
@@ -12,5 +14,9 @@ namespace E_Commerce.Service.Services.Contract
         Task<bool> IsRoleExistByName(string roleName);
         Task<bool> IsRoleExistById(Guid id);
         Task<bool> IsRoleExistExcludeSelf(string roleName, Guid id);
+        Task<ManageUserRolesResponse> ManageUserRolesData(User user);
+        Task<string> UpdateUserRoles(UpdateUserRolesRequest request);
+        Task<ManageUserClaimsResponse> ManageUserClaimsData(User user);
+        Task<string> UpdateUserClaims(UpdateUserClaimsRequest request);
     }
 }

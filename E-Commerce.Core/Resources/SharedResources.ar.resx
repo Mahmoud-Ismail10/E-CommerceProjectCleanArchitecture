@@ -220,7 +220,7 @@
     <value>الايميل الخاص بك ليس مؤكدًا</value>
   </data>
   <data name="RoleName" xml:space="preserve">
-    <value>اسم الدور</value>
+    <value>اسم الصلاحية</value>
   </data>
   <data name="UpdateFailed" xml:space="preserve">
     <value>حدث خطأ أثناء تحديث البيانات</value>
@@ -256,9 +256,27 @@
     <value>رمز الوصول الذي تستخدمة منتهي الصلاحية</value>
   </data>
   <data name="RoleId" xml:space="preserve">
-    <value>معرف الدور</value>
+    <value>معرف الصلاحية</value>
   </data>
   <data name="RoleIsUsed" xml:space="preserve">
-    <value>الدور مستخدم من قبل مستخدمين</value>
+    <value>الصلاحية مستخدمه من قبل مستخدمين بالفعل</value>
+  </data>
+  <data name="FailedToRemoveOldRoles" xml:space="preserve">
+    <value>فشلت عملية حذف الصلاحيات القديمة</value>
+  </data>
+  <data name="FailedToAddNewRoles" xml:space="preserve">
+    <value>فشلت عملية اضافة صلاحيات جديدة للمستخدم</value>
+  </data>
+  <data name="FailedToUpdateUserRoles" xml:space="preserve">
+    <value>فشلت عملية تحديث الصلاحيات للمستخدم</value>
+  </data>
+  <data name="FailedToRemoveOldClaims" xml:space="preserve">
+    <value>فشلت عملية حذف صلاحيات الاستخدام القديمة</value>
+  </data>
+  <data name="FailedToAddNewClaims" xml:space="preserve">
+    <value>فشلت عملية اضافة صلاحيات استخدام جديدة للمستخدم</value>
+  </data>
+  <data name="FailedToUpdateUserClaims" xml:space="preserve">
+    <value>فشلت عملية تحديث الصلاحيات الاستخدام للمستخدم</value>
   </data>
 </root>

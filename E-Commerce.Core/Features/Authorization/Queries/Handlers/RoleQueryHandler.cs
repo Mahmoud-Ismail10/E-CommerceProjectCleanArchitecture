@@ -3,26 +3,32 @@ using E_Commerce.Core.Bases;
 using E_Commerce.Core.Features.Authorization.Queries.Models;
 using E_Commerce.Core.Features.Authorization.Queries.Responses;
 using E_Commerce.Core.Resources;
+using E_Commerce.Domain.Entities.Identity;
+using E_Commerce.Domain.Responses;
 using E_Commerce.Service.Services.Contract;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 
 namespace E_Commerce.Core.Features.Authorization.Queries.Handlers
 {
     public class RoleQueryHandler : ApiResponseHandler,
         IRequestHandler<GetRoleByIdQuery, ApiResponse<GetSingleRoleResponse>>,
-        IRequestHandler<GetRoleListQuery, ApiResponse<List<GetRoleListResponse>>>
+        IRequestHandler<GetRoleListQuery, ApiResponse<List<GetRoleListResponse>>>,
+        IRequestHandler<ManageUserRolesQuery, ApiResponse<ManageUserRolesResponse>>
     {
         #region Fields
         private readonly IAuthorizationService _authorizationService;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
         #region Constructors
-        public RoleQueryHandler(IAuthorizationService authorizationService, IMapper mapper, IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
+        public RoleQueryHandler(IAuthorizationService authorizationService, UserManager<User> userManager, IMapper mapper, IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _authorizationService = authorizationService;
+            _userManager = userManager;
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
         }
@@ -43,6 +49,14 @@ namespace E_Commerce.Core.Features.Authorization.Queries.Handlers
             if (roleList is null) NotFound<GetRoleListResponse>();
             var roleListMapper = _mapper.Map<List<GetRoleListResponse>>(roleList);
             return Success(roleListMapper);
+        }
+
+        public async Task<ApiResponse<ManageUserRolesResponse>> Handle(ManageUserRolesQuery request, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            if (user is null) return NotFound<ManageUserRolesResponse>();
+            var result = await _authorizationService.ManageUserRolesData(user);
+            return Success(result);
         }
         #endregion
     }
