@@ -192,6 +192,16 @@ namespace E_Commerce.Service.Services
             return (userId, expirydate);
         }
 
+        public async Task<string> ConfirmEmailAsync(Guid? userId, string? code)
+        {
+            if (userId is null || string.IsNullOrEmpty(code))
+                return "UserOrCodeIsNullOrEmpty";
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var confirmEmailResult = await _userManager.ConfirmEmailAsync(user, code);
+            if (!confirmEmailResult.Succeeded)
+                return string.Join(",", confirmEmailResult.Errors.Select(x => x.Description).ToList());
+            return "Success";
+        }
         #endregion
     }
 }

@@ -27,6 +27,11 @@ namespace E_Commerce.Infrastructure
             // SQL Server connection
             services.AddDbContext<E_CommerceContext>(options => options.UseSqlServer(sqlConnectionString));
 
+            //services.AddSingleton<EmailSettings>(configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
+            //services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+            //services.AddSingleton(sp => sp.GetRequiredService<IOptions<EmailSettings>>().Value);
+
+
             services.AddIdentity<User, Domain.Entities.Identity.Role>(option =>
             {
                 // Password settings.
@@ -50,10 +55,14 @@ namespace E_Commerce.Infrastructure
 
             }).AddEntityFrameworkStores<E_CommerceContext>().AddDefaultTokenProviders();
 
-            // JWT Authentication
+            // JWT Authentication and Email Settings
             var jwtSettings = new JwtSettings();
+            var emailSettings = new EmailSettings();
             configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
+            configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
+
             services.AddSingleton(jwtSettings);
+            services.AddSingleton(emailSettings);
 
             services.AddAuthentication(x =>
             {

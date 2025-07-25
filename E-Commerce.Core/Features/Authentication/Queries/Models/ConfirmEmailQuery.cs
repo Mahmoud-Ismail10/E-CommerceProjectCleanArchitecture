@@ -3,5 +3,5 @@ using MediatR;
 
 namespace E_Commerce.Core.Features.Authentication.Queries.Models
 {
-    public record AuthorizeUserQuery(string AccessToken) : IRequest<ApiResponse<string>>;
+    public record ConfirmEmailQuery(Guid UserId, string Code) : IRequest<ApiResponse<string>>;
 }

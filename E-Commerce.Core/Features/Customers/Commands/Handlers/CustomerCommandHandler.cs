@@ -14,17 +14,22 @@ namespace E_Commerce.Core.Features.Customers.Commands.Handlers
         IRequestHandler<EditCustomerCommand, ApiResponse<string>>,
         IRequestHandler<DeleteCustomerCommand, ApiResponse<string>>
     {
+        #region Fields
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public CustomerCommandHandler(UserManager<User> userManager, IMapper mapper, IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userManager = userManager;
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
         }
+        #endregion
 
+        #region Handle Functions
         public async Task<ApiResponse<string>> Handle(EditCustomerCommand request, CancellationToken cancellationToken)
         {
             var oldCustomer = await _userManager.FindByIdAsync(request.Id.ToString());
@@ -56,5 +61,6 @@ namespace E_Commerce.Core.Features.Customers.Commands.Handlers
                 return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.DeleteFailed]);
             return Deleted<string>();
         }
+        #endregion
     }
 }

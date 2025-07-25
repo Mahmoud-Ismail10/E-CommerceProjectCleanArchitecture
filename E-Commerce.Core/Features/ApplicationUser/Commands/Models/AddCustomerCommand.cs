@@ -2,7 +2,7 @@
 using E_Commerce.Domain.Enums;
 using MediatR;
 
-namespace E_Commerce.Core.Features.Authentication.Commands.Models
+namespace E_Commerce.Core.Features.ApplicationUser.Commands.Models
 {
     public record AddCustomerCommand : IRequest<ApiResponse<string>>
     {

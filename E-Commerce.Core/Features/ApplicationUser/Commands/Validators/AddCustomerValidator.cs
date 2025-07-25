@@ -1,9 +1,9 @@
-﻿using E_Commerce.Core.Features.Authentication.Commands.Models;
+﻿using E_Commerce.Core.Features.ApplicationUser.Commands.Models;
 using E_Commerce.Core.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace E_Commerce.Core.Features.Authentication.Commands.Validators
+namespace E_Commerce.Core.Features.ApplicationUser.Commands.Validators
 {
     public class AddCustomerValidator : AbstractValidator<AddCustomerCommand>
     {

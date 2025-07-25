@@ -217,7 +217,7 @@
     <value>اسم المستخدم هذا غير موجود</value>
   </data>
   <data name="EmailIsNotConfirmed" xml:space="preserve">
-    <value>الايميل الخاص بك ليس مؤكدًا</value>
+    <value>الايميل الخاص بك ليس مؤكدًا، من فضلك بتأكيده</value>
   </data>
   <data name="RoleName" xml:space="preserve">
     <value>اسم الصلاحية</value>
@@ -278,5 +278,20 @@
   </data>
   <data name="FailedToUpdateUserClaims" xml:space="preserve">
     <value>فشلت عملية تحديث الصلاحيات الاستخدام للمستخدم</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>الرسالة</value>
+  </data>
+  <data name="SendEmailFailed" xml:space="preserve">
+    <value>حدث خطأ اثناء ارسال الايميل</value>
+  </data>
+  <data name="TryToRegisterAgain" xml:space="preserve">
+    <value>حدث خطأ غير متوقع اعد المحاولة مره اخري</value>
+  </data>
+  <data name="UserOrCodeIsNullOrEmpty" xml:space="preserve">
+    <value>حدث خطأ أثناء تأكيد الايميل، معرف المستخدم او الكود غير موجود او فارغ</value>
+  </data>
+  <data name="ConfirmEmailDone" xml:space="preserve">
+    <value>تم تأكيد الايميل بنجاح</value>
   </data>
 </root>

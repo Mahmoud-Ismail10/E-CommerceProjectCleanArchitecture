@@ -36,6 +36,7 @@
         public const string FirstName = "FirstName";
         public const string LastName = "LastName";
         public const string UserName = "UserName";
+        public const string Message = "Message";
         public const string Email = "Email";
         public const string Password = "Password";
         public const string RoleId = "RoleId";
@@ -56,5 +57,10 @@
         public const string FailedToRemoveOldClaims = "FailedToRemoveOldClaims";
         public const string FailedToAddNewClaims = "FailedToAddNewClaims";
         public const string FailedToUpdateUserClaims = "FailedToUpdateUserClaims";
+        public const string SendEmailFailed = "SendEmailFailed";
+        public const string TryToRegisterAgain = "TryToRegisterAgain";
+        public const string UserOrCodeIsNullOrEmpty = "UserOrCodeIsNullOrEmpty";
+        public const string ConfirmEmailDone = "ConfirmEmailDone";
+
     }
 }

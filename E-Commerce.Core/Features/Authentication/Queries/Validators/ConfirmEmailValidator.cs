@@ -1,18 +1,18 @@
-﻿using E_Commerce.Core.Features.Authentication.Commands.Models;
+﻿using E_Commerce.Core.Features.Authentication.Queries.Models;
 using E_Commerce.Core.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace E_Commerce.Core.Features.Authentication.Commands.Validators
+namespace E_Commerce.Core.Features.Authentication.Queries.Validators
 {
-    public class SignInValidator : AbstractValidator<SignInCommand>
+    public class ConfirmEmailValidator : AbstractValidator<ConfirmEmailQuery>
     {
         #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
         #region Constructors
-        public SignInValidator(IStringLocalizer<SharedResources> stringLocalizer)
+        public ConfirmEmailValidator(IStringLocalizer<SharedResources> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             ApplyValidationRoles();
@@ -22,11 +22,11 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Validators
         #region Handle Functions
         public void ApplyValidationRoles()
         {
-            RuleFor(c => c.UserName)
+            RuleFor(c => c.UserId)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
 
-            RuleFor(c => c.Password)
+            RuleFor(c => c.Code)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
         }

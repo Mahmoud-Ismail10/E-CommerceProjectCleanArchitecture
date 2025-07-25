@@ -217,7 +217,7 @@
     <value>This UserName does not exists</value>
   </data>
   <data name="EmailIsNotConfirmed" xml:space="preserve">
-    <value>Your Email is not confirmed</value>
+    <value>Your Email is not confirmed, Please Confirm it</value>
   </data>
   <data name="RoleName" xml:space="preserve">
     <value>RoleName</value>
@@ -278,5 +278,20 @@
   </data>
   <data name="FailedToUpdateUserClaims" xml:space="preserve">
     <value>Operation is Failed To Update User Claims</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="SendEmailFailed" xml:space="preserve">
+    <value>Operation to send email failed</value>
+  </data>
+  <data name="TryToRegisterAgain" xml:space="preserve">
+    <value>Operation Is Failed, Try To Register Again</value>
+  </data>
+  <data name="UserOrCodeIsNullOrEmpty" xml:space="preserve">
+    <value>Error Occure When Confirm Email, User or Code is Null or Empty</value>
+  </data>
+  <data name="ConfirmEmailDone" xml:space="preserve">
+    <value>Confirm Email Done</value>
   </data>
 </root>

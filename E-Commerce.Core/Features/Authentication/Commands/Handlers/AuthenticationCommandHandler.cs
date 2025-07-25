@@ -1,20 +1,16 @@
-﻿using AutoMapper;
-using E_Commerce.Core.Bases;
+﻿using E_Commerce.Core.Bases;
 using E_Commerce.Core.Features.Authentication.Commands.Models;
 using E_Commerce.Core.Resources;
-using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Domain.Helpers;
 using E_Commerce.Service.Services.Contract;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
-using System.Security.Claims;
 
 namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
 {
     public class AuthenticationCommandHandler : ApiResponseHandler,
-        IRequestHandler<AddCustomerCommand, ApiResponse<string>>,
         IRequestHandler<SignInCommand, ApiResponse<JwtAuthResponse>>,
         IRequestHandler<RefreshTokenCommand, ApiResponse<JwtAuthResponse>>
     {
@@ -22,7 +18,6 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
@@ -30,13 +25,12 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
         public AuthenticationCommandHandler(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IAuthenticationService authenticationService,
-            IMapper mapper,
+
             IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _authenticationService = authenticationService;
-            _mapper = mapper;
             _stringLocalizer = stringLocalizer;
         }
         #endregion
@@ -48,43 +42,12 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
             if (user is null) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.UserNameIsNotExist]);
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (signInResult.IsNotAllowed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
+            if (!user.EmailConfirmed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
+            //if (signInResult.IsNotAllowed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
             if (!signInResult.Succeeded) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.InvalidPassword]);
 
             var result = await _authenticationService.GetJWTTokenAsync(user);
             return Success(result);
-        }
-
-        public async Task<ApiResponse<string>> Handle(AddCustomerCommand request, CancellationToken cancellationToken)
-        {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user != null) return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.EmailIsExist]);
-
-            var userByUserName = await _userManager.FindByNameAsync(request.UserName);
-            if (userByUserName != null) return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNameIsExist]);
-
-            var identityUser = _mapper.Map<Customer>(request);
-            var createResult = await _userManager.CreateAsync(identityUser, request.Password);
-
-            if (!createResult.Succeeded)
-                return BadRequest<string>(createResult.Errors.FirstOrDefault().Description);
-
-            //Add default role "Customer"
-            var addToRoleResult = await _userManager.AddToRoleAsync(identityUser, "Customer");
-            if (!addToRoleResult.Succeeded)
-                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewRoles]);
-
-            //Add default customer policies
-            var claims = new List<Claim>
-            {
-                new Claim("Edit Customer", "True"),
-                new Claim("Get Customer", "True")
-            };
-            var addDefaultClaimsResult = await _userManager.AddClaimsAsync(identityUser, claims);
-            if (!addDefaultClaimsResult.Succeeded)
-                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewClaims]);
-
-            return Created("");
         }
 
         public async Task<ApiResponse<JwtAuthResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)

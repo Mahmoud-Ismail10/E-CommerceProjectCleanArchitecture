@@ -7,14 +7,19 @@ namespace E_Commerce.Core.Features.Customers.Commands.Validators
 {
     public class EditCustomerValidator : AbstractValidator<EditCustomerCommand>
     {
+        #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public EditCustomerValidator(IStringLocalizer<SharedResources> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             ApplyValidationRoles();
         }
+        #endregion
 
+        #region Handle Functions
         public void ApplyValidationRoles()
         {
             RuleFor(c => c.FirstName)
@@ -37,5 +42,6 @@ namespace E_Commerce.Core.Features.Customers.Commands.Validators
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
                 .EmailAddress().WithMessage(_stringLocalizer[SharedResourcesKeys.InvalidFormat]);
         }
+        #endregion
     }
 }

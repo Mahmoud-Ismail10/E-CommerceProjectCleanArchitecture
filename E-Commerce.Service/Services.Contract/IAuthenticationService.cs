@@ -11,5 +11,6 @@ namespace E_Commerce.Service.Services.Contract
         JwtSecurityToken ReadJwtToken(string accessToken);
         Task<string> ValidateToken(string accessToken);
         Task<(string, DateTime?)> ValidateDetails(JwtSecurityToken jwtToken, string AccessToken, string RefreshToken);
+        Task<string> ConfirmEmailAsync(Guid? userId, string? code);
     }
 }

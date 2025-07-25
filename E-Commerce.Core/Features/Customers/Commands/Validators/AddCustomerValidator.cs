@@ -7,14 +7,19 @@ namespace E_Commerce.Core.Features.Customers.Commands.Validators
 {
     public class AddCustomerValidator : AbstractValidator<AddCustomerCommand>
     {
+        #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public AddCustomerValidator(IStringLocalizer<SharedResources> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             ApplyValidationRoles();
         }
+        #endregion
 
+        #region Handle Functions
         public void ApplyValidationRoles()
         {
             RuleFor(c => c.FirstName)
@@ -40,5 +45,6 @@ namespace E_Commerce.Core.Features.Customers.Commands.Validators
             RuleFor(c => c.ConfirmPassword)
                 .Equal(c => c.Password).WithMessage(_stringLocalizer[SharedResourcesKeys.PasswordsDoNotMatch]);
         }
+        #endregion
     }
 }

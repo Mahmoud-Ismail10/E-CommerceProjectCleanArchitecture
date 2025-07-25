@@ -8,13 +8,19 @@
         public const string Version = "v1";
         public const string Rule = Root + "/" + Version + "/";
 
+        public static class EmailsRoute
+        {
+            public const string Prefix = Rule + "email/";
+            public const string SendEmail = Prefix + "sendEmail";
+        }
+
         public static class Authentication
         {
             public const string Prefix = Rule + "authenticate/";
-            public const string Register = Prefix + "register";
             public const string SignIn = Prefix + "signIn";
             public const string RefreshToken = Prefix + "refreshToken";
             public const string ValidateToken = Prefix + "validateToken";
+            public const string ConfirmEmail = "api/authenticate/confirmEmail";
         }
 
         public static class Authorization
@@ -36,6 +42,7 @@
         public static class UserRouting
         {
             public const string Prefix = Rule + "user/";
+            public const string Register = Prefix + "register";
             public const string ChangePassword = Prefix + "changePassword";
         }
 

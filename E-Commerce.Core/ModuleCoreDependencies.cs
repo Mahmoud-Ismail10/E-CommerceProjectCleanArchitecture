@@ -22,7 +22,6 @@ namespace E_Commerce.Core
 
             /// Configuaration for Localization
             services.AddSingleton<AzureTranslationService>();
-
             return services;
         }
     }

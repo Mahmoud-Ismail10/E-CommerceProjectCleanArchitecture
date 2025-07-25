@@ -1,4 +1,5 @@
 using E_Commerce.Core;
+using E_Commerce.Core.Filters;
 using E_Commerce.Core.Middleware;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Infrastructure;
@@ -6,6 +7,9 @@ using E_Commerce.Infrastructure.Seeder;
 using E_Commerce.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 
@@ -21,7 +25,7 @@ namespace E_Commerce.Presentation
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            //builder.Services.AddOpenApi();
+            //builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             #region Dependency Injections
@@ -31,7 +35,6 @@ namespace E_Commerce.Presentation
                 .AddServiceDependencies()
                 .AddCoreDependencies()
                 .AddServiceRegistration(builder.Configuration);
-
             #endregion
 
             #region Localization
@@ -74,6 +77,16 @@ namespace E_Commerce.Presentation
             });
 
             #endregion
+
+            builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            builder.Services.AddTransient<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
+            builder.Services.AddTransient<AuthFilter>();
 
             var app = builder.Build();
 
