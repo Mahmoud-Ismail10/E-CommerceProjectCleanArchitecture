@@ -6,7 +6,6 @@ using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Service.Services.Contract;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 
@@ -18,17 +17,15 @@ namespace E_Commerce.Core.Features.ApplicationUser.Commands.Handlers
     {
         #region Fields
         private readonly UserManager<User> _userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IApplicationUserService _applicationUserService;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
         #region Constructors
-        public UserCommandHandler(UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IMapper mapper, IApplicationUserService applicationUserService, IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
+        public UserCommandHandler(UserManager<User> userManager, IMapper mapper, IApplicationUserService applicationUserService, IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _applicationUserService = applicationUserService;
             _stringLocalizer = stringLocalizer;

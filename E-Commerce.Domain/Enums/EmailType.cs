@@ -3,6 +3,6 @@
     public enum EmailType
     {
         ConfirmEmail,
-        ForgotPassword
+        ResetPassword
     }
 }

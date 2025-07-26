@@ -5,6 +5,8 @@ using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Infrastructure;
 using E_Commerce.Infrastructure.Seeder;
 using E_Commerce.Service;
+using EntityFrameworkCore.EncryptColumn.Interfaces;
+using EntityFrameworkCore.EncryptColumn.Util;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +89,9 @@ namespace E_Commerce.Presentation
             });
 
             builder.Services.AddTransient<AuthFilter>();
+
+            var encryptionKey = builder.Configuration["Encryption:Key"];
+            builder.Services.AddSingleton<IEncryptionProvider>(new GenerateEncryptionProvider(encryptionKey));
 
             var app = builder.Build();
 

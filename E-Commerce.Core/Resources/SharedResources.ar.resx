@@ -294,4 +294,16 @@
   <data name="ConfirmEmailDone" xml:space="preserve">
     <value>تم تأكيد الايميل بنجاح</value>
   </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>هذا المستخدم غير موجود</value>
+  </data>
+  <data name="TryAgainLater" xml:space="preserve">
+    <value>حدث خطأ، حاول في وقت لاحق</value>
+  </data>
+  <data name="InvaildCode" xml:space="preserve">
+    <value>هذا الكود غير صحيح</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>الكود</value>
+  </data>
 </root>

@@ -1,7 +1,11 @@
 ﻿using E_Commerce.Domain.Entities.Identity;
+using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Helpers;
+using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
+using EntityFrameworkCore.EncryptColumn.Interfaces;
+using EntityFrameworkCore.EncryptColumn.Util;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,14 +21,25 @@ namespace E_Commerce.Service.Services
         #region Fields
         private readonly UserManager<User> _userManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly IEmailsService _emailsService;
+        private readonly E_CommerceContext _dbContext;
+        private readonly IEncryptionProvider _encryptionProvider;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         #endregion
 
         #region Constructors
-        public AuthenticationService(UserManager<User> userManager, JwtSettings jwtSettings, IRefreshTokenRepository refreshTokenRepository)
+        public AuthenticationService(UserManager<User> userManager,
+            JwtSettings jwtSettings,
+            IEmailsService emailsService,
+            E_CommerceContext dbContext,
+            IEncryptionProvider encryptionProvider,
+            IRefreshTokenRepository refreshTokenRepository)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings;
+            _emailsService = emailsService;
+            _dbContext = dbContext;
+            _encryptionProvider = new GenerateEncryptionProvider("8a4dcaaec64d412380fe4b02193cd26f");
             _refreshTokenRepository = refreshTokenRepository;
         }
         #endregion
@@ -201,6 +216,77 @@ namespace E_Commerce.Service.Services
             if (!confirmEmailResult.Succeeded)
                 return string.Join(",", confirmEmailResult.Errors.Select(x => x.Description).ToList());
             return "Success";
+        }
+
+        public async Task<string> SendResetPasswordCodeAsync(string email)
+        {
+            var trans = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                //Get User
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user is null) return "UserNotFound";
+
+                //Generate Random Number
+                var chars = "0123456789";
+                var random = new Random();
+                var randomNumber = new string(Enumerable.Repeat(chars, 6).Select(s => s[random.Next(s.Length)]).ToArray());
+
+                //Update User In Database Code
+                user.Code = randomNumber;
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                    return "ErrorInUpdateUser";
+
+                //Send Code To Email 
+                var sendEmailResult = await _emailsService.SendEmailAsync(user.Email, user.Code, EmailType.ResetPassword);
+                if (sendEmailResult == "Failed") return "SendEmailFailed";
+                await trans.CommitAsync();
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                await trans.RollbackAsync();
+                return "Failed";
+            }
+        }
+
+        public async Task<string> ConfirmResetPasswordAsync(string code, string email)
+        {
+            //Get User
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null) return "UserNotFound";
+
+            //Decrept Code From Database User Code
+            var userCode = user.Code;
+
+            //Equal With Code
+            if (userCode == code) return "Success";
+            return "Failed";
+        }
+
+        public async Task<string> ResetPasswordAsync(string email, string newNassword)
+        {
+            var trans = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                //Get User
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null) return "UserNotFound";
+
+                //Remove Old Password and Add New Password
+                await _userManager.RemovePasswordAsync(user);
+                if (!await _userManager.HasPasswordAsync(user))
+                    await _userManager.AddPasswordAsync(user, newNassword);
+
+                await trans.CommitAsync();
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                await trans.RollbackAsync();
+                return "Failed";
+            }
         }
         #endregion
     }

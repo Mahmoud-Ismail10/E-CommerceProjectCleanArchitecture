@@ -20,6 +20,9 @@
             public const string SignIn = Prefix + "signIn";
             public const string RefreshToken = Prefix + "refreshToken";
             public const string ValidateToken = Prefix + "validateToken";
+            public const string SendResetPasswordCode = Prefix + "sendResetPasswordCode";
+            public const string ConfirmResetPasswordCode = Prefix + "confirmResetPasswordCode";
+            public const string ResetPassword = Prefix + "resetPassword";
             public const string ConfirmEmail = "api/authenticate/confirmEmail";
         }
 

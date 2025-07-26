@@ -12,7 +12,9 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
 {
     public class AuthenticationCommandHandler : ApiResponseHandler,
         IRequestHandler<SignInCommand, ApiResponse<JwtAuthResponse>>,
-        IRequestHandler<RefreshTokenCommand, ApiResponse<JwtAuthResponse>>
+        IRequestHandler<RefreshTokenCommand, ApiResponse<JwtAuthResponse>>,
+        IRequestHandler<SendResetPasswordCommand, ApiResponse<string>>,
+        IRequestHandler<ResetPasswordCommand, ApiResponse<string>>
     {
         #region Fields
         private readonly UserManager<User> _userManager;
@@ -42,9 +44,8 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
             if (user is null) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.UserNameIsNotExist]);
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (!user.EmailConfirmed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
-            //if (signInResult.IsNotAllowed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
             if (!signInResult.Succeeded) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.InvalidPassword]);
+            if (!user.EmailConfirmed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
 
             var result = await _authenticationService.GetJWTTokenAsync(user);
             return Success(result);
@@ -69,6 +70,28 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
             }
             var result = await _authenticationService.GetRefreshTokenAsync(user, jwtToken, expiryDate, request.RefreshToken);
             return Success(result);
+        }
+
+        public async Task<ApiResponse<string>> Handle(SendResetPasswordCommand request, CancellationToken cancellationToken)
+        {
+            var resetPasswordResult = await _authenticationService.SendResetPasswordCodeAsync(request.Email);
+            return resetPasswordResult switch
+            {
+                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
+                "Success" => Success(""),
+                _ => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.TryAgainLater])
+            };
+        }
+
+        public async Task<ApiResponse<string>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+        {
+            var resetPasswordResult = await _authenticationService.ResetPasswordAsync(request.Email, request.NewPassword);
+            return resetPasswordResult switch
+            {
+                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
+                "Success" => Success(""),
+                _ => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.InvaildCode])
+            };
         }
         #endregion
     }

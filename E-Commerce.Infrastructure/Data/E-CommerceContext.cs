@@ -1,5 +1,7 @@
 ﻿using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Entities.Identity;
+using EntityFrameworkCore.EncryptColumn.Extension;
+using EntityFrameworkCore.EncryptColumn.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +11,11 @@ namespace E_Commerce.Infrastructure.Data
 {
     public class E_CommerceContext : IdentityDbContext<User, Role, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
-        public E_CommerceContext(DbContextOptions<E_CommerceContext> options) : base(options) { }
+        private readonly IEncryptionProvider _encryptionProvider;
+        public E_CommerceContext(DbContextOptions<E_CommerceContext> options, IEncryptionProvider encryptionProvider) : base(options)
+        {
+            _encryptionProvider = encryptionProvider;
+        }
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -31,6 +37,9 @@ namespace E_Commerce.Infrastructure.Data
 
             /// Execute all Configurations that implement from IEntityTypeConfiguration<>
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            /// Configure encryption for sensitive data
+            modelBuilder.UseEncryption(_encryptionProvider);
         }
     }
 }

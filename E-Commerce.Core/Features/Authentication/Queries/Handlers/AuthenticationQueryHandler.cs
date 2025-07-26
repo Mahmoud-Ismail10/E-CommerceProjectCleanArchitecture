@@ -9,7 +9,8 @@ namespace E_Commerce.Core.Features.Authentication.Queries.Handlers
 {
     public class AuthenticationQueryHandler : ApiResponseHandler,
         IRequestHandler<AuthorizeUserQuery, ApiResponse<string>>,
-        IRequestHandler<ConfirmEmailQuery, ApiResponse<string>>
+        IRequestHandler<ConfirmEmailQuery, ApiResponse<string>>,
+        IRequestHandler<ConfirmResetPasswordQuery, ApiResponse<string>>
     {
         #region Fields
         private readonly IAuthenticationService _authenticationService;
@@ -41,6 +42,17 @@ namespace E_Commerce.Core.Features.Authentication.Queries.Handlers
                 "UserOrCodeIsNullOrEmpty" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserOrCodeIsNullOrEmpty]),
                 "Success" => Success<string>(_stringLocalizer[SharedResourcesKeys.ConfirmEmailDone]),
                 _ => BadRequest<string>(confirmEmailResult)
+            };
+        }
+
+        public async Task<ApiResponse<string>> Handle(ConfirmResetPasswordQuery request, CancellationToken cancellationToken)
+        {
+            var confirmResetPasswordResult = await _authenticationService.ConfirmResetPasswordAsync(request.Code, request.Email);
+            return confirmResetPasswordResult switch
+            {
+                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
+                "Success" => Success(""),
+                _ => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.InvaildCode])
             };
         }
         #endregion

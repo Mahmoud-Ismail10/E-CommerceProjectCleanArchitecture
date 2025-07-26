@@ -20,6 +20,7 @@
         public const string EmailIsExist = "EmailIsExist";
         public const string UserNameIsExist = "UserNameIsExist";
         public const string UserNameIsNotExist = "UserNameIsNotExist";
+        public const string UserNotFound = "UserNotFound";
         public const string IsNotExist = "IsNotExist";
         public const string CreateFailed = "CreateFailed";
         public const string UpdateFailed = "UpdateFailed";
@@ -39,6 +40,7 @@
         public const string Message = "Message";
         public const string Email = "Email";
         public const string Password = "Password";
+        public const string Code = "Code";
         public const string RoleId = "RoleId";
         public const string RoleName = "RoleName";
         public const string RoleIsUsed = "RoleIsUsed";
@@ -61,6 +63,8 @@
         public const string TryToRegisterAgain = "TryToRegisterAgain";
         public const string UserOrCodeIsNullOrEmpty = "UserOrCodeIsNullOrEmpty";
         public const string ConfirmEmailDone = "ConfirmEmailDone";
+        public const string TryAgainLater = "TryAgainLater";
+        public const string InvaildCode = "InvaildCode";
 
     }
 }

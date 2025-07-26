@@ -35,5 +35,26 @@ namespace E_Commerce.Presentation.Controllers
             var response = await Mediator.Send(query);
             return NewResult(response);
         }
+
+        [HttpPost(Router.Authentication.SendResetPasswordCode)]
+        public async Task<IActionResult> SendResetPasswordCode([FromQuery] SendResetPasswordCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        [HttpGet(Router.Authentication.ConfirmResetPasswordCode)]
+        public async Task<IActionResult> ConfirmResetPasswordCode([FromQuery] ConfirmResetPasswordQuery query)
+        {
+            var response = await Mediator.Send(query);
+            return NewResult(response);
+        }
+
+        [HttpPost(Router.Authentication.ResetPassword)]
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
     }
 }

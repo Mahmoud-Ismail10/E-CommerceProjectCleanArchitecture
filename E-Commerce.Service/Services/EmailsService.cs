@@ -39,11 +39,11 @@ namespace E_Commerce.Service.Services
                                    <p style='color: #555; font-size: 16px;'>
                                        {(emailType == EmailType.ConfirmEmail
                                            ? "Thank you for signing up! Please confirm your email by clicking the button below."
-                                           : "We received a request to reset your password. Click the button below to proceed.")}
+                                           : "We received a request to reset your password. Use the code below to proceed.")}
                                    </p>
-                                   <a href='{ReturnUrl}' style='display: inline-block; background-color: #007bff; color: white; text-decoration: none; padding: 12px 20px; border-radius: 5px; font-size: 16px; margin-top: 20px;'>
-                                       {(emailType == EmailType.ConfirmEmail ? "Confirm Email" : "Reset Password")}
-                                   </a>
+                                   {(emailType == EmailType.ConfirmEmail
+                                       ? $"<a href='{ReturnUrl}' style='display: inline-block; background-color: #007bff; color: white; text-decoration: none; padding: 12px 20px; border-radius: 5px; font-size: 16px; margin-top: 20px;'>Confirm Email</a>"
+                                       : $"<div style='display: inline-block; background-color: #007bff; color: white; padding: 12px 20px; border-radius: 5px; font-size: 20px; margin-top: 20px; font-weight: bold;'>{ReturnUrl}</div>")}
                                    <p style='color: #999; font-size: 14px; margin-top: 20px;'>
                                        If you didn't request this, you can safely ignore this email.
                                    </p>
@@ -54,7 +54,7 @@ namespace E_Commerce.Service.Services
                         TextBody = emailType switch
                         {
                             EmailType.ConfirmEmail => $"Thank you for signing up! Please confirm your email using this link: {ReturnUrl}",
-                            EmailType.ForgotPassword => $"We received a request to reset your password. Use this link to proceed: {ReturnUrl}",
+                            EmailType.ResetPassword => $"We received a request to reset your password.\nYour reset code is: {ReturnUrl}",
                             _ => "Please confirm your email using the provided link."
                         }
                     };
@@ -67,7 +67,7 @@ namespace E_Commerce.Service.Services
                     message.Subject = emailType switch // The text that will be pressed (Provided Link)
                     {
                         EmailType.ConfirmEmail => "Confirm Your Email",
-                        EmailType.ForgotPassword => "Reset Password",
+                        EmailType.ResetPassword => "Reset Password",
                         _ => "No Submitted"
                     };
                     // (3) Send content of message
