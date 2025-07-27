@@ -2,6 +2,7 @@
 using E_Commerce.Domain.Enums.Sorting;
 using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Service.Services
@@ -10,20 +11,40 @@ namespace E_Commerce.Service.Services
     {
         #region Fields
         private readonly IProductRepository _productRepository;
+        private readonly IFileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Constructors
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IFileService fileService, IHttpContextAccessor httpContextAccessor)
         {
             _productRepository = productRepository;
+            _fileService = fileService;
+            _httpContextAccessor = httpContextAccessor;
         }
         #endregion
 
         #region Handle Functions
-        public async Task<string> AddProductAsync(Product product)
+        public async Task<string> AddProductAsync(Product product, IFormFile file)
         {
-            await _productRepository.AddAsync(product);
-            return "Success";
+            var context = _httpContextAccessor.HttpContext.Request;
+            var baseUrl = context.Scheme + "://" + context.Host;
+            var imageUrl = await _fileService.UploadImageAsync("Products", file);
+            switch (imageUrl)
+            {
+                case "FailedToUploadImage": return "FailedToUploadImage";
+                case "NoImage": return "NoImage";
+            }
+            product.ImageURL = baseUrl + imageUrl;
+            try
+            {
+                await _productRepository.AddAsync(product);
+                return "Success";
+            }
+            catch (Exception)
+            {
+                return "FailedInAdd";
+            }
         }
 
         public async Task<string> DeleteProductAsync(Product product)

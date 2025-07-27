@@ -306,4 +306,10 @@
   <data name="Code" xml:space="preserve">
     <value>الكود</value>
   </data>
+  <data name="FailedToUploadImage" xml:space="preserve">
+    <value>حدث خطأ أثناء رفع الصورة</value>
+  </data>
+  <data name="NoImage" xml:space="preserve">
+    <value>من فضلك قم بإضافة صورة</value>
+  </data>
 </root>

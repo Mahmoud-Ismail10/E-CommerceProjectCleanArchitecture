@@ -65,6 +65,8 @@
         public const string ConfirmEmailDone = "ConfirmEmailDone";
         public const string TryAgainLater = "TryAgainLater";
         public const string InvaildCode = "InvaildCode";
+        public const string FailedToUploadImage = "FailedToUploadImage";
+        public const string NoImage = "NoImage";
 
     }
 }

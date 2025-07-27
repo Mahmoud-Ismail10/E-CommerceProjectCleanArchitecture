@@ -8,10 +8,13 @@ namespace E_Commerce.Core.Features.Products.Commands.Validators
 {
     public class EditProductValidator : AbstractValidator<EditProductCommand>
     {
+        #region Fields
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public EditProductValidator(IProductService productService, ICategoryService categoryService, IStringLocalizer<SharedResources> stringLocalizer)
         {
             _productService = productService;
@@ -20,7 +23,9 @@ namespace E_Commerce.Core.Features.Products.Commands.Validators
             ApplyValidationRoles();
             ApplyCustomValidationRoles();
         }
+        #endregion
 
+        #region Handle Functions
         public void ApplyValidationRoles()
         {
             RuleFor(c => c.Name)
@@ -52,5 +57,6 @@ namespace E_Commerce.Core.Features.Products.Commands.Validators
                 .MustAsync(async (key, cancellation) => await _categoryService.IsCategoryIdExist(key))
                 .WithMessage(_stringLocalizer[SharedResourcesKeys.IsNotExist]);
         }
+        #endregion
     }
 }

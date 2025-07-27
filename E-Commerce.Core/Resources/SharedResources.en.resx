@@ -306,4 +306,10 @@
   <data name="Code" xml:space="preserve">
     <value>Code</value>
   </data>
+  <data name="FailedToUploadImage" xml:space="preserve">
+    <value>Failed To Upload Image</value>
+  </data>
+  <data name="NoImage" xml:space="preserve">
+    <value>Please Select Image</value>
+  </data>
 </root>

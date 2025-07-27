@@ -1,7 +1,5 @@
-﻿using E_Commerce.Domain.Entities.Identity;
-using E_Commerce.Service.AuthService.Services.Contract;
+﻿using E_Commerce.Service.AuthService.Services.Contract;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,18 +7,24 @@ namespace E_Commerce.Core.Filters
 {
     public class AuthFilter : IAsyncActionFilter
     {
+        #region Fields
         private readonly ICurrentUserService _currentUserService;
-        private readonly UserManager<User> _userManager;
+        #endregion
+
+        #region Constructors
         public AuthFilter(ICurrentUserService currentUserService)
         {
             _currentUserService = currentUserService;
         }
+        #endregion
+
+        #region Functions
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (context.HttpContext.User.Identity.IsAuthenticated == true)
             {
                 var roles = await _currentUserService.GetCurrentUserRolesAsync();
-                if (roles.All(x => x != "User"))
+                if (roles.All(x => x != "Customer"))
                 {
                     context.Result = new ObjectResult("Forbidden")
                     {
@@ -31,8 +35,8 @@ namespace E_Commerce.Core.Filters
                 {
                     await next();
                 }
-
             }
         }
+        #endregion
     }
 }

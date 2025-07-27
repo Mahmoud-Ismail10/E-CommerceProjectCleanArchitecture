@@ -18,6 +18,7 @@ namespace E_Commerce.Service
             services.AddTransient<IAuthorizationService, AuthorizationService>();
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IEmailsService, EmailsService>();
+            services.AddTransient<IFileService, FileService>();
 
             return services;
         }

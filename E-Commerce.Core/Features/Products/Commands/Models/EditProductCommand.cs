@@ -1,16 +1,17 @@
 ﻿using E_Commerce.Core.Bases;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace E_Commerce.Core.Features.Products.Commands.Models
 {
-    public record EditProductCommand : IRequest<ApiResponse<string>>
-    {
-        public Guid Id { get; init; }
-        public string? Name { get; init; }
-        public string? Description { get; init; }
-        public decimal? Price { get; init; }
-        public int? StockQuantity { get; init; }
-        public string? ImageURL { get; init; }
-        public Guid CategoryId { get; init; }
-    }
+    public record EditProductCommand
+    (
+        Guid Id,
+        string? Name,
+        string? Description,
+        decimal? Price,
+        int? StockQuantity,
+        IFormFile? ImageURL,
+        Guid CategoryId
+    ) : IRequest<ApiResponse<string>>;
 }

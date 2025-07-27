@@ -14,23 +14,33 @@ namespace E_Commerce.Core.Features.Products.Commands.Handlers
         IRequestHandler<EditProductCommand, ApiResponse<string>>,
         IRequestHandler<DeleteProductCommand, ApiResponse<string>>
     {
+        #region Fields
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public ProductCommandHandler(IProductService productService, IMapper mapper, IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _productService = productService;
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
         }
+        #endregion
 
+        #region Handle Functions
         public async Task<ApiResponse<string>> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
             var productMapper = _mapper.Map<Product>(request);
-            var result = await _productService.AddProductAsync(productMapper);
-            if (result == "Success") return Created("");
-            else return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.CreateFailed]);
+            var result = await _productService.AddProductAsync(productMapper, request.ImageURL);
+            return result switch
+            {
+                "FailedToUploadImage" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToUploadImage]),
+                "NoImage" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.NoImage]),
+                "FailedInAdd" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.CreateFailed]),
+                _ => Created("")
+            };
         }
 
         public async Task<ApiResponse<string>> Handle(EditProductCommand request, CancellationToken cancellationToken)
@@ -51,5 +61,6 @@ namespace E_Commerce.Core.Features.Products.Commands.Handlers
             if (result == "Success") return Deleted<string>();
             else return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.DeleteFailed]);
         }
+        #endregion
     }
 }

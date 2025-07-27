@@ -22,7 +22,7 @@ namespace E_Commerce.Presentation.Controllers
         }
 
         [HttpPost(Router.ProductRouting.Create)]
-        public async Task<IActionResult> CreateProduct([FromBody] AddProductCommand command)
+        public async Task<IActionResult> CreateProduct([FromForm] AddProductCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);

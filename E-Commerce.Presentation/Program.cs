@@ -123,6 +123,10 @@ namespace E_Commerce.Presentation
 
             app.UseHttpsRedirection();
 
+            app.UseCors(CORS);
+
+            app.UseStaticFiles();
+
             app.UseAuthentication();
 
             app.UseAuthorization();

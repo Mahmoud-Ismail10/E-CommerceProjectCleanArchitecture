@@ -1,5 +1,6 @@
 ﻿using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Enums.Sorting;
+using Microsoft.AspNetCore.Http;
 
 namespace E_Commerce.Service.Services.Contract
 {
@@ -7,7 +8,7 @@ namespace E_Commerce.Service.Services.Contract
     {
         IQueryable<Product> FilterProductPaginatedQueryable(ProductSortingEnum sortBy, string search);
         Task<Product> GetProductByIdAsync(Guid id);
-        Task<string> AddProductAsync(Product product);
+        Task<string> AddProductAsync(Product product, IFormFile file);
         Task<string> EditProductAsync(Product product);
         Task<string> DeleteProductAsync(Product product);
         Task<bool> IsNameExist(string name);
