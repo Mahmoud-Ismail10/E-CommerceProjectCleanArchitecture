@@ -4,6 +4,7 @@ using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace E_Commerce.Service.Services
 {
@@ -43,13 +44,14 @@ namespace E_Commerce.Service.Services
             }
             catch (Exception)
             {
+                Log.Error("Error adding product", product);
                 return "FailedInAdd";
             }
         }
 
         public async Task<string> DeleteProductAsync(Product product)
         {
-            var transaction = _productRepository.BeginTransaction();
+            var transaction = await _productRepository.BeginTransactionAsync();
             try
             {
                 await _productRepository.DeleteAsync(product);
@@ -59,7 +61,8 @@ namespace E_Commerce.Service.Services
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return $"Error deleting product: {ex.Message}";
+                Log.Error("Error deleting product {ProductName}: {ErrorMessage}", product.Name, ex.InnerException?.Message ?? ex.Message);
+                return "Failed";
             }
         }
 

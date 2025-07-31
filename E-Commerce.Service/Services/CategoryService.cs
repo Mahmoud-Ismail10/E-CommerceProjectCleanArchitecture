@@ -3,6 +3,7 @@ using E_Commerce.Domain.Enums.Sorting;
 using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace E_Commerce.Service.Services
 {
@@ -28,7 +29,7 @@ namespace E_Commerce.Service.Services
         #region Handle Functions
         public async Task<string> DeleteCategoryAsync(Category category)
         {
-            var transaction = _categoryRepository.BeginTransaction();
+            var transaction = await _categoryRepository.BeginTransactionAsync();
             try
             {
                 /// Remove the category
@@ -41,7 +42,8 @@ namespace E_Commerce.Service.Services
             {
                 /// Rollback the transaction in case of error
                 await transaction.RollbackAsync();
-                return $"Error deleting category: {ex.Message}";
+                Log.Error("Error deleting category {CategoryName}: {ErrorMessage}", category.Name, ex.InnerException?.Message ?? ex.Message);
+                return "Failed";
             }
         }
 

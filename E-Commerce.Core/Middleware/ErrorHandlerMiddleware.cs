@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Net;
 using System.Text.Json;
 
@@ -27,6 +28,7 @@ namespace E_Commerce.Core.Middleware
                 var response = context.Response;
                 response.ContentType = "application/json";
                 var responseModel = new ApiResponse<string>() { Succeeded = false, Message = error?.Message };
+                Log.Information(error, "Error", context.Request, "");
                 //TODO:: cover all validation errors
                 switch (error)
                 {

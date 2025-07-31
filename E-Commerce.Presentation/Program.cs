@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
+using Serilog;
 using System.Globalization;
 
 namespace E_Commerce.Presentation
@@ -92,6 +93,12 @@ namespace E_Commerce.Presentation
 
             var encryptionKey = builder.Configuration["Encryption:Key"];
             builder.Services.AddSingleton<IEncryptionProvider>(new GenerateEncryptionProvider(encryptionKey));
+
+            #region Serilog
+            Log.Logger = new LoggerConfiguration()
+              .ReadFrom.Configuration(builder.Configuration).CreateLogger();
+            builder.Services.AddSerilog();
+            #endregion
 
             var app = builder.Build();
 

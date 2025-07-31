@@ -8,9 +8,9 @@ namespace E_Commerce.Infrastructure.Infrastructure.Bases
         Task<T> GetByIdAsync(Guid id);
         Task<IReadOnlyList<T?>> GetAllAsync();
         Task SaveChangesAsync();
-        IDbContextTransaction BeginTransaction();
-        void Commit();
-        void RollBack();
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        Task CommitAsync();
+        Task RollBackAsync();
         IQueryable<T> GetTableNoTracking();
         IQueryable<T> GetTableAsTracking();
         Task<T> AddAsync(T entity);

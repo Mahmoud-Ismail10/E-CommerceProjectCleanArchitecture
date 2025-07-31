@@ -61,19 +61,19 @@ namespace E_Commerce.Infrastructure.Infrastructure.Bases
             await _dbContext.SaveChangesAsync();
         }
 
-        public IDbContextTransaction BeginTransaction()
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
-            return _dbContext.Database.BeginTransaction();
+            return await _dbContext.Database.BeginTransactionAsync();
         }
 
-        public void Commit()
+        public async Task CommitAsync()
         {
-            _dbContext.Database.CommitTransaction();
+            await _dbContext.Database.CommitTransactionAsync();
         }
 
-        public void RollBack()
+        public async Task RollBackAsync()
         {
-            _dbContext.Database.RollbackTransaction();
+            await _dbContext.Database.RollbackTransactionAsync();
         }
 
         public IQueryable<T> GetTableAsTracking()

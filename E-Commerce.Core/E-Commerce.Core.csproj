@@ -20,6 +20,7 @@
     <PackageReference Include="MediatR" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.7" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +31,12 @@
   <ItemGroup>
     <Folder Include="Features\ApplicationUser\Queries\Handlers\" />
     <Folder Include="Features\Emails\Queries\" />
+    <Folder Include="Features\Orders\Commands\Handlers\" />
+    <Folder Include="Features\Orders\Commands\Models\" />
+    <Folder Include="Features\Orders\Commands\Validators\" />
+    <Folder Include="Features\Orders\Queries\Handlers\" />
+    <Folder Include="Features\Orders\Queries\Models\" />
+    <Folder Include="Features\Orders\Queries\Responses\" />
     <Folder Include="Mapping\Roles\Commands\" />
   </ItemGroup>
 
