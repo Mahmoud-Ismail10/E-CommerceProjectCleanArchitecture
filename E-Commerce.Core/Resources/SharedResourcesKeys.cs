@@ -43,6 +43,9 @@
         public const string Code = "Code";
         public const string RoleId = "RoleId";
         public const string RoleName = "RoleName";
+        public const string Street = "Street";
+        public const string City = "City";
+        public const string State = "State";
         public const string RoleIsUsed = "RoleIsUsed";
         public const string ConfirmPassword = "ConfirmPassword";
         public const string CurrentPassword = "CurrentPassword";
@@ -67,6 +70,7 @@
         public const string InvaildCode = "InvaildCode";
         public const string FailedToUploadImage = "FailedToUploadImage";
         public const string NoImage = "NoImage";
+        public const string ShippingAddressIsExist = "ShippingAddressIsExist";
 
     }
 }

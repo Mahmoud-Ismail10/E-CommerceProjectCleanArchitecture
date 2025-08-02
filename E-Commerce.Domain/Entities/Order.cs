@@ -15,8 +15,8 @@ namespace E_Commerce.Domain.Entities
         public ShippingAddress? ShippingAddress { get; set; }
         public Guid PaymentId { get; set; }
         public Payment? Payment { get; set; }
-        public Guid DeliveryMethodId { get; set; }
-        public DeliveryMethod? DeliveryMethod { get; set; }
+        public Guid DeliveryId { get; set; }
+        public Delivery? Delivery { get; set; }
 
         public ICollection<OrderItem> OrderItems { get; set; }
 

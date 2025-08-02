@@ -42,7 +42,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("E_Commerce.Domain.Entities.DeliveryMethod", b =>
+            modelBuilder.Entity("E_Commerce.Domain.Entities.Delivery", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,6 +51,10 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.Property<decimal>("Cost")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("DeliveryMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DeliveryTime")
                         .HasColumnType("datetime2");
 
@@ -58,14 +62,9 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryMethods");
+                    b.ToTable("Deliveries");
                 });
 
             modelBuilder.Entity("E_Commerce.Domain.Entities.Identity.Role", b =>
@@ -235,7 +234,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DeliveryMethodId")
+                    b.Property<Guid>("DeliveryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderDate")
@@ -260,7 +259,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("DeliveryMethodId")
+                    b.HasIndex("DeliveryId")
                         .IsUnique();
 
                     b.HasIndex("PaymentId")
@@ -309,8 +308,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -595,9 +593,9 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("E_Commerce.Domain.Entities.DeliveryMethod", "DeliveryMethod")
+                    b.HasOne("E_Commerce.Domain.Entities.Delivery", "Delivery")
                         .WithOne()
-                        .HasForeignKey("E_Commerce.Domain.Entities.Order", "DeliveryMethodId")
+                        .HasForeignKey("E_Commerce.Domain.Entities.Order", "DeliveryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -615,7 +613,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
 
                     b.Navigation("Customer");
 
-                    b.Navigation("DeliveryMethod");
+                    b.Navigation("Delivery");
 
                     b.Navigation("Payment");
 

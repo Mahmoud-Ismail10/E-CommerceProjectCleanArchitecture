@@ -7,7 +7,7 @@ namespace E_Commerce.Service.Services.Contract
     public interface IProductService
     {
         IQueryable<Product> FilterProductPaginatedQueryable(ProductSortingEnum sortBy, string search);
-        Task<Product> GetProductByIdAsync(Guid id);
+        Task<Product?> GetProductByIdAsync(Guid id);
         Task<string> AddProductAsync(Product product, IFormFile file);
         Task<string> EditProductAsync(Product product);
         Task<string> DeleteProductAsync(Product product);

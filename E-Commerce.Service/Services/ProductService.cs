@@ -28,7 +28,7 @@ namespace E_Commerce.Service.Services
         #region Handle Functions
         public async Task<string> AddProductAsync(Product product, IFormFile file)
         {
-            var context = _httpContextAccessor.HttpContext.Request;
+            var context = _httpContextAccessor.HttpContext!.Request;
             var baseUrl = context.Scheme + "://" + context.Host;
             var imageUrl = await _fileService.UploadImageAsync("Products", file);
             switch (imageUrl)
@@ -76,7 +76,7 @@ namespace E_Commerce.Service.Services
         {
             var queryable = _productRepository.GetTableNoTracking().Include(p => p.Category).AsQueryable();
             if (!string.IsNullOrWhiteSpace(search))
-                queryable = queryable.Where(c => c.Name.Contains(search) || c.Description.Contains(search));
+                queryable = queryable.Where(c => c.Name!.Contains(search) || c.Description!.Contains(search));
             queryable = sortBy switch
             {
                 ProductSortingEnum.NameAsc => queryable.OrderBy(c => c.Name),
@@ -92,10 +92,9 @@ namespace E_Commerce.Service.Services
                 _ => queryable.OrderBy(c => c.Name)
             };
             return queryable;
-
         }
 
-        public async Task<Product> GetProductByIdAsync(Guid id)
+        public async Task<Product?> GetProductByIdAsync(Guid id)
         {
             var product = await _productRepository.GetTableNoTracking()
                                               .Where(c => c.Id.Equals(id))
@@ -107,7 +106,7 @@ namespace E_Commerce.Service.Services
         public async Task<bool> IsNameExist(string name)
         {
             var product = await _productRepository.GetTableNoTracking()
-                                  .Where(c => c.Name.Equals(name))
+                                  .Where(c => c.Name!.Equals(name))
                                   .FirstOrDefaultAsync();
             if (product != null) return true;
             return false;
@@ -116,7 +115,7 @@ namespace E_Commerce.Service.Services
         public async Task<bool> IsNameExistExcludeSelf(string name, Guid id)
         {
             var product = await _productRepository.GetTableNoTracking()
-                                              .Where(c => c.Name.Equals(name) & !c.Id.Equals(id))
+                                              .Where(c => c.Name!.Equals(name) & !c.Id.Equals(id))
                                               .FirstOrDefaultAsync();
             if (product != null) return true;
             return false;

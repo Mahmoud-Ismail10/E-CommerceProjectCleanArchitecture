@@ -75,9 +75,9 @@ namespace E_Commerce.Service.Services
         private async Task<(JwtSecurityToken, string)> GenerateJwtToken(User user)
         {
             var claims = await GetClaims(user);
-            var jwtToken = new JwtSecurityToken(_jwtSettings.Issuer,
-                                                   _jwtSettings.Audience,
-                                                   claims,
+            var jwtToken = new JwtSecurityToken(issuer: _jwtSettings.Issuer,
+                                                   audience: _jwtSettings.Audience,
+                                                   claims: claims,
                                                    expires: DateTime.UtcNow.AddDays(_jwtSettings.AccessTokenExpireDate),
                                                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature));
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);

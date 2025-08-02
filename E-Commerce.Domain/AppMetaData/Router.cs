@@ -71,6 +71,17 @@
             public const string Delete = Prefix + SingleRoute;
         }
 
+        public static class OrderRouting
+        {
+            public const string Prefix = Rule + "order/";
+            public const string GetAll = Prefix + "getAll";
+            public const string Paginated = Prefix + "paginated";
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "create";
+            public const string Edit = Prefix + "edit";
+            public const string Delete = Prefix + SingleRoute;
+        }
+
         public static class CustomerRouting
         {
             public const string Prefix = Rule + "customer/";
@@ -86,6 +97,16 @@
             public const string Prefix = Rule + "employee/";
             public const string GetAll = Prefix + "getAll";
             public const string Paginated = Prefix + "paginated";
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "create";
+            public const string Edit = Prefix + "edit";
+            public const string Delete = Prefix + SingleRoute;
+        }
+
+        public static class ShippingAddressRouting
+        {
+            public const string Prefix = Rule + "shippingAddress/";
+            public const string GetAll = Prefix + "getAll";
             public const string GetById = Prefix + SingleRoute;
             public const string Create = Prefix + "create";
             public const string Edit = Prefix + "edit";

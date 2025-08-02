@@ -38,13 +38,12 @@ namespace E_Commerce.Core.Features.Products.Queries.Handlers
             if (product is null) return NotFound<GetSingleProductResponse>(_stringLocalizer[SharedResourcesKeys.NotFound]);
             var productMapper = _mapper.Map<GetSingleProductResponse>(product);
 
-            Expression<Func<Review, ReviewResponse>> expression =
-            c => new ReviewResponse
-            {
-                CustomerId = c.CustomerId,
-                FullName = c.Customer!.FirstName + " " + c.Customer.LastName,
-                Rating = c.Rating
-            };
+            Expression<Func<Review, ReviewResponse>> expression = review => new ReviewResponse(
+                review.CustomerId,
+                review.Customer != null ? review.Customer.FirstName + " " + review.Customer.LastName : null,
+                review.Rating,
+                review.Comment
+            );
             var reviewsQueryable = _reviewService.GetReviewsByProductIdQueryable(request.Id);
             var reviewPaginatedList = await reviewsQueryable.Select(expression).ToPaginatedListAsync(request.ReviewPageNumber, request.ReviewPageSize);
             productMapper.Reviews = reviewPaginatedList;

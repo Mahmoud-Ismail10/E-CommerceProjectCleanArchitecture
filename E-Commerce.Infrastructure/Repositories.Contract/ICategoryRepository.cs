@@ -5,6 +5,5 @@ namespace E_Commerce.Infrastructure.Repositories.Contract
 {
     public interface ICategoryRepository : IGenericRepositoryAsync<Category>
     {
-        //Task<List<Category>> GetAllCategoriesAsync();
     }
 }

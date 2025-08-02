@@ -31,13 +31,10 @@
   <ItemGroup>
     <Folder Include="Features\ApplicationUser\Queries\Handlers\" />
     <Folder Include="Features\Emails\Queries\" />
-    <Folder Include="Features\Orders\Commands\Handlers\" />
-    <Folder Include="Features\Orders\Commands\Models\" />
-    <Folder Include="Features\Orders\Commands\Validators\" />
-    <Folder Include="Features\Orders\Queries\Handlers\" />
-    <Folder Include="Features\Orders\Queries\Models\" />
-    <Folder Include="Features\Orders\Queries\Responses\" />
+    <Folder Include="Features\ShippingAddresses\Queries\" />
+    <Folder Include="Mapping\Orders\Commands\" />
     <Folder Include="Mapping\Roles\Commands\" />
+    <Folder Include="Mapping\ShippingAddresses\Queries\" />
   </ItemGroup>
 
 </Project>

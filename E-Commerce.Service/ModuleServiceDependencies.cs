@@ -12,7 +12,10 @@ namespace E_Commerce.Service
         {
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IOrderItemService, OrderItemService>();
             services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IShippingAddressService, ShippingAddressService>();
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IAuthorizationService, AuthorizationService>();

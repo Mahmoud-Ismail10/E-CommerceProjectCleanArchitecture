@@ -53,7 +53,7 @@ namespace E_Commerce.Service.Services
             return "Success";
         }
 
-        public async Task<Category> GetCategoryByIdAsync(Guid id)
+        public async Task<Category?> GetCategoryByIdAsync(Guid id)
         {
             var category = await _categoryRepository.GetTableNoTracking()
                                               .Where(c => c.Id.Equals(id))
@@ -61,16 +61,16 @@ namespace E_Commerce.Service.Services
             return category;
         }
 
-        public async Task<IReadOnlyList<Category>> GetCategoryListAsync()
+        public async Task<IReadOnlyList<Category?>> GetCategoryListAsync()
         {
             return await _categoryRepository.GetAllAsync();
         }
 
         public async Task<bool> IsNameExist(string name)
         {
-            var category = _categoryRepository.GetTableNoTracking()
-                                              .Where(c => c.Name.Equals(name))
-                                              .FirstOrDefault();
+            var category = await _categoryRepository.GetTableNoTracking()
+                                              .Where(c => c.Name!.Equals(name))
+                                              .FirstOrDefaultAsync();
             if (category != null) return true;
             return false;
         }
@@ -78,17 +78,17 @@ namespace E_Commerce.Service.Services
         public async Task<bool> IsNameExistExcludeSelf(string name, Guid id)
         {
             var category = await _categoryRepository.GetTableNoTracking()
-                                              .Where(c => c.Name.Equals(name) & !c.Id.Equals(id))
+                                              .Where(c => c.Name!.Equals(name) & !c.Id.Equals(id))
                                               .FirstOrDefaultAsync();
             if (category != null) return true;
             return false;
         }
 
-        public IQueryable<Category> FilterCategoryPaginatedQueryable(CategorySortingEnum sortBy, string search)
+        public IQueryable<Category?> FilterCategoryPaginatedQueryable(CategorySortingEnum sortBy, string search)
         {
             var queryable = _categoryRepository.GetTableNoTracking();
             if (!string.IsNullOrWhiteSpace(search))
-                queryable = queryable.Where(c => c.Name.Contains(search) || c.Description.Contains(search));
+                queryable = queryable.Where(c => c.Name!.Contains(search) || c.Description!.Contains(search));
             queryable = sortBy switch
             {
                 CategorySortingEnum.NameAsc => queryable.OrderBy(c => c.Name),

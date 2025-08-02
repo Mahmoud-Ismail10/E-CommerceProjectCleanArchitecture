@@ -5,9 +5,9 @@ namespace E_Commerce.Service.Services.Contract
 {
     public interface ICategoryService
     {
-        Task<IReadOnlyList<Category>> GetCategoryListAsync();
-        IQueryable<Category> FilterCategoryPaginatedQueryable(CategorySortingEnum sortBy, string search);
-        Task<Category> GetCategoryByIdAsync(Guid id);
+        Task<IReadOnlyList<Category?>> GetCategoryListAsync();
+        IQueryable<Category?> FilterCategoryPaginatedQueryable(CategorySortingEnum sortBy, string search);
+        Task<Category?> GetCategoryByIdAsync(Guid id);
         Task<string> AddCategoryAsync(Category category);
         Task<string> EditCategoryAsync(Category category);
         Task<string> DeleteCategoryAsync(Category category);

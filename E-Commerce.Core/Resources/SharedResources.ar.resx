@@ -312,4 +312,16 @@
   <data name="NoImage" xml:space="preserve">
     <value>من فضلك قم بإضافة صورة</value>
   </data>
+  <data name="Street" xml:space="preserve">
+    <value>الشارع</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>المدينة</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>المحافظة</value>
+  </data>
+  <data name="ShippingAddressIsExist" xml:space="preserve">
+    <value>عنوان الشحن هذا موجود بالفعل</value>
+  </data>
 </root>

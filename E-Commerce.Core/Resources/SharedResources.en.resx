@@ -312,4 +312,16 @@
   <data name="NoImage" xml:space="preserve">
     <value>Please Select Image</value>
   </data>
+  <data name="Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="ShippingAddressIsExist" xml:space="preserve">
+    <value>This Shipping Address already exists</value>
+  </data>
 </root>

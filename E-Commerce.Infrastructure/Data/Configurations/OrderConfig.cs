@@ -38,9 +38,9 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 .HasForeignKey<Order>(o => o.PaymentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(o => o.DeliveryMethod)
+            builder.HasOne(o => o.Delivery)
                 .WithOne()
-                .HasForeignKey<Order>(o => o.DeliveryMethodId)
+                .HasForeignKey<Order>(o => o.DeliveryId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

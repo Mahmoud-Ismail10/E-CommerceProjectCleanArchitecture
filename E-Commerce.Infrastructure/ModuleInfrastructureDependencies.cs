@@ -11,7 +11,10 @@ namespace E_Commerce.Infrastructure
         {
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IOrderItemRepository, OrderItemRepository>();
             services.AddTransient<IReviewRepository, ReviewRepository>();
+            services.AddTransient<IShippingAddressRepository, ShippingAddressRepository>();
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
             return services;

@@ -14,8 +14,10 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 .IsRequired();
 
             builder.Property(p => p.PaymentMethod)
-                .IsRequired()
-                .HasMaxLength(100);
+                .HasConversion(
+                PM => PM.ToString(),
+                PM => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), PM))
+                .IsRequired();
 
             builder.Property(p => p.Amount)
                 .HasColumnType("decimal(18,2)")

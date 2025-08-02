@@ -24,7 +24,7 @@ namespace E_Commerce.Service.AuthService.Services
         #region Functions
         public Guid GetUserId()
         {
-            var userId = _httpContextAccessor.HttpContext.User.Claims.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id)).Value;
+            var userId = _httpContextAccessor.HttpContext?.User.Claims?.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id))?.Value;
             if (userId == null) throw new UnauthorizedAccessException();
             return Guid.Parse(userId);
         }
