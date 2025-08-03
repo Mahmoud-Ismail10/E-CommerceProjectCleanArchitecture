@@ -324,4 +324,28 @@
   <data name="ShippingAddressIsExist" xml:space="preserve">
     <value>عنوان الشحن هذا موجود بالفعل</value>
   </data>
+  <data name="ProductId" xml:space="preserve">
+    <value>معرف المنتج</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+  <data name="DeliveryMethod" xml:space="preserve">
+    <value>طريقة التوصيل</value>
+  </data>
+  <data name="ShippingAddressId" xml:space="preserve">
+    <value>معرف عنوان الشحن</value>
+  </data>
+  <data name="FailedInDiscountQuantityFromStock" xml:space="preserve">
+    <value>فشل في الخصم من كمية المخزون</value>
+  </data>
+  <data name="FailedInPaymentProcessing" xml:space="preserve">
+    <value>فشل في عملية الدفع</value>
+  </data>
+  <data name="FailedInDeliveryProcessing" xml:space="preserve">
+    <value>فشل في عملية اعداد التوصيل</value>
+  </data>
 </root>

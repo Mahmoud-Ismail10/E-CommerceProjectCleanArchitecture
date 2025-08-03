@@ -1,8 +1,11 @@
 ﻿using E_Commerce.Domain.Entities;
+using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Enums.Sorting;
 using E_Commerce.Infrastructure.Repositories.Contract;
+using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace E_Commerce.Service.Services
 {
@@ -10,20 +13,97 @@ namespace E_Commerce.Service.Services
     {
         #region Fields
         private readonly IOrderRepository _orderRepository;
+        private readonly IProductService _productService;
+        private readonly IPaymentService _paymentService;
+        private readonly IDeliveryService _deliveryService;
+        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly ICurrentUserService _currentUserService;
         #endregion
 
         #region Constructors
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository,
+            IProductService productService,
+            IPaymentService paymentService,
+            IDeliveryService deliveryService,
+            IOrderItemRepository orderItemRepository,
+            ICurrentUserService currentUserService)
         {
             _orderRepository = orderRepository;
+            _productService = productService;
+            _paymentService = paymentService;
+            _deliveryService = deliveryService;
+            _orderItemRepository = orderItemRepository;
+            _currentUserService = currentUserService;
         }
         #endregion
 
         #region handle Functions
-        public Task<string> AddOrderAsync(Order order)
+        public async Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Payment payment, Delivery? delivery)
         {
-            throw new NotImplementedException();
+            using var transaction = await _orderRepository.BeginTransactionAsync();
+            try
+            {
+                // Discount quantity from stock
+                foreach (var item in orderItems)
+                {
+                    var product = await _productService.GetProductByIdAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.StockQuantity -= item.Quantity;
+                        var result = await _productService.EditProductAsync(product);
+                        if (result != "Success")
+                        {
+                            await transaction.RollbackAsync();
+                            return "FailedInDiscountQuantityFromStock"; // Return error message from product service
+                        }
+                    }
+                }
+
+                // Payment processing
+                var paymentResult = await _paymentService.AddPaymentAsync(payment);
+                if (paymentResult != "Success")
+                {
+                    await transaction.RollbackAsync();
+                    return "FailedInPaymentProcessing";
+                }
+                order.PaymentId = payment.Id;
+
+                // Delivery processing if exists
+                if (delivery is not null)
+                {
+                    var deliveryResult = await _deliveryService.AddDeliveryAsync(delivery);
+                    if (deliveryResult != "Success")
+                    {
+                        await transaction.RollbackAsync();
+                        return "FailedInDeliveryProcessing";
+                    }
+                    order.DeliveryId = delivery.Id;
+                }
+
+                // Map remaining of Order
+                order.OrderDate = DateTime.UtcNow;
+                order.TotalAmount = payment.Amount;
+                order.Status = Status.Pending;
+                order.CustomerId = _currentUserService.GetUserId();
+
+                await _orderRepository.AddAsync(order);
+                foreach (var item in orderItems)
+                {
+                    item.OrderId = order.Id;
+                }
+                await _orderItemRepository.AddRangeAsync(orderItems);
+
+                await transaction.CommitAsync();
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Log.Error("Error adding order: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "FailedInAdd";
+            }
         }
+
 
         public Task<string> DeleteOrderAsync(Order order)
         {

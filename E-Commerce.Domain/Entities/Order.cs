@@ -11,11 +11,11 @@ namespace E_Commerce.Domain.Entities
 
         public Guid CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public Guid ShippingAddressId { get; set; }
+        public Guid? ShippingAddressId { get; set; }
         public ShippingAddress? ShippingAddress { get; set; }
         public Guid PaymentId { get; set; }
         public Payment? Payment { get; set; }
-        public Guid DeliveryId { get; set; }
+        public Guid? DeliveryId { get; set; }
         public Delivery? Delivery { get; set; }
 
         public ICollection<OrderItem> OrderItems { get; set; }

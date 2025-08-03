@@ -68,8 +68,17 @@ namespace E_Commerce.Service.Services
 
         public async Task<string> EditProductAsync(Product product)
         {
-            await _productRepository.UpdateAsync(product);
-            return "Success";
+            try
+            {
+                product.Category = null; // Avoid circular reference issues
+                await _productRepository.UpdateAsync(product);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error updating product: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "FailedInUpdate";
+            }
         }
 
         public IQueryable<Product> FilterProductPaginatedQueryable(ProductSortingEnum sortBy, string search)

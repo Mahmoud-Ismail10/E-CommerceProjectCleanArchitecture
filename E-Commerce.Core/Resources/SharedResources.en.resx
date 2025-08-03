@@ -324,4 +324,28 @@
   <data name="ShippingAddressIsExist" xml:space="preserve">
     <value>This Shipping Address already exists</value>
   </data>
+  <data name="ProductId" xml:space="preserve">
+    <value>ProductId</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>PaymentMethod</value>
+  </data>
+  <data name="DeliveryMethod" xml:space="preserve">
+    <value>DeliveryMethod</value>
+  </data>
+  <data name="ShippingAddressId" xml:space="preserve">
+    <value>ShippingAddressId</value>
+  </data>
+  <data name="FailedInDiscountQuantityFromStock" xml:space="preserve">
+    <value>Failed in discount quantity from stock</value>
+  </data>
+  <data name="FailedInPaymentProcessing" xml:space="preserve">
+    <value>Failed in payment processing</value>
+  </data>
+  <data name="FailedInDeliveryProcessing" xml:space="preserve">
+    <value>Failed in delivery processing</value>
+  </data>
 </root>

@@ -10,8 +10,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
             builder.Property(p => p.PaymentDate)
-                .HasDefaultValueSql("GETDATE()")
-                .IsRequired();
+                .IsRequired(false);
 
             builder.Property(p => p.PaymentMethod)
                 .HasConversion(

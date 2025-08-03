@@ -29,7 +29,7 @@ namespace E_Commerce.Service.Services
             }
             catch (Exception ex)
             {
-                Log.Error("Error adding product : {ErrorMessage}", ex.InnerException?.Message ?? ex.Message);
+                Log.Error("Error adding shipping address : {ErrorMessage}", ex.InnerException?.Message ?? ex.Message);
                 return "FailedInAdd";
             }
         }

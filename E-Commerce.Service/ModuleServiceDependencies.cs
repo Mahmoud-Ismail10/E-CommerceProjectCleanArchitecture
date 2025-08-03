@@ -15,6 +15,8 @@ namespace E_Commerce.Service
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IOrderItemService, OrderItemService>();
             services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<IDeliveryService, DeliveryService>();
             services.AddTransient<IShippingAddressService, ShippingAddressService>();
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();

@@ -4,6 +4,7 @@ using E_Commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(E_CommerceContext))]
-    partial class E_CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20250803031349_SetShippingAddressIdNullable")]
+    partial class SetShippingAddressIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,7 +237,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("DeliveryId")
+                    b.Property<Guid>("DeliveryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderDate")
@@ -260,8 +263,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("DeliveryId")
-                        .IsUnique()
-                        .HasFilter("[DeliveryId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("PaymentId")
                         .IsUnique();
@@ -303,8 +305,10 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("PaymentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -596,7 +600,8 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.HasOne("E_Commerce.Domain.Entities.Delivery", "Delivery")
                         .WithOne()
                         .HasForeignKey("E_Commerce.Domain.Entities.Order", "DeliveryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("E_Commerce.Domain.Entities.Payment", "Payment")
                         .WithOne()

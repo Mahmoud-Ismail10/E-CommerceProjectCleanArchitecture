@@ -46,6 +46,11 @@
         public const string Street = "Street";
         public const string City = "City";
         public const string State = "State";
+        public const string ProductId = "ProductId";
+        public const string Quantity = "Quantity";
+        public const string PaymentMethod = "PaymentMethod";
+        public const string DeliveryMethod = "DeliveryMethod";
+        public const string ShippingAddressId = "ShippingAddressId";
         public const string RoleIsUsed = "RoleIsUsed";
         public const string ConfirmPassword = "ConfirmPassword";
         public const string CurrentPassword = "CurrentPassword";
@@ -71,6 +76,9 @@
         public const string FailedToUploadImage = "FailedToUploadImage";
         public const string NoImage = "NoImage";
         public const string ShippingAddressIsExist = "ShippingAddressIsExist";
+        public const string FailedInDiscountQuantityFromStock = "FailedInDiscountQuantityFromStock";
+        public const string FailedInPaymentProcessing = "FailedInPaymentProcessing";
+        public const string FailedInDeliveryProcessing = "FailedInDeliveryProcessing";
 
     }
 }
