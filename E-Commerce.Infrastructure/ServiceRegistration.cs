@@ -18,19 +18,14 @@ namespace E_Commerce.Infrastructure
     {
         public static IServiceCollection AddServiceRegistration(this IServiceCollection services, IConfiguration configuration)
         {
-            var sqlConnectionString = configuration.GetConnectionString("CS");
-            var redisConnectionString = configuration.GetConnectionString("Redis");
-
             // Redis connection
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
+            var redisConnectionString = configuration.GetConnectionString("Redis");
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString!));
+            services.AddSingleton(sp => sp.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
 
             // SQL Server connection
+            var sqlConnectionString = configuration.GetConnectionString("CS");
             services.AddDbContext<E_CommerceContext>(options => options.UseSqlServer(sqlConnectionString));
-
-            //services.AddSingleton<EmailSettings>(configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
-            //services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
-            //services.AddSingleton(sp => sp.GetRequiredService<IOptions<EmailSettings>>().Value);
-
 
             services.AddIdentity<User, Domain.Entities.Identity.Role>(option =>
             {

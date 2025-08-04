@@ -3,7 +3,7 @@
     public class Cart
     {
         public Guid Id { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
 
         public Guid CustomerId { get; set; }
         public Customer? Customer { get; set; }

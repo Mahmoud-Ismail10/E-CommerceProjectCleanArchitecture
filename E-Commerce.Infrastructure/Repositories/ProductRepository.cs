@@ -14,5 +14,12 @@ namespace E_Commerce.Infrastructure.Repositories
         {
             _products = dbContext.Set<Product>();
         }
+
+        public async Task<Dictionary<Guid, string?>> GetProductsByIdsAsync(List<Guid> productIds)
+        {
+            var products = await _products.Where(p => productIds.Contains(p.Id))
+                                            .ToDictionaryAsync(p => p.Id, p => p.Name);
+            return products;
+        }
     }
 }

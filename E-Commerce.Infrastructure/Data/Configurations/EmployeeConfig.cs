@@ -46,7 +46,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 .IsRequired();
 
             builder.Property(e => e.HireDate)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()")
                 .IsRequired();
         }
     }

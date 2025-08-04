@@ -7,7 +7,8 @@ namespace E_Commerce.Core.Mapping.Orders
     {
         public void AddOrderCommandMapping()
         {
-            CreateMap<AddOrderCommand, Order>();
+            CreateMap<AddOrderCommand, Order>()
+                .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(_ => DateTimeOffset.UtcNow.ToLocalTime()));
         }
     }
 }

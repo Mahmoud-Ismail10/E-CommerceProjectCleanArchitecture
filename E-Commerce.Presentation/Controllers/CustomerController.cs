@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Presentation.Controllers
 {
-    [Authorize(Roles = "Admin, Employee")]
+    //[Authorize(Roles = "Admin, Employee")]
     public class CustomerController : AppControllerBase
     {
-        [Authorize(Policy = "GetCustomer")]
+        //[Authorize(Policy = "GetCustomer")]
         [HttpGet(Router.CustomerRouting.Paginated)]
         public async Task<IActionResult> GetCustomerPaginatedList([FromQuery] GetCustomerPaginatedListQuery query)
         {

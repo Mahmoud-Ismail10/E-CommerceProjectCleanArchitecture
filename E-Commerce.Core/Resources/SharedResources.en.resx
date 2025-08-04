@@ -348,4 +348,10 @@
   <data name="FailedInDeliveryProcessing" xml:space="preserve">
     <value>Failed in delivery processing</value>
   </data>
+  <data name="CartId" xml:space="preserve">
+    <value>CartId</value>
+  </data>
+  <data name="CartNotFound" xml:space="preserve">
+    <value>This Cart is not found</value>
+  </data>
 </root>

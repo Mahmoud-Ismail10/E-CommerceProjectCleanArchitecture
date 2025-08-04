@@ -9,6 +9,6 @@
         public Product? Product { get; set; } // Navigation property to Product
 
         public int Quantity { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
     }
 }

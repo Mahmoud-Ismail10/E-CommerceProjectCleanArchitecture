@@ -8,7 +8,7 @@
         public decimal? Price { get; init; }
         public int? StockQuantity { get; init; }
         public string? ImageURL { get; init; }
-        public DateTime? CreatedAt { get; init; }
+        public DateTimeOffset? CreatedAt { get; init; }
         public string? CategoryName { get; init; }
     }
 }

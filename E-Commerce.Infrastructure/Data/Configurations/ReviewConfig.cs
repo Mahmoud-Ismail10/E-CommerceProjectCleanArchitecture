@@ -17,7 +17,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 .HasMaxLength(400);
 
             builder.Property(r => r.CreatedAt)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()")
                 .IsRequired();
 
             builder.HasOne(r => r.Customer)

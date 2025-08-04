@@ -12,6 +12,6 @@ namespace E_Commerce.Domain.Entities
 
         public Rating? Rating { get; set; }
         public string? Comment { get; set; }
-        public DateTime? CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
     }
 }

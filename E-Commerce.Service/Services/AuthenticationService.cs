@@ -52,10 +52,10 @@ namespace E_Commerce.Service.Services
             var refreshToken = GetRefreshToken(user.UserName);
             var userRefreshToken = new UserRefreshToken
             {
-                // AddedTime is set to default value at Fluent API configuration
                 IsUsed = true,
                 IsRevoked = false,
-                ExpiryDate = DateTime.Now.AddDays(_jwtSettings.RefreshTokenExpireDate),
+                ExpiryDate = DateTimeOffset.Now.ToLocalTime().AddDays(_jwtSettings.RefreshTokenExpireDate),
+                AddedTime = DateTimeOffset.Now.ToLocalTime(),
                 JwtId = jwtToken.Id,
                 RefreshToken = refreshToken.TokenString,
                 Token = accessToken,
@@ -78,7 +78,7 @@ namespace E_Commerce.Service.Services
             var jwtToken = new JwtSecurityToken(issuer: _jwtSettings.Issuer,
                                                    audience: _jwtSettings.Audience,
                                                    claims: claims,
-                                                   expires: DateTime.UtcNow.AddDays(_jwtSettings.AccessTokenExpireDate),
+                                                   expires: DateTimeOffset.UtcNow.ToLocalTime().AddDays(_jwtSettings.AccessTokenExpireDate).DateTime,
                                                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature));
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             return (jwtToken, accessToken);
@@ -110,7 +110,7 @@ namespace E_Commerce.Service.Services
             {
                 UserName = userName,
                 TokenString = GenerateRefreshToken(),
-                ExpireAt = DateTime.Now.AddDays(_jwtSettings.RefreshTokenExpireDate),
+                ExpireAt = DateTimeOffset.UtcNow.ToLocalTime().AddDays(_jwtSettings.RefreshTokenExpireDate),
             };
             return refreshToken;
         }
@@ -125,7 +125,7 @@ namespace E_Commerce.Service.Services
             }
         }
 
-        public async Task<JwtAuthResponse> GetRefreshTokenAsync(User user, JwtSecurityToken jwtToken, DateTime? expiryDate, string refreshToken)
+        public async Task<JwtAuthResponse> GetRefreshTokenAsync(User user, JwtSecurityToken jwtToken, DateTimeOffset? expiryDate, string refreshToken)
         {
             var (jwtSecurityToken, newToken) = await GenerateJwtToken(user);
             var response = new JwtAuthResponse();
@@ -134,7 +134,7 @@ namespace E_Commerce.Service.Services
             var refreshTokenResult = new RefreshToken();
             refreshTokenResult.UserName = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.UserName)).Value;
             refreshTokenResult.TokenString = refreshToken;
-            refreshTokenResult.ExpireAt = (DateTime)expiryDate;
+            refreshTokenResult.ExpireAt = (DateTimeOffset)expiryDate;
 
             response.RefreshToken = refreshTokenResult;
             return response;
@@ -179,11 +179,11 @@ namespace E_Commerce.Service.Services
             }
         }
 
-        public async Task<(string, DateTime?)> ValidateDetails(JwtSecurityToken jwtToken, string accessToken, string refreshToken)
+        public async Task<(string, DateTimeOffset?)> ValidateDetails(JwtSecurityToken jwtToken, string accessToken, string refreshToken)
         {
             if (jwtToken == null || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256Signature))
                 return ("AlgorithmIsWrong", null);
-            if (jwtToken.ValidTo > DateTime.UtcNow)
+            if (jwtToken.ValidTo > DateTimeOffset.UtcNow.ToLocalTime())
                 return ("TokenIsNotExpired", null);
 
             //Get User
@@ -196,7 +196,7 @@ namespace E_Commerce.Service.Services
             if (userRefreshToken == null)
                 return ("RefreshTokenIsNotFound", null);
 
-            if (userRefreshToken.ExpiryDate < DateTime.UtcNow)
+            if (userRefreshToken.ExpiryDate < DateTimeOffset.UtcNow.ToLocalTime())
             {
                 userRefreshToken.IsRevoked = true;
                 userRefreshToken.IsUsed = false;

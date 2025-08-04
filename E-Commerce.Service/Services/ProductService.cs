@@ -112,6 +112,11 @@ namespace E_Commerce.Service.Services
             return product;
         }
 
+        public async Task<Dictionary<Guid, string?>> GetProductsByIdsAsync(List<Guid> productIds)
+        {
+            return await _productRepository.GetProductsByIdsAsync(productIds);
+        }
+
         public async Task<bool> IsNameExist(string name)
         {
             var product = await _productRepository.GetTableNoTracking()

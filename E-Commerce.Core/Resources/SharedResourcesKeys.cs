@@ -41,6 +41,7 @@
         public const string Email = "Email";
         public const string Password = "Password";
         public const string Code = "Code";
+        public const string CartId = "CartId";
         public const string RoleId = "RoleId";
         public const string RoleName = "RoleName";
         public const string Street = "Street";
@@ -55,6 +56,7 @@
         public const string ConfirmPassword = "ConfirmPassword";
         public const string CurrentPassword = "CurrentPassword";
         public const string NewPassword = "NewPassword";
+        public const string CartNotFound = "CartNotFound";
         public const string EmailIsNotConfirmed = "EmailIsNotConfirmed";
         public const string TokenIsExpired = "TokenIsExpired";
         public const string AlgorithmIsWrong = "AlgorithmIsWrong";

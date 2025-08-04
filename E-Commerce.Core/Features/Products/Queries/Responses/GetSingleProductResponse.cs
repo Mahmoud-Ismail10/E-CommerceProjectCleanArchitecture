@@ -10,7 +10,7 @@ namespace E_Commerce.Core.Features.Products.Queries.Responses
         decimal? Price,
         int? StockQuantity,
         string? ImageURL,
-        DateTime? CreatedAt,
+        DateTimeOffset? CreatedAt,
         string? CategoryName)
     {
         public PaginatedResult<ReviewResponse>? Reviews { get; set; }

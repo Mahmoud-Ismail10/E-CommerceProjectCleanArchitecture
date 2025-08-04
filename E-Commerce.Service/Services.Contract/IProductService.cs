@@ -8,6 +8,7 @@ namespace E_Commerce.Service.Services.Contract
     {
         IQueryable<Product> FilterProductPaginatedQueryable(ProductSortingEnum sortBy, string search);
         Task<Product?> GetProductByIdAsync(Guid id);
+        Task<Dictionary<Guid, string?>> GetProductsByIdsAsync(List<Guid> productIds);
         Task<string> AddProductAsync(Product product, IFormFile file);
         Task<string> EditProductAsync(Product product);
         Task<string> DeleteProductAsync(Product product);

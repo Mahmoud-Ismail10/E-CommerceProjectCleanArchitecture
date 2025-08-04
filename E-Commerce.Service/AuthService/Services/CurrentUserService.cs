@@ -25,7 +25,7 @@ namespace E_Commerce.Service.AuthService.Services
         public Guid GetUserId()
         {
             var userId = _httpContextAccessor.HttpContext?.User.Claims?.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id))?.Value;
-            if (userId == null) throw new UnauthorizedAccessException();
+            if (string.IsNullOrEmpty(userId)) throw new UnauthorizedAccessException("UnAuthenticated");
             return Guid.Parse(userId);
         }
 

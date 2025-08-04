@@ -10,7 +10,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.Property(o => o.OrderDate)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()")
                 .IsRequired();
 
             builder.Property(o => o.Status)

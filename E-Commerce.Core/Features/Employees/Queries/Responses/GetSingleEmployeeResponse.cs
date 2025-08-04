@@ -11,7 +11,7 @@ namespace E_Commerce.Core.Features.Employees.Queries.Responses
         public Gender? Gender { get; init; }
         public string? Position { get; init; }
         public decimal? Salary { get; init; }
-        public DateTime? HireDate { get; init; }
+        public DateTimeOffset? HireDate { get; init; }
         public string? Address { get; init; }
     }
 }

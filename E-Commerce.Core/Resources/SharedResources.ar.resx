@@ -348,4 +348,10 @@
   <data name="FailedInDeliveryProcessing" xml:space="preserve">
     <value>فشل في عملية اعداد التوصيل</value>
   </data>
+  <data name="CartId" xml:space="preserve">
+    <value>معرف العربة</value>
+  </data>
+  <data name="CartNotFound" xml:space="preserve">
+    <value>هذه العربة غير موجودة</value>
+  </data>
 </root>

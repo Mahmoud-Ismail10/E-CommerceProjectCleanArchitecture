@@ -20,7 +20,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 .IsRequired();
 
             builder.Property(u => u.AddedTime)
-                .HasDefaultValueSql("GETDATE()")
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()")
                 .IsRequired();
 
             builder.Property(u => u.IsUsed)

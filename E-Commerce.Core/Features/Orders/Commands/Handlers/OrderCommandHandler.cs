@@ -19,8 +19,7 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
-        private readonly IPaymentService _paymentService;
-        private readonly IDeliveryService _deliveryService;
+        private readonly ICartService _cartService;
         private readonly IShippingAddressService _shippingAddressService;
         #endregion
 
@@ -29,16 +28,14 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
             IMapper mapper,
             IOrderService orderService,
             IProductService productService,
-            IPaymentService paymentService,
-            IDeliveryService deliveryService,
+            ICartService cartService,
             IShippingAddressService shippingAddressService) : base(stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             _mapper = mapper;
             _orderService = orderService;
             _productService = productService;
-            _paymentService = paymentService;
-            _deliveryService = deliveryService;
+            _cartService = cartService;
             _shippingAddressService = shippingAddressService;
         }
         #endregion
@@ -46,12 +43,17 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
         #region Handle Functions
         public async Task<ApiResponse<string>> Handle(AddOrderCommand request, CancellationToken cancellationToken)
         {
+            // Retrieve the cart
+            var cart = await _cartService.GetCartByIdAsync(request.CartId);
+            if (cart == null) return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.CartNotFound]);
+
             var order = _mapper.Map<Order>(request);
 
             var orderItems = new List<OrderItem>();
             decimal totalAmount = 0;
 
-            foreach (var item in request.OrderItemResults!)
+            // Validate and process each cart item
+            foreach (var item in cart.CartItems)
             {
                 var product = await _productService.GetProductByIdAsync(item.ProductId);
                 if (product == null)
@@ -79,6 +81,12 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
                 Status = Status.Pending
             };
 
+            // Convert cart to order
+            order.CustomerId = cart.CustomerId;
+            order.OrderDate = DateTimeOffset.UtcNow.ToLocalTime();
+            order.Status = Status.Pending;
+            order.TotalAmount = totalAmount;
+
             // Delivery Settings
             Delivery? delivery = null;
             if (request.DeliveryMethod != DeliveryMethod.Pickup)
@@ -100,7 +108,8 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
                 };
             }
 
-            var result = await _orderService.AddOrderAsync(order, orderItems, payment, delivery);
+            // Add Order and return result
+            var result = await _orderService.AddOrderAsync(order, orderItems, payment, delivery, cart.Id);
             return result switch
             {
                 "Success" => Created(""),

@@ -82,6 +82,15 @@
             public const string Delete = Prefix + SingleRoute;
         }
 
+        public static class CartRouting
+        {
+            public const string Prefix = Rule + "cart/";
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "create";
+            public const string Edit = Prefix + "edit";
+            public const string Delete = Prefix + SingleRoute;
+        }
+
         public static class CustomerRouting
         {
             public const string Prefix = Rule + "customer/";

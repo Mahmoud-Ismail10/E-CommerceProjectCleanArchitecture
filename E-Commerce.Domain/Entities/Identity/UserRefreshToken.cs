@@ -9,8 +9,8 @@
         public string? JwtId { get; set; }
         public bool IsUsed { get; set; }
         public bool IsRevoked { get; set; }
-        public DateTime AddedTime { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTimeOffset AddedTime { get; set; }
+        public DateTimeOffset ExpiryDate { get; set; }
 
         public User? user { get; set; }
     }

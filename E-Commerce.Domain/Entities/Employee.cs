@@ -6,7 +6,7 @@ namespace E_Commerce.Domain.Entities
     {
         public string? Position { get; set; }
         public decimal? Salary { get; set; }
-        public DateTime? HireDate { get; set; }
+        public DateTimeOffset? HireDate { get; set; }
         public string? Address { get; set; }
     }
 }

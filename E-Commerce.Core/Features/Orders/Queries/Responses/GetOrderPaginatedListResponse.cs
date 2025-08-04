@@ -4,15 +4,15 @@ namespace E_Commerce.Core.Features.Orders.Queries.Responses
 {
     public record GetOrderPaginatedListResponse(
         Guid Id,
-        DateTime? OrderDate,
+        DateTimeOffset? OrderDate,
         Status? OrderStatus,
         decimal? TotalAmount,
         string? CustomerName,
         string? ShippingAddress,
         PaymentMethod? PaymentMethod,
-        DateTime? PaymentDate,
+        DateTimeOffset? PaymentDate,
         Status? PaymentStatus,
         DeliveryMethod? DeliveryMethod,
-        DateTime? DeliveryTime,
+        DateTimeOffset? DeliveryTime,
         decimal? DeliveryCost);
 }

@@ -1,8 +1,6 @@
 ﻿using E_Commerce.Domain.Entities;
-using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Enums.Sorting;
 using E_Commerce.Infrastructure.Repositories.Contract;
-using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -16,8 +14,8 @@ namespace E_Commerce.Service.Services
         private readonly IProductService _productService;
         private readonly IPaymentService _paymentService;
         private readonly IDeliveryService _deliveryService;
+        private readonly ICartService _cartService;
         private readonly IOrderItemRepository _orderItemRepository;
-        private readonly ICurrentUserService _currentUserService;
         #endregion
 
         #region Constructors
@@ -25,20 +23,20 @@ namespace E_Commerce.Service.Services
             IProductService productService,
             IPaymentService paymentService,
             IDeliveryService deliveryService,
-            IOrderItemRepository orderItemRepository,
-            ICurrentUserService currentUserService)
+            ICartService cartService,
+            IOrderItemRepository orderItemRepository)
         {
             _orderRepository = orderRepository;
             _productService = productService;
             _paymentService = paymentService;
             _deliveryService = deliveryService;
+            _cartService = cartService;
             _orderItemRepository = orderItemRepository;
-            _currentUserService = currentUserService;
         }
         #endregion
 
         #region handle Functions
-        public async Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Payment payment, Delivery? delivery)
+        public async Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Payment payment, Delivery? delivery, Guid cartId)
         {
             using var transaction = await _orderRepository.BeginTransactionAsync();
             try
@@ -80,18 +78,13 @@ namespace E_Commerce.Service.Services
                     order.DeliveryId = delivery.Id;
                 }
 
-                // Map remaining of Order
-                order.OrderDate = DateTime.UtcNow;
-                order.TotalAmount = payment.Amount;
-                order.Status = Status.Pending;
-                order.CustomerId = _currentUserService.GetUserId();
-
                 await _orderRepository.AddAsync(order);
                 foreach (var item in orderItems)
                 {
                     item.OrderId = order.Id;
                 }
                 await _orderItemRepository.AddRangeAsync(orderItems);
+                await _cartService.DeleteCartAsync(cartId);
 
                 await transaction.CommitAsync();
                 return "Success";

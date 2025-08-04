@@ -24,6 +24,7 @@ namespace E_Commerce.Service
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IEmailsService, EmailsService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddScoped<ICartService, CartService>();
 
             return services;
         }
