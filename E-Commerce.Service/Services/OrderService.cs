@@ -1,6 +1,7 @@
 ﻿using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Enums.Sorting;
 using E_Commerce.Infrastructure.Repositories.Contract;
+using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -12,32 +13,37 @@ namespace E_Commerce.Service.Services
         #region Fields
         private readonly IOrderRepository _orderRepository;
         private readonly IProductService _productService;
-        private readonly IPaymentService _paymentService;
         private readonly IDeliveryService _deliveryService;
         private readonly ICartService _cartService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IOrderItemRepository _orderItemRepository;
         #endregion
 
         #region Constructors
         public OrderService(IOrderRepository orderRepository,
             IProductService productService,
-            IPaymentService paymentService,
             IDeliveryService deliveryService,
             ICartService cartService,
+            ICurrentUserService currentUserService,
             IOrderItemRepository orderItemRepository)
         {
             _orderRepository = orderRepository;
             _productService = productService;
-            _paymentService = paymentService;
             _deliveryService = deliveryService;
             _cartService = cartService;
+            _currentUserService = currentUserService;
             _orderItemRepository = orderItemRepository;
         }
         #endregion
 
+
+
         #region handle Functions
-        public async Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Payment payment, Delivery? delivery, Guid cartId)
+        public async Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Delivery? delivery)
         {
+            if (!_currentUserService.IsAuthenticated)
+                return "PleaseLoginFirst";
+
             using var transaction = await _orderRepository.BeginTransactionAsync();
             try
             {
@@ -48,8 +54,8 @@ namespace E_Commerce.Service.Services
                     if (product != null)
                     {
                         product.StockQuantity -= item.Quantity;
-                        var result = await _productService.EditProductAsync(product);
-                        if (result != "Success")
+                        var result1 = await _productService.EditProductAsync(product);
+                        if (result1 != "Success")
                         {
                             await transaction.RollbackAsync();
                             return "FailedInDiscountQuantityFromStock"; // Return error message from product service
@@ -58,13 +64,13 @@ namespace E_Commerce.Service.Services
                 }
 
                 // Payment processing
-                var paymentResult = await _paymentService.AddPaymentAsync(payment);
-                if (paymentResult != "Success")
-                {
-                    await transaction.RollbackAsync();
-                    return "FailedInPaymentProcessing";
-                }
-                order.PaymentId = payment.Id;
+                //var paymentResult = await _paymentService.AddPaymentAsync(payment);
+                //if (paymentResult != "Success")
+                //{
+                //    await transaction.RollbackAsync();
+                //    return "FailedInPaymentProcessing";
+                //}
+                //order.PaymentId = payment.Id;
 
                 // Delivery processing if exists
                 if (delivery is not null)
@@ -83,9 +89,15 @@ namespace E_Commerce.Service.Services
                 {
                     item.OrderId = order.Id;
                 }
-                await _orderItemRepository.AddRangeAsync(orderItems);
-                await _cartService.DeleteCartAsync(cartId);
 
+                await _orderItemRepository.AddRangeAsync(orderItems);
+
+                var result2 = await _cartService.DeleteMyCartAsync();
+                if (!result2)
+                {
+                    await transaction.RollbackAsync();
+                    return "FailedInDeletingCart";
+                }
                 await transaction.CommitAsync();
                 return "Success";
             }
@@ -97,15 +109,32 @@ namespace E_Commerce.Service.Services
             }
         }
 
-
-        public Task<string> DeleteOrderAsync(Order order)
+        public async Task<string> DeleteOrderAsync(Order order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _orderRepository.DeleteAsync(order);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error deleting order {OrderId}: {ErrorMessage}", order.Id, ex.InnerException?.Message ?? ex.Message);
+                return "Failed";
+            }
         }
 
-        public Task<string> EditOrderAsync(Order order)
+        public async Task<string> EditOrderAsync(Order order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _orderRepository.UpdateAsync(order);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error editing order {OrderId}: {ErrorMessage}", order.Id, ex.InnerException?.Message ?? ex.Message);
+                return "Failed";
+            }
         }
 
         public IQueryable<Order> FilterOrderPaginatedQueryable(OrderSortingEnum sortBy, string search)
@@ -135,7 +164,7 @@ namespace E_Commerce.Service.Services
 
         public async Task<Order?> GetOrderByIdAsync(Guid id)
         {
-            var order = await _orderRepository.GetTableNoTracking()
+            var order = await _orderRepository.GetTableAsTracking()
                                               .Where(c => c.Id.Equals(id))
                                               .Include(c => c.Customer)
                                               .Include(c => c.ShippingAddress)
@@ -153,6 +182,14 @@ namespace E_Commerce.Service.Services
         public Task<bool> IsOrderIdExist(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Order?> GetLatestOrderForUserAsync(Guid userId)
+        {
+            return await _orderRepository.GetTableAsTracking()
+                                   .Where(o => o.CustomerId == userId)
+                                   .OrderByDescending(o => o.OrderDate)
+                                   .FirstOrDefaultAsync();
         }
         #endregion
     }

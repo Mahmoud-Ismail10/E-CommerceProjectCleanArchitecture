@@ -44,13 +44,12 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
         public async Task<ApiResponse<string>> Handle(AddOrderCommand request, CancellationToken cancellationToken)
         {
             // Retrieve the cart
-            var cart = await _cartService.GetCartByIdAsync(request.CartId);
+            var cart = await _cartService.GetMyCartAsync();
             if (cart == null) return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.CartNotFound]);
 
             var order = _mapper.Map<Order>(request);
 
             var orderItems = new List<OrderItem>();
-            decimal totalAmount = 0;
 
             // Validate and process each cart item
             foreach (var item in cart.CartItems)
@@ -62,34 +61,34 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
                 if (product.Price == null || product.StockQuantity < item.Quantity)
                     return BadRequest<string>($"Product {product.Name} is not available or stock is insufficient.");
 
-                totalAmount += product.Price.Value * item.Quantity;
-
                 orderItems.Add(new OrderItem
                 {
-                    ProductId = product.Id,
+                    ProductId = item.ProductId,
+                    OrderId = order.Id,
                     Quantity = item.Quantity,
-                    UnitPrice = product.Price
+                    UnitPrice = product.Price,
+                    SubAmount = item.SubAmount
                 });
             }
 
             // Payment Settings
-            var payment = new Payment
-            {
-                Id = Guid.NewGuid(),
-                PaymentMethod = request.PaymentMethod,
-                Amount = totalAmount,
-                Status = Status.Pending
-            };
+            //var payment = new Payment
+            //{
+            //    Id = Guid.NewGuid(),
+            //    PaymentMethod = request.PaymentMethod,
+            //    TotalAmount = cart.TotalAmount,
+            //    Status = Status.Pending
+            //};
 
             // Convert cart to order
             order.CustomerId = cart.CustomerId;
             order.OrderDate = DateTimeOffset.UtcNow.ToLocalTime();
             order.Status = Status.Pending;
-            order.TotalAmount = totalAmount;
+            order.TotalAmount = cart.TotalAmount;
 
             // Delivery Settings
             Delivery? delivery = null;
-            if (request.DeliveryMethod != DeliveryMethod.Pickup)
+            if (request.DeliveryMethod != DeliveryMethod.PickupFromBranch)
             {
                 var shippingAddress = await _shippingAddressService.GetShippingAddressByIdAsync((Guid)request.ShippingAddressId!);
                 if (shippingAddress == null)
@@ -104,12 +103,13 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
                     DeliveryMethod = request.DeliveryMethod,
                     Description = $"Delivery for order {order.Id}",
                     DeliveryTime = DateTime.UtcNow.Add(deliveryOffset),
-                    Cost = deliveryCost
+                    Cost = deliveryCost,
+                    Status = Status.Pending,
                 };
             }
 
             // Add Order and return result
-            var result = await _orderService.AddOrderAsync(order, orderItems, payment, delivery, cart.Id);
+            var result = await _orderService.AddOrderAsync(order, orderItems, delivery);
             return result switch
             {
                 "Success" => Created(""),

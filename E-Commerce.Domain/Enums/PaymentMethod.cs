@@ -2,11 +2,13 @@
 {
     public enum PaymentMethod
     {
-        Cash = 1,
-        CreditCard = 2,
-        PayPal = 3,
-        BankTransfer = 4,
-        VodafoneCash = 5,
-        Stripe = 6
+        CashOnDelivery = 1,
+        CashAtBranch = 2,
+        Paymob = 3,
+        CreditCard = 4,
+        PayPal = 5,
+        BankTransfer = 6,
+        VodafoneCash = 7,
+        Stripe = 8
     }
 }

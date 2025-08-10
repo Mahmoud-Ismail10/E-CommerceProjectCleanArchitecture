@@ -3,6 +3,7 @@
     public enum EmailType
     {
         ConfirmEmail,
-        ResetPassword
+        ResetPassword,
+        OrderConfirmation,
     }
 }

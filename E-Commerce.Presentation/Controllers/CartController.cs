@@ -8,17 +8,34 @@ namespace E_Commerce.Presentation.Controllers
 {
     public class CartController : AppControllerBase
     {
+        [HttpGet(Router.CartRouting.GetMyCart)]
+        public async Task<IActionResult> GetMyCart()
+        {
+            return NewResult(await Mediator.Send(new GetMyCartQuery()));
+        }
+
         [HttpGet(Router.CartRouting.GetById)]
         public async Task<IActionResult> GetCartById([FromRoute] Guid id)
         {
             return NewResult(await Mediator.Send(new GetCartByIdQuery(id)));
         }
 
-        [HttpPost(Router.CartRouting.Edit)]
-        public async Task<IActionResult> UpdateCart([FromBody] EditCartCommand command)
+        [HttpPost(Router.CartRouting.AddToCart)]
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartCommand command)
         {
-            var response = await Mediator.Send(command);
-            return NewResult(response);
+            return NewResult(await Mediator.Send(command));
+        }
+
+        [HttpPut(Router.CartRouting.UpdateItemQuantity)]
+        public async Task<IActionResult> UpdateItemQuantity([FromBody] UpdateItemQuantityCommand command)
+        {
+            return NewResult(await Mediator.Send(command));
+        }
+
+        [HttpDelete(Router.CartRouting.RemoveFromCart)]
+        public async Task<IActionResult> RemoveFromCart([FromRoute] Guid id)
+        {
+            return NewResult(await Mediator.Send(new RemoveFromCartCommand(id)));
         }
 
         [HttpDelete(Router.CartRouting.Delete)]

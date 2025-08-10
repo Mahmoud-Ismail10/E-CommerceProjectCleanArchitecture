@@ -4,7 +4,10 @@
     {
         Pending = 1,
         Completed = 2,
-        Canceled = 3,
-        Failed = 4
+        Voided = 3,
+        Failed = 4,
+        Refunded = 5,
+        Paid = 6,
+        Received = 7,
     }
 }

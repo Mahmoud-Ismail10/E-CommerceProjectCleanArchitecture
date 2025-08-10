@@ -86,8 +86,12 @@
         {
             public const string Prefix = Rule + "cart/";
             public const string GetById = Prefix + SingleRoute;
+            public const string GetMyCart = Prefix + "myCart";
             public const string Create = Prefix + "create";
-            public const string Edit = Prefix + "edit";
+            //public const string Edit = Prefix + "edit";
+            public const string AddToCart = Prefix + "addToCart";
+            public const string UpdateItemQuantity = Prefix + "updateItemQuantity";
+            public const string RemoveFromCart = Prefix + "removeFromCart/" + SingleRoute;
             public const string Delete = Prefix + SingleRoute;
         }
 

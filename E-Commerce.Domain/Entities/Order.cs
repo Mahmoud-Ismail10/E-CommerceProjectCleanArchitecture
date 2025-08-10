@@ -1,4 +1,5 @@
 ﻿using E_Commerce.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Commerce.Domain.Entities
 {
@@ -8,6 +9,8 @@ namespace E_Commerce.Domain.Entities
         public DateTimeOffset? OrderDate { get; set; }
         public Status? Status { get; set; }
         public decimal? TotalAmount { get; set; }
+        [NotMapped]
+        public string PaymentToken { get; set; }
 
         public Guid CustomerId { get; set; }
         public Customer? Customer { get; set; }

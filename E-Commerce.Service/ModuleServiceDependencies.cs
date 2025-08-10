@@ -3,6 +3,7 @@ using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.Extensions.DependencyInjection;
+using X.Paymob.CashIn;
 
 namespace E_Commerce.Service
 {
@@ -15,7 +16,7 @@ namespace E_Commerce.Service
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IOrderItemService, OrderItemService>();
             services.AddTransient<IReviewService, ReviewService>();
-            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<IPaymobService, PaymobService>();
             services.AddTransient<IDeliveryService, DeliveryService>();
             services.AddTransient<IShippingAddressService, ShippingAddressService>();
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
@@ -24,6 +25,7 @@ namespace E_Commerce.Service
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IEmailsService, EmailsService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddHttpClient<IPaymobCashInBroker, PaymobCashInBroker>();
             services.AddScoped<ICartService, CartService>();
 
             return services;

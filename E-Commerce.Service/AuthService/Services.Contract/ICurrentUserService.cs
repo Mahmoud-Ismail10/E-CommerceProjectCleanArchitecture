@@ -4,8 +4,10 @@ namespace E_Commerce.Service.AuthService.Services.Contract
 {
     public interface ICurrentUserService
     {
-        public Guid GetUserId();
-        public Task<User> GetUserAsync();
-        public Task<List<string>> GetCurrentUserRolesAsync();
+        bool IsAuthenticated { get; }
+        Guid GetUserId();
+        Guid GetCartOwnerId();
+        Task<User> GetUserAsync();
+        Task<List<string>> GetCurrentUserRolesAsync();
     }
 }

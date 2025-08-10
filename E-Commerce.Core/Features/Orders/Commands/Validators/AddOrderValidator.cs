@@ -35,9 +35,9 @@ namespace E_Commerce.Core.Features.Orders.Commands.Validators
             //        .GreaterThan(0).WithMessage(_stringLocalizer[SharedResourcesKeys.GreaterThanZero]);
             //});
 
-            RuleFor(c => c.CartId)
-                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
-                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
+            //RuleFor(c => c.CartId)
+            //    .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
+            //    .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
 
             RuleFor(c => c.PaymentMethod)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
@@ -50,7 +50,25 @@ namespace E_Commerce.Core.Features.Orders.Commands.Validators
             RuleFor(c => c.ShippingAddressId)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
-                .When(c => c.DeliveryMethod != DeliveryMethod.Pickup);
+                .When(c => c.DeliveryMethod != DeliveryMethod.PickupFromBranch)
+                    .WithMessage(_stringLocalizer[SharedResourcesKeys.CannotSelectShippingAddress]);
+
+            RuleFor(c => c)
+                .Must(c => IsValidCombination(c.PaymentMethod, c.DeliveryMethod))
+                .WithMessage(_stringLocalizer[SharedResourcesKeys.InvalidCombination]);
+        }
+
+        private bool IsValidCombination(PaymentMethod? paymentMethod, DeliveryMethod? deliveryMethod)
+        {
+            return (paymentMethod, deliveryMethod) switch
+            {
+                (PaymentMethod.CashOnDelivery, DeliveryMethod.PickupFromBranch) => false,
+                (PaymentMethod.CashAtBranch, DeliveryMethod.Standard) => false,
+                (PaymentMethod.CashAtBranch, DeliveryMethod.Express) => false,
+                (PaymentMethod.CashAtBranch, DeliveryMethod.SameDay) => false,
+                (PaymentMethod.CashAtBranch, DeliveryMethod.Scheduled) => false,
+                _ => true
+            };
         }
         #endregion
     }

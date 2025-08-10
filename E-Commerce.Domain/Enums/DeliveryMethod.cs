@@ -4,8 +4,8 @@
     {
         Standard = 1,
         Express = 2,
-        Pickup = 3, //Receipt from the branch
-        SameDay = 4,
-        Scheduled = 5
+        SameDay = 3,
+        Scheduled = 4,
+        PickupFromBranch = 5
     }
 }

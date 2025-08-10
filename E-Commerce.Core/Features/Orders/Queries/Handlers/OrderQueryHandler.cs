@@ -71,7 +71,8 @@ namespace E_Commerce.Core.Features.Orders.Queries.Handlers
             o.Payment.Status,
             o.Delivery!.DeliveryMethod,
             o.Delivery.DeliveryTime,
-            o.Delivery.Cost);
+            o.Delivery.Cost,
+            o.Delivery.Status);
 
             var filterQuery = _orderService.FilterOrderPaginatedQueryable(request.SortBy, request.Search!);
             var paginatedList = await filterQuery.Select(expression)

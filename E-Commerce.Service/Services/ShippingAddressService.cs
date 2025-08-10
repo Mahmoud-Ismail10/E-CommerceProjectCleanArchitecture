@@ -44,9 +44,13 @@ namespace E_Commerce.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<ShippingAddress?> GetShippingAddressByIdAsync(Guid id)
+        public async Task<ShippingAddress?> GetShippingAddressByIdAsync(Guid? id)
         {
-            throw new NotImplementedException();
+            var shippingAddress = await _shippingAddressRepository.GetTableNoTracking()
+                                              .Where(c => c.Id.Equals(id))
+                                              .Include(c => c.Customer)
+                                              .FirstOrDefaultAsync();
+            return shippingAddress;
         }
 
         public Task<IReadOnlyList<ShippingAddress?>> GetShippingAddressListAsync()

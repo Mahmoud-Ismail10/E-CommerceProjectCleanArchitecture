@@ -9,5 +9,6 @@ namespace E_Commerce.Domain.Entities
         public string? Description { get; set; }
         public DateTimeOffset? DeliveryTime { get; set; }
         public decimal? Cost { get; set; }
+        public Status? Status { get; set; }
     }
 }

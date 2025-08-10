@@ -81,6 +81,17 @@
         public const string FailedInDiscountQuantityFromStock = "FailedInDiscountQuantityFromStock";
         public const string FailedInPaymentProcessing = "FailedInPaymentProcessing";
         public const string FailedInDeliveryProcessing = "FailedInDeliveryProcessing";
+        public const string InvalidCombination = "InvalidCombination";
+        public const string CannotSelectShippingAddress = "CannotSelectShippingAddress";
+        public const string FailedToModifyThisCart = "FailedToModifyThisCart";
+        public const string AddedToCart = "AddedToCart";
+        public const string ProductNotFound = "ProductNotFound";
+        public const string AnErrorOccurredWhileAddingToTheCart = "AnErrorOccurredWhileAddingToTheCart";
+        public const string ItemNotFoundInCart = "ItemNotFoundInCart";
+        public const string ItemRemovedFromCart = "ItemRemovedFromCart";
+        public const string AnErrorOccurredWhileRemovingFromTheCart = "AnErrorOccurredWhileRemovingFromTheCart";
+        public const string ItemQuantityUpdated = "ItemQuantityUpdated";
+        public const string AnErrorOccurredWhileUpdatingItemQuantity = "AnErrorOccurredWhileUpdatingItemQuantity";
 
     }
 }

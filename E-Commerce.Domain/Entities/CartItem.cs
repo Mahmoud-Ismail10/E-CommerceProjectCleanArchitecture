@@ -8,7 +8,9 @@
         public Guid ProductId { get; set; }
         public Product? Product { get; set; } // Navigation property to Product
 
-        public int Quantity { get; set; }
+        public decimal? Price { get; set; }
+        public int? Quantity { get; set; }
+        public decimal? SubAmount => Price * Quantity;
         public DateTimeOffset CreatedAt { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using E_Commerce.Domain.Entities;
+using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using Serilog;
 using StackExchange.Redis;
@@ -10,21 +11,163 @@ namespace E_Commerce.Service.Services
     {
         #region Fields
         private readonly IDatabase _database;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IProductService _productService;
         #endregion
 
         #region Constructors
-        public CartService(IDatabase database, IConnectionMultiplexer connectionMultiplexer)
+        public CartService(IDatabase database,
+            ICurrentUserService currentUserService,
+            IProductService productService,
+            IConnectionMultiplexer connectionMultiplexer)
         {
             _database = connectionMultiplexer.GetDatabase();
+            _currentUserService = currentUserService;
+            _productService = productService;
         }
         #endregion
 
+        #region Private Helpers
+        private string GetCartKey() => $"cart:{_currentUserService.GetCartOwnerId()}";
+        #endregion
+
         #region Handle Functions
-        public async Task<bool> DeleteCartAsync(Guid cartId)
+        public async Task<Cart?> GetCartByIdAsync(string cartKey)
+        {
+            var cart = await _database.StringGetAsync(cartKey); // return JSON
+            return cart.IsNullOrEmpty ? null : JsonSerializer.Deserialize<Cart>(cart!); // Convert JSON to Object of Cart
+        }
+
+        // Add or Update Cart
+        public async Task<Cart?> EditCartAsync(Cart cart)
+        {
+            var cartKey = $"cart:{cart.CustomerId}";
+            var existingCart = await GetCartByIdAsync(cartKey);
+
+            if (existingCart is not null)
+            {
+                cart.CreatedAt = cart.CreatedAt == default ? existingCart.CreatedAt : DateTimeOffset.UtcNow.ToLocalTime();
+                cart.CustomerId = cart.CustomerId == Guid.Empty ? existingCart.CustomerId : cart.CustomerId;
+                cart.CartItems = cart.CartItems ?? existingCart.CartItems;
+                cart.PaymentToken = string.IsNullOrEmpty(cart.PaymentToken) ? existingCart.PaymentToken : cart.PaymentToken;
+                cart.PaymentIntentId = string.IsNullOrEmpty(cart.PaymentIntentId) ? existingCart.PaymentIntentId : cart.PaymentIntentId;
+            }
+
+            var createOrUpdateCart = await _database.StringSetAsync(cartKey, JsonSerializer.Serialize(cart), TimeSpan.FromDays(3));
+            if (createOrUpdateCart is false) return null;
+            return await GetCartByIdAsync(cartKey);
+        }
+
+        public async Task<Cart?> GetMyCartAsync()
+        {
+            var cartKey = GetCartKey();
+            var cart = await _database.StringGetAsync(cartKey);
+            return cart.IsNullOrEmpty ? null : JsonSerializer.Deserialize<Cart>(cart!);
+        }
+
+        public async Task<string> AddToCartAsync(Guid productId, int quantity)
         {
             try
             {
-                return await _database.KeyDeleteAsync(cartId.ToString());
+                var ownerId = _currentUserService.GetCartOwnerId();
+                var cartKey = $"cart:{ownerId}";
+                var existingCart = await GetCartByIdAsync(cartKey) ?? new Cart
+                {
+                    CustomerId = ownerId,
+                    CreatedAt = DateTimeOffset.UtcNow.ToLocalTime(),
+                    CartItems = new List<CartItem>()
+                };
+                // Check if the product exists
+                var existingProduct = await _productService.GetProductByIdAsync(productId);
+                if (existingProduct is null) return "ProductNotFound";
+                // Check if the item already exists in the cart
+                var existingItem = existingCart.CartItems?.FirstOrDefault(x => x.ProductId == productId);
+                if (existingItem != null)
+                {
+                    // Update quantity if it exists
+                    existingItem.Quantity += quantity;
+                }
+                else
+                {
+                    // Add new item to the cart
+                    existingCart.CartItems!.Add(new CartItem
+                    {
+                        CartId = existingCart.CustomerId,
+                        ProductId = productId,
+                        Quantity = quantity,
+                        CreatedAt = DateTimeOffset.UtcNow.ToLocalTime()
+                    });
+                }
+                // Save the updated cart
+                var result = await EditCartAsync(existingCart);
+                if (result is null) return "FailedInAddItemToCart";
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error adding item to cart: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "AnErrorOccurredWhileAddingToTheCart";
+            }
+        }
+
+        public async Task<string> RemoveItemFromCartAsync(Guid productId)
+        {
+            try
+            {
+                var existingCart = await GetMyCartAsync();
+                if (existingCart is null) return "CartNotFound";
+                // Check if the product exists
+                var existingProduct = await _productService.GetProductByIdAsync(productId);
+                if (existingProduct is null) return "ProductNotFound";
+                // Find the item to remove
+                var itemToRemove = existingCart.CartItems?.FirstOrDefault(x => x.ProductId == productId);
+                if (itemToRemove is null) return "ItemNotFoundInCart";
+                // Remove the item
+                existingCart.CartItems!.Remove(itemToRemove);
+                // Save the updated cart
+                var result = await EditCartAsync(existingCart);
+                if (result is null) return "FailedInRemoveItemFromCart";
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error removing item from cart: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "AnErrorOccurredWhileRemovingItemFromTheCart";
+            }
+        }
+
+        public async Task<string> UpdateItemQuantityAsync(Guid productId, int Quantity)
+        {
+            try
+            {
+                var existingCart = await GetMyCartAsync();
+                if (existingCart is null) return "CartNotFound";
+                // Check if the product exists
+                var existingProduct = await _productService.GetProductByIdAsync(productId);
+                if (existingProduct is null) return "ProductNotFound";
+                // Find the item to update
+                var itemToUpdate = existingCart.CartItems?.FirstOrDefault(x => x.ProductId == productId);
+                if (itemToUpdate is null) return "ItemNotFoundInCart";
+                // Update the quantity
+                itemToUpdate.Quantity = Quantity;
+                // Save the updated cart
+                var result = await EditCartAsync(existingCart);
+                if (result is null) return "FailedInUpdateItemQuantity";
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error updating item quantity in cart: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "AnErrorOccurredWhileUpdatingItemQuantityInTheCart";
+            }
+        }
+
+        public async Task<bool> DeleteMyCartAsync()
+        {
+            try
+            {
+                var cartKey = GetCartKey();
+                return await _database.KeyDeleteAsync(cartKey);
             }
             catch (Exception ex)
             {
@@ -33,29 +176,20 @@ namespace E_Commerce.Service.Services
             }
         }
 
-        public async Task<Cart?> GetCartByIdAsync(Guid cartId)
+        public async Task<bool> DeleteCartAsync(Guid customerId)
         {
-            var cart = await _database.StringGetAsync(cartId.ToString()); // return JSON
-            return cart.IsNullOrEmpty ? null : JsonSerializer.Deserialize<Cart>(cart!); // Convert JSON to Object of Cart
-        }
-
-        // Add or Update Cart
-        public async Task<Cart?> UpdateCartAsync(Cart cart)
-        {
-            var existingCart = await GetCartByIdAsync(cart.Id);
-
-            if (existingCart is not null)
+            try
             {
-                // Merge: only update non-null values from new cart
-                cart.CreatedAt = cart.CreatedAt != default ? cart.CreatedAt : existingCart.CreatedAt;
-                cart.CustomerId = cart.CustomerId != Guid.Empty ? cart.CustomerId : existingCart.CustomerId;
-                cart.CartItems = cart.CartItems?.Any() == true ? cart.CartItems : existingCart.CartItems;
+                var cartKey = $"cart:{customerId}";
+                return await _database.KeyDeleteAsync(cartKey);
             }
-
-            var createOrUpdateCart = await _database.StringSetAsync(cart.Id.ToString(), JsonSerializer.Serialize(cart), TimeSpan.FromDays(30));
-            if (createOrUpdateCart is false) return null;
-            return await GetCartByIdAsync(cart.Id);
+            catch (Exception ex)
+            {
+                Log.Error("Error deleting cart: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return false;
+            }
         }
+
         #endregion
     }
 }

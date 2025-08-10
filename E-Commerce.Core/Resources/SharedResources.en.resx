@@ -354,4 +354,37 @@
   <data name="CartNotFound" xml:space="preserve">
     <value>This Cart is not found</value>
   </data>
+  <data name="InvalidCombination" xml:space="preserve">
+    <value>Invalid payment and delivery combination.</value>
+  </data>
+  <data name="CannotSelectShippingAddress" xml:space="preserve">
+    <value>You cannot select a shipping address if you will pickup the order from the branch.</value>
+  </data>
+  <data name="FailedToModifyThisCart" xml:space="preserve">
+    <value>Failed to modify this cart.</value>
+  </data>
+  <data name="AddedToCart" xml:space="preserve">
+    <value>Added To The Cart Successfully</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Product Is Not Found</value>
+  </data>
+  <data name="AnErrorOccurredWhileAddingToTheCart" xml:space="preserve">
+    <value>An Error Occurred While Adding To The Cart</value>
+  </data>
+  <data name="ItemNotFoundInCart" xml:space="preserve">
+    <value>This item was not found in your cart.</value>
+  </data>
+  <data name="ItemRemovedFromCart" xml:space="preserve">
+    <value>Item Removed From The Cart Successfully.</value>
+  </data>
+  <data name="AnErrorOccurredWhileRemovingFromTheCart" xml:space="preserve">
+    <value>An Error Occurred While Removing From The Cart.</value>
+  </data>
+  <data name="ItemQuantityUpdated" xml:space="preserve">
+    <value>Item Quantity Updated Successfully.</value>
+  </data>
+  <data name="AnErrorOccurredWhileUpdatingItemQuantity" xml:space="preserve">
+    <value>An Error  Occurred While Updating Item Quantity.</value>
+  </data>
 </root>

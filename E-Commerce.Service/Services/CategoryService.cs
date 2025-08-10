@@ -49,8 +49,16 @@ namespace E_Commerce.Service.Services
 
         public async Task<string> EditCategoryAsync(Category category)
         {
-            await _categoryRepository.UpdateAsync(category);
-            return "Success";
+            try
+            {
+                await _categoryRepository.UpdateAsync(category);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error editing category {CategoryName}: {ErrorMessage}", category.Name, ex.InnerException?.Message ?? ex.Message);
+                return "Failed";
+            }
         }
 
         public async Task<Category?> GetCategoryByIdAsync(Guid id)

@@ -349,9 +349,42 @@
     <value>فشل في عملية اعداد التوصيل</value>
   </data>
   <data name="CartId" xml:space="preserve">
-    <value>معرف العربة</value>
+    <value>معرف السلة</value>
   </data>
   <data name="CartNotFound" xml:space="preserve">
-    <value>هذه العربة غير موجودة</value>
+    <value>هذه السلة غير موجودة</value>
+  </data>
+  <data name="InvalidCombination" xml:space="preserve">
+    <value>لا يصلح اختيارك لطريقة الدفع مع طريقة الشحن.</value>
+  </data>
+  <data name="CannotSelectShippingAddress" xml:space="preserve">
+    <value>لا يمكنك تحديد عنوان الشحن إذا كنت ستستلم الطلب من الفرع.</value>
+  </data>
+  <data name="FailedToModifyThisCart" xml:space="preserve">
+    <value>فشل في تعديل هذه السلة.</value>
+  </data>
+  <data name="AddedToCart" xml:space="preserve">
+    <value>تمت الإضافة إلى السلة بنجاح</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>المنتج غير موجود</value>
+  </data>
+  <data name="AnErrorOccurredWhileAddingToTheCart" xml:space="preserve">
+    <value>حدث خطأ أثناء الإضافة إلى السلة</value>
+  </data>
+  <data name="ItemNotFoundInCart" xml:space="preserve">
+    <value>لم يتم العثور على هذا المنتج في السلة الخاصه بك</value>
+  </data>
+  <data name="ItemRemovedFromCart" xml:space="preserve">
+    <value>تمت إزالة المنتج من السلة بنجاح.</value>
+  </data>
+  <data name="AnErrorOccurredWhileRemovingFromTheCart" xml:space="preserve">
+    <value>حدث خطأ أثناء ازالة المنتج من السلة.</value>
+  </data>
+  <data name="ItemQuantityUpdated" xml:space="preserve">
+    <value>تم تحديث كمية المنتج بنجاح.</value>
+  </data>
+  <data name="AnErrorOccurredWhileUpdatingItemQuantity" xml:space="preserve">
+    <value>حدث خطأ أثناء تحديث كمية المنتج.</value>
   </data>
 </root>

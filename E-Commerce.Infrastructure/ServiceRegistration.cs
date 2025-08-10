@@ -50,14 +50,18 @@ namespace E_Commerce.Infrastructure
 
             }).AddEntityFrameworkStores<E_CommerceContext>().AddDefaultTokenProviders();
 
-            // JWT Authentication and Email Settings
+            // JWT Authentication, Email, and Paymob Payment's GateWay Settings
             var jwtSettings = new JwtSettings();
             var emailSettings = new EmailSettings();
+            var paymobSettings = new PaymobSettings();
+
             configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
             configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
+            configuration.GetSection(nameof(PaymobSettings)).Bind(paymobSettings);
 
             services.AddSingleton(jwtSettings);
             services.AddSingleton(emailSettings);
+            services.AddSingleton(paymobSettings);
 
             services.AddAuthentication(x =>
             {

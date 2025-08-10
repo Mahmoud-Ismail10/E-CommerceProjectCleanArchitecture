@@ -14,5 +14,6 @@ namespace E_Commerce.Core.Features.Orders.Queries.Responses
         Status? PaymentStatus,
         DeliveryMethod? DeliveryMethod,
         DateTimeOffset? DeliveryTime,
-        decimal? DeliveryCost);
+        decimal? DeliveryCost,
+        Status? DeliveryStatus);
 }

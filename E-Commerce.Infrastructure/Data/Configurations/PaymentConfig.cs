@@ -18,7 +18,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 PM => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), PM))
                 .IsRequired();
 
-            builder.Property(p => p.Amount)
+            builder.Property(p => p.TotalAmount)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
 

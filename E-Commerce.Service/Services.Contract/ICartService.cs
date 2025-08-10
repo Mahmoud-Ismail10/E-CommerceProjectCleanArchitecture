@@ -4,8 +4,13 @@ namespace E_Commerce.Service.Services.Contract
 {
     public interface ICartService
     {
-        Task<Cart?> GetCartByIdAsync(Guid cartId);
-        Task<Cart?> UpdateCartAsync(Cart cart); // Add or Update
-        Task<bool> DeleteCartAsync(Guid cartId);
+        Task<string> AddToCartAsync(Guid productId, int quantity);
+        Task<string> RemoveItemFromCartAsync(Guid productId);
+        Task<string> UpdateItemQuantityAsync(Guid productId, int Quantity);
+        Task<Cart?> GetCartByIdAsync(string cartKey);
+        Task<Cart?> GetMyCartAsync();
+        Task<Cart?> EditCartAsync(Cart cart); // Add or Edit
+        Task<bool> DeleteMyCartAsync();
+        Task<bool> DeleteCartAsync(Guid customerId);
     }
 }

@@ -13,6 +13,10 @@ namespace E_Commerce.Service.AuthService.Services
         private readonly UserManager<User> _userManager;
         #endregion
 
+        #region Helper
+        public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+        #endregion
+
         #region Constructors
         public CurrentUserService(IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
         {
@@ -24,9 +28,32 @@ namespace E_Commerce.Service.AuthService.Services
         #region Functions
         public Guid GetUserId()
         {
+            //var cartKey = $"cart:{(IsAuthenticated ? "user" : "guest")}:{GetCartOwnerId()}";
             var userId = _httpContextAccessor.HttpContext?.User.Claims?.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id))?.Value;
             if (string.IsNullOrEmpty(userId)) throw new UnauthorizedAccessException("UnAuthenticated");
             return Guid.Parse(userId);
+        }
+
+        public Guid GetCartOwnerId()
+        {
+            // If the user is authenticated, return their UserId
+            if (IsAuthenticated) return GetUserId();
+
+            // If the user is not authenticated, generate or retrieve a GuestId
+            var guestId = _httpContextAccessor.HttpContext?.Request.Cookies["GuestId"];
+            if (string.IsNullOrEmpty(guestId) || !Guid.TryParse(guestId, out var parsedGuestId))
+            {
+                parsedGuestId = Guid.NewGuid();
+                _httpContextAccessor.HttpContext?.Response.Cookies.Append("GuestId", parsedGuestId.ToString(), new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    HttpOnly = true,
+                    Secure = true,
+                    IsEssential = true
+                });
+            }
+
+            return parsedGuestId;
         }
 
         public async Task<User> GetUserAsync()
