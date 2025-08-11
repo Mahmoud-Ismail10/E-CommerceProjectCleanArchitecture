@@ -387,4 +387,25 @@
   <data name="AnErrorOccurredWhileUpdatingItemQuantity" xml:space="preserve">
     <value>An Error  Occurred While Updating Item Quantity.</value>
   </data>
+  <data name="PleaseLoginFirst" xml:space="preserve">
+    <value>Please log in first, so that you can add the order.</value>
+  </data>
+  <data name="TransactionFailedToCommit" xml:space="preserve">
+    <value>Transaction Failed To Commit</value>
+  </data>
+  <data name="FailedInMigrateGuestCartToCustomer" xml:space="preserve">
+    <value>Failed In Migrate Guest Cart Id To Customer Id</value>
+  </data>
+  <data name="FailedToDeleteGuestIdCookie" xml:space="preserve">
+    <value>Failed To Delete GuestId Cookie</value>
+  </data>
+  <data name="ItemAlreadyExistsInCart" xml:space="preserve">
+    <value>This Item is already in the cart.</value>
+  </data>
+  <data name="FailedInDeletingCart" xml:space="preserve">
+    <value>Failed In Deleting The Cart</value>
+  </data>
+  <data name="ShippingAddressDoesNotExist" xml:space="preserve">
+    <value>Shipping Address Does Not Exist</value>
+  </data>
 </root>

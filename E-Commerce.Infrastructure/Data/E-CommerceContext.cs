@@ -40,10 +40,6 @@ namespace E_Commerce.Infrastructure.Data
 
             /// Configure encryption for sensitive data
             modelBuilder.UseEncryption(_encryptionProvider);
-
-            /// Restrict EF from create a table
-            modelBuilder.Entity<CartItem>().Ignore(ci => ci.Product);
-            modelBuilder.Ignore<CartItem>();
         }
     }
 }

@@ -92,6 +92,13 @@
         public const string AnErrorOccurredWhileRemovingFromTheCart = "AnErrorOccurredWhileRemovingFromTheCart";
         public const string ItemQuantityUpdated = "ItemQuantityUpdated";
         public const string AnErrorOccurredWhileUpdatingItemQuantity = "AnErrorOccurredWhileUpdatingItemQuantity";
+        public const string PleaseLoginFirst = "PleaseLoginFirst";
+        public const string FailedInMigrateGuestCartToCustomer = "FailedInMigrateGuestCartToCustomer";
+        public const string TransactionFailedToCommit = "TransactionFailedToCommit";
+        public const string FailedToDeleteGuestIdCookie = "FailedToDeleteGuestIdCookie";
+        public const string ItemAlreadyExistsInCart = "ItemAlreadyExistsInCart";
+        public const string FailedInDeletingCart = "FailedInDeletingCart";
+        public const string ShippingAddressDoesNotExist = "ShippingAddressDoesNotExist";
 
     }
 }

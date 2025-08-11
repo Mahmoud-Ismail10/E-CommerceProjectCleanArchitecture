@@ -61,7 +61,7 @@ namespace E_Commerce.Service.Services
             {
                 // Get cart from repository
                 var cartKey = GetCartKey();
-                var cart = await _cartService.GetCartByIdAsync(cartKey);
+                var cart = await _cartService.GetCartByKeyAsync(cartKey);
 
                 if (cart is null || !cart.CartItems.Any())
                     return "CartIsEmptyOrDoesNotExist";
@@ -85,7 +85,7 @@ namespace E_Commerce.Service.Services
                 cart.PaymentIntentId = orderResponse.Id.ToString();
 
                 // Update cart in repository
-                var result = await _cartService.EditCartAsync(cart);
+                var result = await _cartService.AddOrEditCartAsync(cart);
                 if (result is null)
                 {
                     await transaction.RollbackAsync();

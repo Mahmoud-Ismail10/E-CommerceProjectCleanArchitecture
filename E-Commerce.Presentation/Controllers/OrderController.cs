@@ -8,6 +8,13 @@ namespace E_Commerce.Presentation.Controllers
 {
     public class OrderController : AppControllerBase
     {
+        [HttpGet(Router.OrderRouting.GetMyOrders)]
+        public async Task<IActionResult> GetMyOrders([FromQuery] GetMyOrdersQuery query)
+        {
+            var response = await Mediator.Send(query);
+            return Ok(response);
+        }
+
         [HttpGet(Router.OrderRouting.GetById)]
         public async Task<IActionResult> GetOrderById([FromRoute] Guid id)
         {

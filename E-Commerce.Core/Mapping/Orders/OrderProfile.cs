@@ -7,7 +7,6 @@ namespace E_Commerce.Core.Mapping.Orders
         public OrderProfile()
         {
             GetOrderByIdQueryMapping();
-            AddOrderCommandMapping();
         }
     }
 }

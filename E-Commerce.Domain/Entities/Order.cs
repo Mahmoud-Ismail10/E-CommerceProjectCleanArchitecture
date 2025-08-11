@@ -5,7 +5,7 @@ namespace E_Commerce.Domain.Entities
 {
     public class Order
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public DateTimeOffset? OrderDate { get; set; }
         public Status? Status { get; set; }
         public decimal? TotalAmount { get; set; }

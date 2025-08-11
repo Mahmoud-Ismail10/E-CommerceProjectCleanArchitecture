@@ -5,6 +5,7 @@ using E_Commerce.Core.Features.Orders.Queries.Responses;
 using E_Commerce.Core.Resources;
 using E_Commerce.Core.Wrappers;
 using E_Commerce.Domain.Entities;
+using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -14,12 +15,14 @@ namespace E_Commerce.Core.Features.Orders.Queries.Handlers
 {
     public class OrderQueryHandler : ApiResponseHandler,
         IRequestHandler<GetOrderByIdQuery, ApiResponse<GetSingleOrderResponse>>,
+        IRequestHandler<GetMyOrdersQuery, PaginatedResult<GetMyOrdersResponse>>,
         IRequestHandler<GetOrderPaginatedListQuery, PaginatedResult<GetOrderPaginatedListResponse>>
     {
         #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         private readonly IOrderService _orderService;
         private readonly IOrderItemService _orderItemService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -27,11 +30,13 @@ namespace E_Commerce.Core.Features.Orders.Queries.Handlers
         public OrderQueryHandler(IStringLocalizer<SharedResources> stringLocalizer,
             IOrderService orderService,
             IOrderItemService orderItemService,
+            ICurrentUserService currentUserService,
             IMapper mapper) : base(stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             _orderService = orderService;
             _orderItemService = orderItemService;
+            _currentUserService = currentUserService;
             _mapper = mapper;
         }
         #endregion
@@ -75,6 +80,31 @@ namespace E_Commerce.Core.Features.Orders.Queries.Handlers
             o.Delivery.Status);
 
             var filterQuery = _orderService.FilterOrderPaginatedQueryable(request.SortBy, request.Search!);
+            var paginatedList = await filterQuery.Select(expression)
+                                                 .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+            paginatedList.Meta = new { Count = paginatedList.Data.Count() };
+            return paginatedList;
+        }
+
+        public async Task<PaginatedResult<GetMyOrdersResponse>> Handle(GetMyOrdersQuery request, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserId();
+            Expression<Func<Order, GetMyOrdersResponse>> expression = o => new GetMyOrdersResponse(
+            o.Id,
+            o.OrderDate,
+            o.Status,
+            o.TotalAmount,
+            o.Customer != null ? o.Customer.FirstName + " " + o.Customer.LastName : null,
+            o.ShippingAddress != null ? $"{o.ShippingAddress.Street}, {o.ShippingAddress.City}, {o.ShippingAddress.State}" : null,
+            o.Payment!.PaymentMethod,
+            o.Payment.PaymentDate,
+            o.Payment.Status,
+            o.Delivery!.DeliveryMethod,
+            o.Delivery.DeliveryTime,
+            o.Delivery.Cost,
+            o.Delivery.Status);
+
+            var filterQuery = _orderService.FilterOrderPaginatedByCustomerIdQueryable(request.SortBy, request.Search!, userId);
             var paginatedList = await filterQuery.Select(expression)
                                                  .ToPaginatedListAsync(request.PageNumber, request.PageSize);
             paginatedList.Meta = new { Count = paginatedList.Data.Count() };

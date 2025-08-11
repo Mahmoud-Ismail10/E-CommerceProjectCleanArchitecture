@@ -12,7 +12,6 @@ namespace E_Commerce.Core.Features.Carts.Commands.Handlers
         IRequestHandler<AddToCartCommand, ApiResponse<string>>,
         IRequestHandler<RemoveFromCartCommand, ApiResponse<string>>,
         IRequestHandler<UpdateItemQuantityCommand, ApiResponse<string>>,
-        //IRequestHandler<EditCartCommand, ApiResponse<EditCartResponse>>,
         IRequestHandler<DeleteCartCommand, ApiResponse<string>>
     {
         #region Fields
@@ -51,6 +50,7 @@ namespace E_Commerce.Core.Features.Carts.Commands.Handlers
                 "Success" => Success<string>(_stringLocalizer[SharedResourcesKeys.AddedToCart]),
                 "ProductNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.ProductNotFound]),
                 "FailedInAddItemToCart" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToModifyThisCart]),
+                "ItemAlreadyExistsInCart" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.ItemAlreadyExistsInCart]),
                 _ => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.AnErrorOccurredWhileAddingToTheCart])
             };
         }

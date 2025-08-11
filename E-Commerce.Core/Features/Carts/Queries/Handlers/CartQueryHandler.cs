@@ -38,7 +38,7 @@ namespace E_Commerce.Core.Features.Carts.Queries.Handlers
         {
             // 1. Get cart from Redis
             var cartKey = $"cart:{request.Id}";
-            var cart = await _cartService.GetCartByIdAsync(cartKey);
+            var cart = await _cartService.GetCartByKeyAsync(cartKey);
             if (cart == null) return NotFound<GetSingleCartResponse>(_stringLocalizer[SharedResourcesKeys.CartNotFound]);
 
             // 2. Extract ProductIds

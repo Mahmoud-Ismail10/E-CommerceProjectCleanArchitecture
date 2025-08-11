@@ -7,8 +7,9 @@ namespace E_Commerce.Service.Services.Contract
     {
         Task<IReadOnlyList<Order>> GetOrderListAsync();
         IQueryable<Order> FilterOrderPaginatedQueryable(OrderSortingEnum sortBy, string search);
+        IQueryable<Order> FilterOrderPaginatedByCustomerIdQueryable(OrderSortingEnum sortBy, string search, Guid customerId);
         Task<Order?> GetOrderByIdAsync(Guid id);
-        Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Delivery? delivery);
+        Task<string> AddOrderAsync(Order order);
         Task<string> EditOrderAsync(Order order);
         Task<string> DeleteOrderAsync(Order order);
         Task<bool> IsOrderIdExist(Guid id);

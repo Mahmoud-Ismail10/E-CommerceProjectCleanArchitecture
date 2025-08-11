@@ -74,6 +74,7 @@
         public static class OrderRouting
         {
             public const string Prefix = Rule + "order/";
+            public const string GetMyOrders = Prefix + "getMyOrders";
             public const string GetAll = Prefix + "getAll";
             public const string Paginated = Prefix + "paginated";
             public const string GetById = Prefix + SingleRoute;

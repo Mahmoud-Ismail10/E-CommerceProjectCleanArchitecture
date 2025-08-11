@@ -28,7 +28,6 @@ namespace E_Commerce.Service.AuthService.Services
         #region Functions
         public Guid GetUserId()
         {
-            //var cartKey = $"cart:{(IsAuthenticated ? "user" : "guest")}:{GetCartOwnerId()}";
             var userId = _httpContextAccessor.HttpContext?.User.Claims?.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id))?.Value;
             if (string.IsNullOrEmpty(userId)) throw new UnauthorizedAccessException("UnAuthenticated");
             return Guid.Parse(userId);
@@ -69,6 +68,26 @@ namespace E_Commerce.Service.AuthService.Services
             var user = await GetUserAsync();
             var roles = await _userManager.GetRolesAsync(user);
             return roles.ToList();
+        }
+
+        public bool DeleteGuestIdCookie()
+        {
+            try
+            {
+                var httpContext = _httpContextAccessor.HttpContext;
+                if (httpContext != null)
+                {
+                    if (httpContext.Request.Cookies.ContainsKey("GuestId"))
+                    {
+                        httpContext.Response.Cookies.Delete("GuestId");
+                    }
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         #endregion
     }

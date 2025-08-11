@@ -387,4 +387,25 @@
   <data name="AnErrorOccurredWhileUpdatingItemQuantity" xml:space="preserve">
     <value>حدث خطأ أثناء تحديث كمية المنتج.</value>
   </data>
+  <data name="PleaseLoginFirst" xml:space="preserve">
+    <value>يرجى تسجيل الدخول أولاً ، بحيث يمكنك إضافة الطلب.</value>
+  </data>
+  <data name="TransactionFailedToCommit" xml:space="preserve">
+    <value>فشلت عملية حفظ التعديلات</value>
+  </data>
+  <data name="FailedInMigrateGuestCartToCustomer" xml:space="preserve">
+    <value>فشل في تحويل معرف سلة كضيف إلى معرف كمستخدم</value>
+  </data>
+  <data name="FailedToDeleteGuestIdCookie" xml:space="preserve">
+    <value>فشل في حذف ملف تعريف الارتباط الخاص بـ الضيف</value>
+  </data>
+  <data name="ItemAlreadyExistsInCart" xml:space="preserve">
+    <value>هذا العنصر موجود بالفعل في السلة.</value>
+  </data>
+  <data name="FailedInDeletingCart" xml:space="preserve">
+    <value>فشل في حذف السلة</value>
+  </data>
+  <data name="ShippingAddressDoesNotExist" xml:space="preserve">
+    <value>عنوان الشحن غير موجود</value>
+  </data>
 </root>

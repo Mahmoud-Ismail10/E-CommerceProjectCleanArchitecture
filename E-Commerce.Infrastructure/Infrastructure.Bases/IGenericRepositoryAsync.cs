@@ -18,5 +18,6 @@ namespace E_Commerce.Infrastructure.Infrastructure.Bases
         Task UpdateAsync(T entity);
         Task UpdateRangeAsync(ICollection<T> entities);
         Task DeleteAsync(T entity);
+        void AttachEntity<TEntity>(TEntity entity) where TEntity : class;
     }
 }

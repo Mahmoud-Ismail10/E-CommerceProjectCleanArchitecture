@@ -91,5 +91,11 @@ namespace E_Commerce.Infrastructure.Infrastructure.Bases
         {
             return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
+
+        public void AttachEntity<TEntity>(TEntity entity) where TEntity : class
+        {
+            _dbContext.Set<TEntity>().Attach(entity);
+            _dbContext.Entry(entity).State = EntityState.Unchanged;
+        }
     }
 }

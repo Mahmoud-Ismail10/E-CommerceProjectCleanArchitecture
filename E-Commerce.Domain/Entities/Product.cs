@@ -13,13 +13,11 @@
         public Guid CategoryId { get; set; }
         public Category? Category { get; set; } // Navigation property to Category
 
-        public ICollection<CartItem> CartItems { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
         public ICollection<Review> Reviews { get; set; }
 
         public Product()
         {
-            CartItems = new HashSet<CartItem>();
             OrderItems = new HashSet<OrderItem>();
             Reviews = new HashSet<Review>();
         }

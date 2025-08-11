@@ -1,7 +1,8 @@
 ﻿using E_Commerce.Domain.Entities;
+using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Enums.Sorting;
+using E_Commerce.Domain.Helpers;
 using E_Commerce.Infrastructure.Repositories.Contract;
-using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -15,7 +16,7 @@ namespace E_Commerce.Service.Services
         private readonly IProductService _productService;
         private readonly IDeliveryService _deliveryService;
         private readonly ICartService _cartService;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly IShippingAddressService _shippingAddressService;
         private readonly IOrderItemRepository _orderItemRepository;
         #endregion
 
@@ -24,31 +25,26 @@ namespace E_Commerce.Service.Services
             IProductService productService,
             IDeliveryService deliveryService,
             ICartService cartService,
-            ICurrentUserService currentUserService,
+            IShippingAddressService shippingAddressService,
             IOrderItemRepository orderItemRepository)
         {
             _orderRepository = orderRepository;
             _productService = productService;
             _deliveryService = deliveryService;
             _cartService = cartService;
-            _currentUserService = currentUserService;
+            _shippingAddressService = shippingAddressService;
             _orderItemRepository = orderItemRepository;
         }
         #endregion
 
-
-
         #region handle Functions
-        public async Task<string> AddOrderAsync(Order order, List<OrderItem> orderItems, Delivery? delivery)
+        public async Task<string> AddOrderAsync(Order order)
         {
-            if (!_currentUserService.IsAuthenticated)
-                return "PleaseLoginFirst";
-
             using var transaction = await _orderRepository.BeginTransactionAsync();
             try
             {
                 // Discount quantity from stock
-                foreach (var item in orderItems)
+                foreach (var item in order.OrderItems)
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
                     if (product != null)
@@ -63,34 +59,38 @@ namespace E_Commerce.Service.Services
                     }
                 }
 
-                // Payment processing
-                //var paymentResult = await _paymentService.AddPaymentAsync(payment);
-                //if (paymentResult != "Success")
-                //{
-                //    await transaction.RollbackAsync();
-                //    return "FailedInPaymentProcessing";
-                //}
-                //order.PaymentId = payment.Id;
-
-                // Delivery processing if exists
-                if (delivery is not null)
+                // Delivery Settings
+                if (order.Delivery!.DeliveryMethod != DeliveryMethod.PickupFromBranch)
                 {
-                    var deliveryResult = await _deliveryService.AddDeliveryAsync(delivery);
-                    if (deliveryResult != "Success")
+                    var shippingAddress = await _shippingAddressService.GetShippingAddressByIdAsync(order.ShippingAddressId);
+                    if (shippingAddress == null)
                     {
                         await transaction.RollbackAsync();
-                        return "FailedInDeliveryProcessing";
+                        return "ShippingAddressDoesNotExist";
                     }
-                    order.DeliveryId = delivery.Id;
+
+                    var deliveryOffset = DeliveryTimeCalculator.Calculate(shippingAddress.City, order.Delivery.DeliveryMethod);
+                    var deliveryCost = DeliveryCostCalculator.Calculate(shippingAddress.City, order.Delivery.DeliveryMethod);
+
+                    order.Delivery.Id = Guid.NewGuid();
+                    order.Delivery.Description = $"Delivery for order {order.Id} to {shippingAddress.State}, {shippingAddress.City}, {shippingAddress.Street}";
+                    order.Delivery.DeliveryTime = DateTime.UtcNow.Add(deliveryOffset);
+                    order.Delivery.Cost = deliveryCost;
+                    order.Delivery.Status = Status.Pending;
+                    order.DeliveryId = order.Delivery.Id;
+                    _orderRepository.AttachEntity(shippingAddress);
+                    //order.ShippingAddress = shippingAddress;
                 }
+                else
+                    order.Delivery = null;
 
                 await _orderRepository.AddAsync(order);
-                foreach (var item in orderItems)
-                {
-                    item.OrderId = order.Id;
-                }
+                //foreach (var item in order.OrderItems)
+                //{
+                //    item.OrderId = order.Id;
+                //}
 
-                await _orderItemRepository.AddRangeAsync(orderItems);
+                //await _orderItemRepository.AddRangeAsync(order.OrderItems);
 
                 var result2 = await _cartService.DeleteMyCartAsync();
                 if (!result2)
@@ -157,7 +157,32 @@ namespace E_Commerce.Service.Services
                 OrderSortingEnum.OrderDateDesc => queryable.OrderByDescending(c => c.OrderDate),
                 OrderSortingEnum.TotalAmountAsc => queryable.OrderBy(c => c.TotalAmount),
                 OrderSortingEnum.TotalAmountDesc => queryable.OrderByDescending(c => c.TotalAmount),
-                _ => queryable.OrderBy(c => c.OrderDate)
+                _ => queryable.OrderByDescending(c => c.OrderDate)
+            };
+            return queryable;
+        }
+
+        public IQueryable<Order> FilterOrderPaginatedByCustomerIdQueryable(OrderSortingEnum sortBy, string search, Guid customerId)
+        {
+            var queryable = _orderRepository.GetTableNoTracking().Where(o => o.CustomerId == customerId)
+                                            .Include(c => c.Customer)
+                                            .Include(c => c.ShippingAddress)
+                                            .Include(c => c.Payment)
+                                            .Include(c => c.Delivery).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(search))
+                queryable = queryable.Where(c => c.Customer!.FirstName!.Contains(search)
+                                              || c.Customer!.LastName!.Contains(search)
+                                              || c.ShippingAddress!.City!.Contains(search)
+                                              || c.ShippingAddress!.Street!.Contains(search)
+                                              || c.ShippingAddress!.State!.Contains(search));
+
+            queryable = sortBy switch
+            {
+                OrderSortingEnum.OrderDateAsc => queryable.OrderBy(c => c.OrderDate),
+                OrderSortingEnum.OrderDateDesc => queryable.OrderByDescending(c => c.OrderDate),
+                OrderSortingEnum.TotalAmountAsc => queryable.OrderBy(c => c.TotalAmount),
+                OrderSortingEnum.TotalAmountDesc => queryable.OrderByDescending(c => c.TotalAmount),
+                _ => queryable.OrderByDescending(c => c.OrderDate)
             };
             return queryable;
         }

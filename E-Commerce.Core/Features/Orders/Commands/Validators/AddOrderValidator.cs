@@ -23,22 +23,6 @@ namespace E_Commerce.Core.Features.Orders.Commands.Validators
         #region Handle Functions
         public void ApplyValidationRoles()
         {
-            //RuleForEach(c => c.OrderItemResults).ChildRules(item =>
-            //{
-            //    item.RuleFor(i => i.ProductId)
-            //        .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
-            //        .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
-
-            //    item.RuleFor(i => i.Quantity)
-            //        .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
-            //        .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
-            //        .GreaterThan(0).WithMessage(_stringLocalizer[SharedResourcesKeys.GreaterThanZero]);
-            //});
-
-            //RuleFor(c => c.CartId)
-            //    .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
-            //    .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
-
             RuleFor(c => c.PaymentMethod)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
