@@ -124,6 +124,7 @@
         public const string InvalidHMAC = "InvalidHMAC";
         public const string CategoryNotFound = "CategoryNotFound";
         public const string Id = "Id";
+        public const string ReviewNotFound = "ReviewNotFound";
 
     }
 }

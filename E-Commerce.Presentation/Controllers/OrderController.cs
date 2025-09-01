@@ -42,5 +42,12 @@ namespace E_Commerce.Presentation.Controllers
             var response = await Mediator.Send(new PlaceOrderCommand(id));
             return Ok(response);
         }
+
+        [HttpDelete(Router.OrderRouting.Delete)]
+        public async Task<IActionResult> DeleteOrder([FromRoute] Guid id)
+        {
+            var response = await Mediator.Send(new DeleteOrderCommand(id));
+            return Ok(response);
+        }
     }
 }

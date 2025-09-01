@@ -132,7 +132,9 @@ namespace E_Commerce.Service.Services
             response.AccessToken = newToken;
 
             var refreshTokenResult = new RefreshToken();
-            refreshTokenResult.UserName = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.UserName)).Value;
+            var userNameClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.UserName));
+            refreshTokenResult.UserName = userNameClaim?.Value ?? user.UserName;
+            //refreshTokenResult.UserName = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.UserName)).Value;
             refreshTokenResult.TokenString = refreshToken;
             refreshTokenResult.ExpireAt = (DateTimeOffset)expiryDate;
 

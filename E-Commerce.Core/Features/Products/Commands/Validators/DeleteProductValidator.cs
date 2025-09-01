@@ -1,35 +1,30 @@
-﻿using E_Commerce.Core.Features.Carts.Commands.Models;
+﻿using E_Commerce.Core.Features.Products.Commands.Models;
 using E_Commerce.Core.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace E_Commerce.Core.Features.Carts.Commands.Validators
+namespace E_Commerce.Core.Features.Products.Commands.Validators
 {
-    public class AddToCartValidator : AbstractValidator<AddToCartCommand>
+    public class DeleteProductValidator : AbstractValidator<DeleteProductCommand>
     {
         #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
         #region Constructors
-        public AddToCartValidator(IStringLocalizer<SharedResources> stringLocalizer)
+        public DeleteProductValidator(IStringLocalizer<SharedResources> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             ApplyValidationRoles();
         }
         #endregion
 
-        #region Functions Handle
+        #region Handle Functions
         public void ApplyValidationRoles()
         {
             RuleFor(c => c.ProductId)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
-
-            RuleFor(c => c.Quantity)
-                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
-                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
-                .GreaterThan(0).WithMessage(_stringLocalizer[SharedResourcesKeys.GreaterThanZero]);
         }
         #endregion
     }

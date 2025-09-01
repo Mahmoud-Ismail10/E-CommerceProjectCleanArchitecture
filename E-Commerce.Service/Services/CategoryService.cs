@@ -23,8 +23,16 @@ namespace E_Commerce.Service.Services
         #region Handle Functions
         public async Task<string> AddCategoryAsync(Category category)
         {
-            await _categoryRepository.AddAsync(category);
-            return "Success";
+            try
+            {
+                await _categoryRepository.AddAsync(category);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error adding category {CategoryName}: {ErrorMessage}", category.Name, ex.InnerException?.Message ?? ex.Message);
+                return "Failed";
+            }
         }
 
         public async Task<string> DeleteCategoryAsync(Category category)

@@ -34,7 +34,7 @@ namespace E_Commerce.Core.Features.Products.Queries.Handlers
 
         public async Task<ApiResponse<GetSingleProductResponse>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var product = await _productService.GetProductByIdAsync(request.Id);
+            var product = await _productService.GetProductByIdAsync(request.ProductId);
             if (product is null) return NotFound<GetSingleProductResponse>(_stringLocalizer[SharedResourcesKeys.NotFound]);
             var productMapper = _mapper.Map<GetSingleProductResponse>(product);
 
@@ -44,8 +44,9 @@ namespace E_Commerce.Core.Features.Products.Queries.Handlers
                 review.Rating,
                 review.Comment
             );
-            var reviewsQueryable = _reviewService.GetReviewsByProductIdQueryable(request.Id);
-            var reviewPaginatedList = await reviewsQueryable.Select(expression).ToPaginatedListAsync(request.ReviewPageNumber, request.ReviewPageSize);
+            var reviewsQueryable = _reviewService.FilterReviewPaginatedQueryable(request.SortBy, request.Search!, request.ProductId);
+            var reviewPaginatedList = await reviewsQueryable.Select(expression!)
+                                                            .ToPaginatedListAsync(request.ReviewPageNumber, request.ReviewPageSize);
             productMapper.Reviews = reviewPaginatedList;
 
             return Success(productMapper);
@@ -65,7 +66,7 @@ namespace E_Commerce.Core.Features.Products.Queries.Handlers
                 CategoryName = c.Category!.Name,
             };
 
-            var filterQuery = _productService.FilterProductPaginatedQueryable(request.SortBy, request.Search);
+            var filterQuery = _productService.FilterProductPaginatedQueryable(request.SortBy, request.Search!);
             var paginatedList = await filterQuery.Select(expression).ToPaginatedListAsync(request.PageNumber, request.PageSize);
             paginatedList.Meta = new { Count = paginatedList.Data.Count() };
             return paginatedList;

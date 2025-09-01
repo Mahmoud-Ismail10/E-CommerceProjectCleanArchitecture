@@ -15,10 +15,10 @@ namespace E_Commerce.Presentation.Controllers
             return Ok(response);
         }
 
-        [HttpGet(Router.ProductRouting.GetById)]
-        public async Task<IActionResult> GetProductById([FromRoute] Guid id)
+        [HttpGet(Router.ProductRouting.GetSingle)]
+        public async Task<IActionResult> GetProductById([FromQuery] GetProductByIdQuery query)
         {
-            return NewResult(await Mediator.Send(new GetProductByIdQuery(id)));
+            return NewResult(await Mediator.Send(query));
         }
 
         [HttpPost(Router.ProductRouting.Create)]

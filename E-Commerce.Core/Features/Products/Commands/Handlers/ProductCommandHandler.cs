@@ -33,12 +33,12 @@ namespace E_Commerce.Core.Features.Products.Commands.Handlers
         public async Task<ApiResponse<string>> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
             var productMapper = _mapper.Map<Product>(request);
-            var result = await _productService.AddProductAsync(productMapper, request.ImageURL);
+            var result = await _productService.AddProductAsync(productMapper, request.ImageURL!);
             return result switch
             {
-                "FailedToUploadImage" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToUploadImage]),
                 "NoImage" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.NoImage]),
                 "FailedInAdd" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.CreateFailed]),
+                "FailedToUploadImage" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToUploadImage]),
                 _ => Created("")
             };
         }
@@ -46,7 +46,7 @@ namespace E_Commerce.Core.Features.Products.Commands.Handlers
         public async Task<ApiResponse<string>> Handle(EditProductCommand request, CancellationToken cancellationToken)
         {
             var product = await _productService.GetProductByIdAsync(request.Id);
-            if (product == null) return NotFound<string>();
+            if (product == null) return NotFound<string>(_stringLocalizer[SharedResourcesKeys.ProductNotFound]);
             var productMapper = _mapper.Map(request, product);
             var result = await _productService.EditProductAsync(productMapper);
             if (result == "Success") return Edit("");
@@ -55,8 +55,8 @@ namespace E_Commerce.Core.Features.Products.Commands.Handlers
 
         public async Task<ApiResponse<string>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var product = await _productService.GetProductByIdAsync(request.Id);
-            if (product == null) return NotFound<string>();
+            var product = await _productService.GetProductByIdAsync(request.ProductId);
+            if (product == null) return NotFound<string>(_stringLocalizer[SharedResourcesKeys.ProductNotFound]);
             var result = await _productService.DeleteProductAsync(product);
             if (result == "Success") return Deleted<string>();
             else return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.DeleteFailed]);

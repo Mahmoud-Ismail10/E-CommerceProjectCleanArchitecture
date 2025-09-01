@@ -187,24 +187,6 @@ namespace E_Commerce.Service.Services
                                               .FirstOrDefaultAsync();
             return order;
         }
-
-        public Task<IReadOnlyList<Order>> GetOrderListAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsOrderIdExist(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Order?> GetLatestOrderForUserAsync(Guid userId)
-        {
-            return await _orderRepository.GetTableAsTracking()
-                                   .Where(o => o.CustomerId == userId)
-                                   .OrderByDescending(o => o.OrderDate)
-                                   .FirstOrDefaultAsync();
-        }
         #endregion
     }
 }

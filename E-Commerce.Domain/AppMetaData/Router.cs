@@ -63,9 +63,8 @@
         public static class ProductRouting
         {
             public const string Prefix = Rule + "product/";
-            public const string GetAll = Prefix + "getAll";
             public const string Paginated = Prefix + "paginated";
-            public const string GetById = Prefix + SingleRoute;
+            public const string GetSingle = Prefix + "getSingle";
             public const string Create = Prefix + "create";
             public const string Edit = Prefix + "edit";
             public const string Delete = Prefix + SingleRoute;
@@ -75,11 +74,9 @@
         {
             public const string Prefix = Rule + "order/";
             public const string GetMyOrders = Prefix + "getMyOrders";
-            public const string GetAll = Prefix + "getAll";
             public const string Paginated = Prefix + "paginated";
             public const string GetById = Prefix + SingleRoute;
             public const string Create = Prefix + "create";
-            public const string Edit = Prefix + "edit";
             public const string Delete = Prefix + SingleRoute;
             public const string PlaceOrder = Prefix + "placeOrder/" + SingleRoute;
         }
@@ -89,8 +86,6 @@
             public const string Prefix = Rule + "cart/";
             public const string GetById = Prefix + SingleRoute;
             public const string GetMyCart = Prefix + "myCart";
-            public const string Create = Prefix + "create";
-            //public const string Edit = Prefix + "edit";
             public const string AddToCart = Prefix + "addToCart";
             public const string UpdateItemQuantity = Prefix + "updateItemQuantity";
             public const string RemoveFromCart = Prefix + "removeFromCart/" + SingleRoute;
@@ -100,7 +95,6 @@
         public static class CustomerRouting
         {
             public const string Prefix = Rule + "customer/";
-            public const string GetAll = Prefix + "getAll";
             public const string Paginated = Prefix + "paginated";
             public const string GetById = Prefix + SingleRoute;
             public const string Edit = Prefix + "edit";
@@ -142,6 +136,15 @@
             public const string Edit = Prefix + "edit";
             public const string Delete = Prefix + SingleRoute;
             public const string SetShippingAddress = Prefix + "setShippingAddress";
+        }
+
+        public static class ReviewRouting
+        {
+            public const string Prefix = Rule + "review/";
+            public const string Paginated = Prefix + "paginated";
+            public const string Create = Prefix + "create";
+            public const string Edit = Prefix + "edit";
+            public const string Delete = Prefix + SingleRoute;
         }
     }
 }

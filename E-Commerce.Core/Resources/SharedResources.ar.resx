@@ -483,4 +483,7 @@
   <data name="Id" xml:space="preserve">
     <value>المعرف</value>
   </data>
+  <data name="ReviewNotFound" xml:space="preserve">
+    <value>لم يتم العثور على هذه المراجعة</value>
+  </data>
 </root>

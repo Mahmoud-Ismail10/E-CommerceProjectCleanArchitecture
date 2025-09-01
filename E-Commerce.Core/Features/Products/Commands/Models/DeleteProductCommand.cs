@@ -3,5 +3,5 @@ using MediatR;
 
 namespace E_Commerce.Core.Features.Products.Commands.Models
 {
-    public record DeleteProductCommand(Guid Id) : IRequest<ApiResponse<string>>;
+    public record DeleteProductCommand(Guid ProductId) : IRequest<ApiResponse<string>>;
 }

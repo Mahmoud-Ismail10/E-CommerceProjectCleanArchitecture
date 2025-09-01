@@ -5,14 +5,14 @@ using Microsoft.Extensions.Localization;
 
 namespace E_Commerce.Core.Features.Carts.Commands.Validators
 {
-    public class AddToCartValidator : AbstractValidator<AddToCartCommand>
+    public class DeleteCartValidator : AbstractValidator<DeleteCartCommand>
     {
         #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
         #region Constructors
-        public AddToCartValidator(IStringLocalizer<SharedResources> stringLocalizer)
+        public DeleteCartValidator(IStringLocalizer<SharedResources> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             ApplyValidationRoles();
@@ -22,14 +22,9 @@ namespace E_Commerce.Core.Features.Carts.Commands.Validators
         #region Functions Handle
         public void ApplyValidationRoles()
         {
-            RuleFor(c => c.ProductId)
+            RuleFor(c => c.CartId)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
-
-            RuleFor(c => c.Quantity)
-                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
-                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
-                .GreaterThan(0).WithMessage(_stringLocalizer[SharedResourcesKeys.GreaterThanZero]);
         }
         #endregion
     }

@@ -483,4 +483,7 @@
   <data name="Id" xml:space="preserve">
     <value>Id</value>
   </data>
+  <data name="ReviewNotFound" xml:space="preserve">
+    <value>This Review Is Not Found</value>
+  </data>
 </root>

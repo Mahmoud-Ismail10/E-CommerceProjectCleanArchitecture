@@ -13,7 +13,8 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
 {
     public class OrderCommandHandler : ApiResponseHandler,
         IRequestHandler<AddOrderCommand, Guid>,
-        IRequestHandler<PlaceOrderCommand, ApiResponse<PaymentProcessResponse>>
+        IRequestHandler<PlaceOrderCommand, ApiResponse<PaymentProcessResponse>>,
+        IRequestHandler<DeleteOrderCommand, ApiResponse<string>>
     {
         #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
@@ -123,6 +124,14 @@ namespace E_Commerce.Core.Features.Orders.Commands.Handlers
                 "InvalidPaymobIntegrationIDInConfiguration" => BadRequest<PaymentProcessResponse>(_stringLocalizer[SharedResourcesKeys.InvalidPaymobIntegrationIDInConfiguration]),
                 _ => Success(new PaymentProcessResponse(order.Id, result, order.PaymentToken!))
             };
+        }
+
+        public async Task<ApiResponse<string>> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+        {
+            var order = await _orderService.GetOrderByIdAsync(request.OrderId);
+            if (order == null) return NotFound<string>(_stringLocalizer[SharedResourcesKeys.OrderNotFound]);
+            var result = await _orderService.DeleteOrderAsync(order);
+            return result != "Success" ? BadRequest<string>(_stringLocalizer[SharedResourcesKeys.DeleteFailed]) : Deleted<string>();
         }
         #endregion
     }

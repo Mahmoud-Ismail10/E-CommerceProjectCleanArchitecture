@@ -7,14 +7,19 @@ namespace E_Commerce.Core.Features.Employees.Commands.Validators
 {
     public class EditEmployeeValidator : AbstractValidator<EditEmployeeCommand>
     {
+        #region Fields
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+        #endregion
 
+        #region Constructors
         public EditEmployeeValidator(IStringLocalizer<SharedResources> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             ApplyValidationRoles();
         }
+        #endregion
 
+        #region Functions
         public void ApplyValidationRoles()
         {
             RuleFor(e => e.FirstName)
@@ -52,5 +57,6 @@ namespace E_Commerce.Core.Features.Employees.Commands.Validators
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
                 .MaximumLength(200).WithMessage(_stringLocalizer[SharedResourcesKeys.MaxLengthIs200]);
         }
+        #endregion
     }
 }

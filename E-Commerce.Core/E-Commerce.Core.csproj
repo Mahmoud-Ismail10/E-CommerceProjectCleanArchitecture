@@ -33,6 +33,7 @@
     <Folder Include="Features\Deliveries\Queries\" />
     <Folder Include="Features\Emails\Queries\" />
     <Folder Include="Mapping\Orders\Commands\" />
+    <Folder Include="Mapping\Reviews\Queries\" />
     <Folder Include="Mapping\Roles\Commands\" />
   </ItemGroup>
 
