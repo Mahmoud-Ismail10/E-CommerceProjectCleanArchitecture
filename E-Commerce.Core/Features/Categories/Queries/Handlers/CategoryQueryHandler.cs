@@ -45,7 +45,7 @@ namespace E_Commerce.Core.Features.Categories.Queries.Handlers
         public async Task<ApiResponse<GetSingleCategoryResponse>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             var category = await _categoryService.GetCategoryByIdAsync(request.Id);
-            if (category is null) return NotFound<GetSingleCategoryResponse>();
+            if (category is null) return NotFound<GetSingleCategoryResponse>(_stringLocalizer[SharedResourcesKeys.CategoryNotFound]);
             var categoryMapper = _mapper.Map<GetSingleCategoryResponse>(category);
             return Success(categoryMapper);
         }

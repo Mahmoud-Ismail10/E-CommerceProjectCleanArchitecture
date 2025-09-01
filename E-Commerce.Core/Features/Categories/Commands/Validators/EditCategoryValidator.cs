@@ -21,10 +21,15 @@ namespace E_Commerce.Core.Features.Categories.Commands.Validators
 
         public void ApplyValidationRoles()
         {
+            RuleFor(c => c.Id)
+                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
+                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
+
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
                 .MaximumLength(100).WithMessage(_stringLocalizer[SharedResourcesKeys.MaxLengthIs100]);
+
             RuleFor(c => c.Description)
                 .MaximumLength(300).WithMessage(_stringLocalizer[SharedResourcesKeys.MaxLengthIs300]);
         }

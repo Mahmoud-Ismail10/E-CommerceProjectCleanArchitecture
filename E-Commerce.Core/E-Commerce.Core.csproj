@@ -30,11 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Features\ApplicationUser\Queries\Handlers\" />
+    <Folder Include="Features\Deliveries\Queries\" />
     <Folder Include="Features\Emails\Queries\" />
-    <Folder Include="Features\ShippingAddresses\Queries\" />
     <Folder Include="Mapping\Orders\Commands\" />
     <Folder Include="Mapping\Roles\Commands\" />
-    <Folder Include="Mapping\ShippingAddresses\Queries\" />
   </ItemGroup>
 
 </Project>

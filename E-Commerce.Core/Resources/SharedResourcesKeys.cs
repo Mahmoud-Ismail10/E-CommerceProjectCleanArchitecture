@@ -56,7 +56,7 @@
         public const string ConfirmPassword = "ConfirmPassword";
         public const string CurrentPassword = "CurrentPassword";
         public const string NewPassword = "NewPassword";
-        public const string CartNotFound = "CartNotFound";
+        public const string CartNotFoundOrEmpty = "CartNotFoundOrEmpty";
         public const string EmailIsNotConfirmed = "EmailIsNotConfirmed";
         public const string TokenIsExpired = "TokenIsExpired";
         public const string AlgorithmIsWrong = "AlgorithmIsWrong";
@@ -99,6 +99,31 @@
         public const string ItemAlreadyExistsInCart = "ItemAlreadyExistsInCart";
         public const string FailedInDeletingCart = "FailedInDeletingCart";
         public const string ShippingAddressDoesNotExist = "ShippingAddressDoesNotExist";
+        public const string OrderNotFound = "OrderNotFound";
+        public const string PaymobIframeIDIsNotConfigured = "PaymobIframeIDIsNotConfigured";
+        public const string PaymentTokenCannotBeNullOrEmpty = "PaymentTokenCannotBeNullOrEmpty";
+        public const string NoCustomerFoundForOrder = "NoCustomerFoundForOrder";
+        public const string FailedToUpdateOrderAfterPaymentCreation = "FailedToUpdateOrderAfterPaymentCreation";
+        public const string InvalidPaymobIntegrationIDInConfiguration = "InvalidPaymobIntegrationIDInConfiguration";
+        public const string FailedToProcessPaymentForOrder = "FailedToProcessPaymentForOrder";
+        public const string InvalidOrder = "InvalidOrder";
+        public const string OrderId = "OrderId";
+        public const string PaymentMethodNotSelected = "PaymentMethodNotSelected";
+        public const string ShippingAddressIsRequiredForHomeDelivery = "ShippingAddressIsRequiredForHomeDelivery";
+        public const string FailedToConfirmCODOrder = "FailedToConfirmCODOrder";
+        public const string FailedToPersistOnlinePaymentData = "FailedToPersistOnlinePaymentData";
+        public const string ErrorInPlacedOrder = "ErrorInPlacedOrder";
+        public const string InvalidPayload = "InvalidPayload";
+        public const string PaymentNotFound = "PaymentNotFound";
+        public const string FailedToUpdateOrder = "FailedToUpdateOrder";
+        public const string FailedToDeleteCartAfterOrderSuccess = "FailedToDeleteCartAfterOrderSuccess";
+        public const string PaymentIntentIdMissing = "PaymentIntentIdMissing";
+        public const string ErrorProcessingServerCallback = "ErrorProcessingServerCallback";
+        public const string InvalidCallbackData = "InvalidCallbackData";
+        public const string FailedToSendOrderConfirmationEmail = "FailedToSendOrderConfirmationEmail";
+        public const string InvalidHMAC = "InvalidHMAC";
+        public const string CategoryNotFound = "CategoryNotFound";
+        public const string Id = "Id";
 
     }
 }

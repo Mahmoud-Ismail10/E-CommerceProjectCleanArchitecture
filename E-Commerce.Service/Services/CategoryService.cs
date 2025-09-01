@@ -20,13 +20,13 @@ namespace E_Commerce.Service.Services
         }
         #endregion
 
+        #region Handle Functions
         public async Task<string> AddCategoryAsync(Category category)
         {
             await _categoryRepository.AddAsync(category);
             return "Success";
         }
 
-        #region Handle Functions
         public async Task<string> DeleteCategoryAsync(Category category)
         {
             var transaction = await _categoryRepository.BeginTransactionAsync();
@@ -86,7 +86,7 @@ namespace E_Commerce.Service.Services
         public async Task<bool> IsNameExistExcludeSelf(string name, Guid id)
         {
             var category = await _categoryRepository.GetTableNoTracking()
-                                              .Where(c => c.Name!.Equals(name) & !c.Id.Equals(id))
+                                              .Where(c => c.Name!.Equals(name) && !c.Id.Equals(id))
                                               .FirstOrDefaultAsync();
             if (category != null) return true;
             return false;

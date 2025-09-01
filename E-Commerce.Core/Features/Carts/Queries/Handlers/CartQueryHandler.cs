@@ -39,7 +39,7 @@ namespace E_Commerce.Core.Features.Carts.Queries.Handlers
             // 1. Get cart from Redis
             var cartKey = $"cart:{request.Id}";
             var cart = await _cartService.GetCartByKeyAsync(cartKey);
-            if (cart == null) return NotFound<GetSingleCartResponse>(_stringLocalizer[SharedResourcesKeys.CartNotFound]);
+            if (cart == null) return NotFound<GetSingleCartResponse>(_stringLocalizer[SharedResourcesKeys.CartNotFoundOrEmpty]);
 
             // 2. Extract ProductIds
             var productIds = cart.CartItems.Select(i => i.ProductId).ToList();
@@ -70,7 +70,7 @@ namespace E_Commerce.Core.Features.Carts.Queries.Handlers
         {
             // 1. Get cart from Redis
             var cart = await _cartService.GetMyCartAsync();
-            if (cart is null) return NotFound<GetSingleCartResponse>(_stringLocalizer[SharedResourcesKeys.CartNotFound]);
+            if (cart is null) return NotFound<GetSingleCartResponse>(_stringLocalizer[SharedResourcesKeys.CartNotFoundOrEmpty]);
 
             // 2. Extract ProductIds
             var productIds = cart.CartItems.Select(i => i.ProductId).ToList();

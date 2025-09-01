@@ -169,7 +169,7 @@
     <value>هذا الكائن موجود بالفعل</value>
   </data>
   <data name="IsNotExist" xml:space="preserve">
-    <value> غير موجود</value>
+    <value>غير موجود</value>
   </data>
   <data name="MinLengthIs6" xml:space="preserve">
     <value>لا يمكن أن تقل الطول عن 6 احرف.</value>
@@ -351,8 +351,8 @@
   <data name="CartId" xml:space="preserve">
     <value>معرف السلة</value>
   </data>
-  <data name="CartNotFound" xml:space="preserve">
-    <value>هذه السلة غير موجودة</value>
+  <data name="CartNotFoundOrEmpty" xml:space="preserve">
+    <value>هذه السلة غير موجودة أو فارغة</value>
   </data>
   <data name="InvalidCombination" xml:space="preserve">
     <value>لا يصلح اختيارك لطريقة الدفع مع طريقة الشحن.</value>
@@ -407,5 +407,80 @@
   </data>
   <data name="ShippingAddressDoesNotExist" xml:space="preserve">
     <value>عنوان الشحن غير موجود</value>
+  </data>
+  <data name="OrderNotFound" xml:space="preserve">
+    <value>الطلب غير موجود</value>
+  </data>
+  <data name="PaymobIframeIDIsNotConfigured" xml:space="preserve">
+    <value>لم يتم تكوين الصفحة الخاصه بعملية الدفع</value>
+  </data>
+  <data name="PaymentTokenCannotBeNullOrEmpty" xml:space="preserve">
+    <value>لا يمكن أن يكون رمز الدفع فارغًا أو غير موجود</value>
+  </data>
+  <data name="NoCustomerFoundForOrder" xml:space="preserve">
+    <value>لا يوجد عميل لهذا الطلب</value>
+  </data>
+  <data name="FailedToUpdateOrderAfterPaymentCreation" xml:space="preserve">
+    <value>فشل في تحديث الطلب بعد انشاء عملية الدفع</value>
+  </data>
+  <data name="InvalidPaymobIntegrationIDInConfiguration" xml:space="preserve">
+    <value>معرف التكامل الخاص بعملية الدفع غير صالح بالتكوين</value>
+  </data>
+  <data name="FailedToProcessPaymentForOrder" xml:space="preserve">
+    <value>فشل في عملية الدفع لهذا الطلب</value>
+  </data>
+  <data name="InvalidOrder" xml:space="preserve">
+    <value>الطلب غير صالح</value>
+  </data>
+  <data name="OrderId" xml:space="preserve">
+    <value>معرف الطلب</value>
+  </data>
+  <data name="PaymentMethodNotSelected" xml:space="preserve">
+    <value>لم يتم تحديد طريقة الدفع</value>
+  </data>
+  <data name="ShippingAddressIsRequiredForHomeDelivery" xml:space="preserve">
+    <value>عنوان الشحن مطلوب لتسليم المنازل</value>
+  </data>
+  <data name="FailedToPersistOnlinePaymentData" xml:space="preserve">
+    <value>فشل في استمرار بيانات الدفع عبر الإنترنت</value>
+  </data>
+  <data name="FailedToConfirmCODOrder" xml:space="preserve">
+    <value>فشل في تأكيد طلب الدفع عن طريق الشحن</value>
+  </data>
+  <data name="ErrorInPlacedOrder" xml:space="preserve">
+    <value>فشل في حجز الطلب</value>
+  </data>
+  <data name="InvalidPayload" xml:space="preserve">
+    <value>محتوى غير صحيح</value>
+  </data>
+  <data name="PaymentNotFound" xml:space="preserve">
+    <value>لم يتم العثور على عملية الدفع</value>
+  </data>
+  <data name="FailedToUpdateOrder" xml:space="preserve">
+    <value>فشل تحديث الطلب</value>
+  </data>
+  <data name="FailedToDeleteCartAfterOrderSuccess" xml:space="preserve">
+    <value>فشل حذف السلة بعد نجاح الطلب</value>
+  </data>
+  <data name="PaymentIntentIdMissing" xml:space="preserve">
+    <value>معرف اذن الدفع مفقود</value>
+  </data>
+  <data name="ErrorProcessingServerCallback" xml:space="preserve">
+    <value>خطأ في معالجة استدعاء الخادم</value>
+  </data>
+  <data name="InvalidCallbackData" xml:space="preserve">
+    <value>بيانات استرجاع غير صالحة</value>
+  </data>
+  <data name="FailedToSendOrderConfirmationEmail" xml:space="preserve">
+    <value>فشل في إرسال بريد إلكتروني لتأكيد الطلب</value>
+  </data>
+  <data name="InvalidHMAC" xml:space="preserve">
+    <value>رمز HMAC غير صالح</value>
+  </data>
+  <data name="CategoryNotFound" xml:space="preserve">
+    <value>هذه الفئه غير موجوده</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>المعرف</value>
   </data>
 </root>

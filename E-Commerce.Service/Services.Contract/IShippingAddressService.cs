@@ -4,7 +4,7 @@ namespace E_Commerce.Service.Services.Contract
 {
     public interface IShippingAddressService
     {
-        Task<IReadOnlyList<ShippingAddress?>> GetShippingAddressListAsync();
+        Task<IReadOnlyList<ShippingAddress?>> GetShippingAddressListByCustomerIdAsync(Guid customerId);
         Task<ShippingAddress?> GetShippingAddressByIdAsync(Guid? id);
         Task<string> AddShippingAddressAsync(ShippingAddress shippingAddress);
         Task<string> EditShippingAddressAsync(ShippingAddress shippingAddress);

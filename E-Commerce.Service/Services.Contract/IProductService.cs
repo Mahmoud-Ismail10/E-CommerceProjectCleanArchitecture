@@ -14,5 +14,6 @@ namespace E_Commerce.Service.Services.Contract
         Task<string> DeleteProductAsync(Product product);
         Task<bool> IsNameExist(string name);
         Task<bool> IsNameExistExcludeSelf(string name, Guid id);
+        Task<string> DiscountQuantityFromStock(List<OrderItem> orderItems);
     }
 }

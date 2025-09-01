@@ -1,4 +1,5 @@
-﻿using E_Commerce.Domain.Enums;
+﻿using E_Commerce.Domain.Entities;
+using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Helpers;
 using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
@@ -13,25 +14,25 @@ namespace E_Commerce.Service.Services
         #region Fields
         private readonly EmailSettings _emailSettings;
         private readonly ICurrentUserService _currentUserService;
-        private readonly IOrderService _orderService;
+        //private readonly IOrderService _orderService;
         #endregion
 
         #region Constructors
-        public EmailsService(EmailSettings emailSettings, ICurrentUserService currentUserService, IOrderService orderService)
+        public EmailsService(EmailSettings emailSettings,
+            ICurrentUserService currentUserService)
         {
             _emailSettings = emailSettings;
             _currentUserService = currentUserService;
-            _orderService = orderService;
+            //_orderService = orderService;
         }
         #endregion
 
         #region Handle Functions
-        public async Task<string> SendEmailAsync(string email, string ReturnUrl, EmailType? emailType)
+        public async Task<string> SendEmailAsync(string email, string ReturnUrl, EmailType? emailType, Order? order = null)
         {
             var userId = _currentUserService.GetUserId();
-            var order = await _orderService.GetLatestOrderForUserAsync(userId);
-            var customerEmail = order.Customer?.Email;
-            var paymentStatus = order.Payment?.Status?.ToString() ?? "Unknown";
+
+            var paymentStatus = order?.Payment?.Status?.ToString() ?? "Unknown";
 
             var statusColor = paymentStatus switch
             {
@@ -79,17 +80,17 @@ namespace E_Commerce.Service.Services
                               <html>
                                   <body style='font-family: Arial, sans-serif; color: #333;'>
                                       <h2>Order Placed Successfully!</h2>
-                                      <p>Dear {order.Customer?.FirstName} {order.Customer?.LastName},</p>
-                                      <p>Your order #{order.Id} has been successfully placed. We're now preparing your items for delivery or pickup.</p>
+                                      <p>Dear {order?.Customer?.FirstName} {order?.Customer?.LastName},</p>
+                                      <p>Your order #{order?.Id} has been successfully placed. We're now preparing your items for delivery or pickup.</p>
                              
                                       <table style='border-collapse: collapse; width: 100%; max-width: 600px;'>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Order ID:</td>
-                                              <td style='padding: 8px;'>{order.Id}</td>
+                                              <td style='padding: 8px;'>{order?.Id}</td>
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Order Date:</td>
-                                              <td style='padding: 8px;'>{order.OrderDate:MMMM dd, yyyy}</td>
+                                              <td style='padding: 8px;'>{order?.OrderDate:MMMM dd, yyyy}</td>
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Payment Status:</td>
@@ -97,23 +98,23 @@ namespace E_Commerce.Service.Services
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Delivery Method:</td>
-                                              <td style='padding: 8px;'>{order.Delivery?.DeliveryMethod}</td>
+                                              <td style='padding: 8px;'>{order?.Delivery?.DeliveryMethod}</td>
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Estimated Delivery Date:</td>
-                                              <td style='padding: 8px;'>{order.Delivery?.DeliveryTime:MMMM dd, yyyy}</td>
+                                              <td style='padding: 8px;'>{order?.Delivery?.DeliveryTime:MMMM dd, yyyy}</td>
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Order Cost:</td>
-                                              <td style='padding: 8px;'>{order.TotalAmount}</td>
+                                              <td style='padding: 8px;'>{order?.TotalAmount}</td>
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Delivery Cost:</td>
-                                              <td style='padding: 8px;'>{order.Delivery?.Cost}</td>
+                                              <td style='padding: 8px;'>{order?.Delivery?.Cost}</td>
                                           </tr>
                                           <tr>
                                               <td style='padding: 8px; font-weight: bold;'>Total Amount:</td>
-                                              <td style='padding: 8px;'>{order.TotalAmount + order.Delivery?.Cost:F2}</td>
+                                              <td style='padding: 8px;'>{order?.TotalAmount + order?.Delivery?.Cost:F2}</td>
                                           </tr>
                                       </table>
                              

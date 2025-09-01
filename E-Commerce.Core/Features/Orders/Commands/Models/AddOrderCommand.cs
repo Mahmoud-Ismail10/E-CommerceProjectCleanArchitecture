@@ -1,11 +1,11 @@
-﻿using E_Commerce.Core.Bases;
-using E_Commerce.Domain.Enums;
-using MediatR;
+﻿using MediatR;
 
-namespace E_Commerce.Core.Features.Orders.Commands.Models;
-public class AddOrderCommand : IRequest<ApiResponse<string>>
+namespace E_Commerce.Core.Features.Orders.Commands.Models
 {
-    public PaymentMethod? PaymentMethod { get; set; }
-    public Guid? ShippingAddressId { get; set; }
-    public DeliveryMethod? DeliveryMethod { get; set; }
+    public record AddOrderCommand : IRequest<Guid>;
 }
+//{
+//public PaymentMethod? PaymentMethod { get; set; }
+//public Guid? ShippingAddressId { get; set; }
+//public DeliveryMethod? DeliveryMethod { get; set; }
+//}

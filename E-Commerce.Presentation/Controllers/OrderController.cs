@@ -30,10 +30,17 @@ namespace E_Commerce.Presentation.Controllers
         }
 
         [HttpPost(Router.OrderRouting.Create)]
-        public async Task<IActionResult> CreateOrder([FromBody] AddOrderCommand command)
+        public async Task<IActionResult> CreateOrder()
         {
-            var response = await Mediator.Send(command);
-            return NewResult(response);
+            var response = await Mediator.Send(new AddOrderCommand());
+            return Ok(response);
+        }
+
+        [HttpPut(Router.OrderRouting.PlaceOrder)]
+        public async Task<IActionResult> PlaceOrder([FromRoute] Guid id)
+        {
+            var response = await Mediator.Send(new PlaceOrderCommand(id));
+            return Ok(response);
         }
     }
 }

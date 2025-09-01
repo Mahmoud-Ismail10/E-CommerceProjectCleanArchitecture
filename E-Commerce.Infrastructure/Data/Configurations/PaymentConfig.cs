@@ -9,9 +9,6 @@ namespace E_Commerce.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            builder.Property(p => p.PaymentDate)
-                .IsRequired(false);
-
             builder.Property(p => p.PaymentMethod)
                 .HasConversion(
                 PM => PM.ToString(),
@@ -19,8 +16,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
                 .IsRequired();
 
             builder.Property(p => p.TotalAmount)
-                .HasColumnType("decimal(18,2)")
-                .IsRequired();
+                .HasColumnType("decimal(18,2)");
 
             builder.Property(p => p.Status)
                 .HasConversion(

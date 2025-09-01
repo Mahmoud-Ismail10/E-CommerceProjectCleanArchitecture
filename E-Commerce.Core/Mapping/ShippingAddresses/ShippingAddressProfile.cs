@@ -7,6 +7,9 @@ namespace E_Commerce.Core.Mapping.ShippingAddresses
         public ShippingAddressProfile()
         {
             AddShippingAddressCommandMapping();
+            EditShippingAddressCommandMapping();
+            GetShippingAddressListQueryMapping();
+            GetSingleShippingAddressQueryMapping();
         }
     }
 }

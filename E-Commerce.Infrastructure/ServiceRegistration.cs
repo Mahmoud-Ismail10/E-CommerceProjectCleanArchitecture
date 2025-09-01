@@ -57,7 +57,7 @@ namespace E_Commerce.Infrastructure
 
             configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
             configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
-            configuration.GetSection(nameof(PaymobSettings)).Bind(paymobSettings);
+            configuration.GetSection("Paymob").Bind(paymobSettings);
 
             services.AddSingleton(jwtSettings);
             services.AddSingleton(emailSettings);

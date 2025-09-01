@@ -351,8 +351,8 @@
   <data name="CartId" xml:space="preserve">
     <value>CartId</value>
   </data>
-  <data name="CartNotFound" xml:space="preserve">
-    <value>This Cart is not found</value>
+  <data name="CartNotFoundOrEmpty" xml:space="preserve">
+    <value>This Cart is not found or empty.</value>
   </data>
   <data name="InvalidCombination" xml:space="preserve">
     <value>Invalid payment and delivery combination.</value>
@@ -407,5 +407,80 @@
   </data>
   <data name="ShippingAddressDoesNotExist" xml:space="preserve">
     <value>Shipping Address Does Not Exist</value>
+  </data>
+  <data name="OrderNotFound" xml:space="preserve">
+    <value>The Order Is Not Found</value>
+  </data>
+  <data name="PaymobIframeIDIsNotConfigured" xml:space="preserve">
+    <value>Paymob Iframe ID Is Not Configured</value>
+  </data>
+  <data name="PaymentTokenCannotBeNullOrEmpty" xml:space="preserve">
+    <value>Payment Token Cannot Be Null Or Empty</value>
+  </data>
+  <data name="NoCustomerFoundForOrder" xml:space="preserve">
+    <value>No Customer Found For This Order</value>
+  </data>
+  <data name="FailedToUpdateOrderAfterPaymentCreation" xml:space="preserve">
+    <value>Failed To Update Order After Payment Creation</value>
+  </data>
+  <data name="InvalidPaymobIntegrationIDInConfiguration" xml:space="preserve">
+    <value>Invalid Paymob Integration ID In Configuration</value>
+  </data>
+  <data name="FailedToProcessPaymentForOrder" xml:space="preserve">
+    <value>Failed To Process Payment For This Order</value>
+  </data>
+  <data name="InvalidOrder" xml:space="preserve">
+    <value>InvalidOrder</value>
+  </data>
+  <data name="OrderId" xml:space="preserve">
+    <value>OrderId</value>
+  </data>
+  <data name="PaymentMethodNotSelected" xml:space="preserve">
+    <value>Payment Method Not Selected</value>
+  </data>
+  <data name="ShippingAddressIsRequiredForHomeDelivery" xml:space="preserve">
+    <value>Shipping Address Is Required For Home Delivery</value>
+  </data>
+  <data name="FailedToPersistOnlinePaymentData" xml:space="preserve">
+    <value>Failed To Persist Online Payment Data</value>
+  </data>
+  <data name="FailedToConfirmCODOrder" xml:space="preserve">
+    <value>Failed To Confirm COD Order</value>
+  </data>
+  <data name="ErrorInPlacedOrder" xml:space="preserve">
+    <value>Error In Placed Order</value>
+  </data>
+  <data name="InvalidPayload" xml:space="preserve">
+    <value>InvalidPayload</value>
+  </data>
+  <data name="PaymentNotFound" xml:space="preserve">
+    <value>The Payment Is Not Found</value>
+  </data>
+  <data name="FailedToUpdateOrder" xml:space="preserve">
+    <value>Failed To Update Order</value>
+  </data>
+  <data name="FailedToDeleteCartAfterOrderSuccess" xml:space="preserve">
+    <value>Failed To Delete Cart After Order Success</value>
+  </data>
+  <data name="PaymentIntentIdMissing" xml:space="preserve">
+    <value>Payment Intent Id Missing</value>
+  </data>
+  <data name="ErrorProcessingServerCallback" xml:space="preserve">
+    <value>Error Processing Server Callback</value>
+  </data>
+  <data name="InvalidCallbackData" xml:space="preserve">
+    <value>Invalid Callback Data</value>
+  </data>
+  <data name="FailedToSendOrderConfirmationEmail" xml:space="preserve">
+    <value>Failed To Send Order Confirmation Email</value>
+  </data>
+  <data name="InvalidHMAC" xml:space="preserve">
+    <value>Invalid HMAC</value>
+  </data>
+  <data name="CategoryNotFound" xml:space="preserve">
+    <value>This Category Is NotFound</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
   </data>
 </root>

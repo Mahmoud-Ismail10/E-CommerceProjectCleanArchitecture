@@ -1,3 +1,4 @@
+using DotNetEnv;
 using E_Commerce.Core;
 using E_Commerce.Core.Filters;
 using E_Commerce.Core.Middleware;
@@ -22,6 +23,7 @@ namespace E_Commerce.Presentation
     {
         public static async Task Main(string[] args)
         {
+            Env.Load(); // Load environment variables from .env file
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -35,7 +37,7 @@ namespace E_Commerce.Presentation
 
             builder.Services
                 .AddInfrastructureDependencies()
-                .AddServiceDependencies()
+                .AddServiceDependencies(builder.Configuration)
                 .AddCoreDependencies()
                 .AddServiceRegistration(builder.Configuration);
             #endregion

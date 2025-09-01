@@ -184,7 +184,7 @@ namespace E_Commerce.Service.Services
                 await transact.CommitAsync();
                 return "Success";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transact.RollbackAsync();
                 return "FailedToUpdateUserClaims";

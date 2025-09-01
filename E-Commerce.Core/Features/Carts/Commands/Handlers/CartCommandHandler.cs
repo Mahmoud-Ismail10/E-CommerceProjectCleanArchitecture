@@ -61,7 +61,7 @@ namespace E_Commerce.Core.Features.Carts.Commands.Handlers
             return result switch
             {
                 "Success" => Success<string>(_stringLocalizer[SharedResourcesKeys.ItemRemovedFromCart]),
-                "CartNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.CartNotFound]),
+                "CartNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.CartNotFoundOrEmpty]),
                 "ProductNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.ProductNotFound]),
                 "ItemNotFoundInCart" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.ItemNotFoundInCart]),
                 "FailedInRemoveItemFromCart" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToModifyThisCart]),
@@ -75,7 +75,7 @@ namespace E_Commerce.Core.Features.Carts.Commands.Handlers
             return result switch
             {
                 "Success" => Success<string>(_stringLocalizer[SharedResourcesKeys.ItemQuantityUpdated]),
-                "CartNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.CartNotFound]),
+                "CartNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.CartNotFoundOrEmpty]),
                 "ProductNotFound" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.ProductNotFound]),
                 "ItemNotFoundInCart" => NotFound<string>(_stringLocalizer[SharedResourcesKeys.ItemNotFoundInCart]),
                 "FailedInUpdateItemQuantity" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.FailedToModifyThisCart]),

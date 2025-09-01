@@ -81,6 +81,7 @@
             public const string Create = Prefix + "create";
             public const string Edit = Prefix + "edit";
             public const string Delete = Prefix + SingleRoute;
+            public const string PlaceOrder = Prefix + "placeOrder/" + SingleRoute;
         }
 
         public static class CartRouting
@@ -117,6 +118,21 @@
             public const string Delete = Prefix + SingleRoute;
         }
 
+        public static class PaymentRouting
+        {
+            public const string Prefix = Rule + "payment/";
+            public const string SetPaymentMethod = Prefix + "setPaymentMethod";
+            public const string ServerCallback = Prefix + "serverCallback";
+            public const string PaymobCallback = Prefix + "paymobCallback";
+        }
+
+        public static class DeliveryRouting
+        {
+            public const string Prefix = Rule + "delivery/";
+            public const string SetDeliveryMethod = Prefix + "setDeliveryMethod";
+            public const string EditDeliveryMethod = Prefix + "editDeliveryMethod";
+        }
+
         public static class ShippingAddressRouting
         {
             public const string Prefix = Rule + "shippingAddress/";
@@ -125,6 +141,7 @@
             public const string Create = Prefix + "create";
             public const string Edit = Prefix + "edit";
             public const string Delete = Prefix + SingleRoute;
+            public const string SetShippingAddress = Prefix + "setShippingAddress";
         }
     }
 }

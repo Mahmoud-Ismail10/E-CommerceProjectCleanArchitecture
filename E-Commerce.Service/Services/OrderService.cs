@@ -1,7 +1,6 @@
 ﻿using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Enums.Sorting;
-using E_Commerce.Domain.Helpers;
 using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
@@ -14,98 +13,88 @@ namespace E_Commerce.Service.Services
         #region Fields
         private readonly IOrderRepository _orderRepository;
         private readonly IProductService _productService;
-        private readonly IDeliveryService _deliveryService;
-        private readonly ICartService _cartService;
-        private readonly IShippingAddressService _shippingAddressService;
-        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IPaymobService _paymobService;
         #endregion
 
         #region Constructors
         public OrderService(IOrderRepository orderRepository,
             IProductService productService,
-            IDeliveryService deliveryService,
-            ICartService cartService,
-            IShippingAddressService shippingAddressService,
-            IOrderItemRepository orderItemRepository)
+            IPaymobService paymobService)
         {
             _orderRepository = orderRepository;
             _productService = productService;
-            _deliveryService = deliveryService;
-            _cartService = cartService;
-            _shippingAddressService = shippingAddressService;
-            _orderItemRepository = orderItemRepository;
+            _paymobService = paymobService;
         }
         #endregion
 
         #region handle Functions
         public async Task<string> AddOrderAsync(Order order)
         {
-            using var transaction = await _orderRepository.BeginTransactionAsync();
             try
             {
-                // Discount quantity from stock
-                foreach (var item in order.OrderItems)
-                {
-                    var product = await _productService.GetProductByIdAsync(item.ProductId);
-                    if (product != null)
-                    {
-                        product.StockQuantity -= item.Quantity;
-                        var result1 = await _productService.EditProductAsync(product);
-                        if (result1 != "Success")
-                        {
-                            await transaction.RollbackAsync();
-                            return "FailedInDiscountQuantityFromStock"; // Return error message from product service
-                        }
-                    }
-                }
-
-                // Delivery Settings
-                if (order.Delivery!.DeliveryMethod != DeliveryMethod.PickupFromBranch)
-                {
-                    var shippingAddress = await _shippingAddressService.GetShippingAddressByIdAsync(order.ShippingAddressId);
-                    if (shippingAddress == null)
-                    {
-                        await transaction.RollbackAsync();
-                        return "ShippingAddressDoesNotExist";
-                    }
-
-                    var deliveryOffset = DeliveryTimeCalculator.Calculate(shippingAddress.City, order.Delivery.DeliveryMethod);
-                    var deliveryCost = DeliveryCostCalculator.Calculate(shippingAddress.City, order.Delivery.DeliveryMethod);
-
-                    order.Delivery.Id = Guid.NewGuid();
-                    order.Delivery.Description = $"Delivery for order {order.Id} to {shippingAddress.State}, {shippingAddress.City}, {shippingAddress.Street}";
-                    order.Delivery.DeliveryTime = DateTime.UtcNow.Add(deliveryOffset);
-                    order.Delivery.Cost = deliveryCost;
-                    order.Delivery.Status = Status.Pending;
-                    order.DeliveryId = order.Delivery.Id;
-                    _orderRepository.AttachEntity(shippingAddress);
-                    //order.ShippingAddress = shippingAddress;
-                }
-                else
-                    order.Delivery = null;
-
                 await _orderRepository.AddAsync(order);
-                //foreach (var item in order.OrderItems)
-                //{
-                //    item.OrderId = order.Id;
-                //}
-
-                //await _orderItemRepository.AddRangeAsync(order.OrderItems);
-
-                var result2 = await _cartService.DeleteMyCartAsync();
-                if (!result2)
-                {
-                    await transaction.RollbackAsync();
-                    return "FailedInDeletingCart";
-                }
-                await transaction.CommitAsync();
                 return "Success";
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 Log.Error("Error adding order: {Message}", ex.InnerException?.Message ?? ex.Message);
                 return "FailedInAdd";
+            }
+        }
+
+        public async Task<string> PlaceOrderAsync(Order order)
+        {
+            using var transaction = await _orderRepository.BeginTransactionAsync();
+            try
+            {
+                var discountResult = await _productService.DiscountQuantityFromStock(order.OrderItems.ToList());
+                if (discountResult != "Success") return discountResult;
+
+                if (order.Payment!.PaymentMethod == null)
+                    return "PaymentMethodNotSelected";
+
+                // Validate delivery prerequisites
+                if (order.Delivery != null && order.Delivery.DeliveryMethod != DeliveryMethod.PickupFromBranch && order.ShippingAddressId == null)
+                    return "ShippingAddressIsRequiredForHomeDelivery";
+
+                if (order.Payment.PaymentMethod == PaymentMethod.CashOnDelivery)
+                {
+                    order.Status = Status.Completed;
+                    if (order.Payment != null)
+                        order.Payment.Status = Status.Pending;
+
+                    var edit = await EditOrderAsync(order);
+                    if (edit != "Success")
+                    {
+                        await transaction.RollbackAsync();
+                        return "FailedToConfirmCODOrder";
+                    }
+                    await transaction.CommitAsync();
+                    return "Success";
+                }
+
+                // Online payment (Paymob)
+                var (newOrder, message) = await _paymobService.ProcessPaymentForOrderAsync(order);
+                if (message == "Success")
+                {
+                    var save = await EditOrderAsync(newOrder!);
+                    if (save != "Success")
+                    {
+                        await transaction.RollbackAsync();
+                        return "FailedToPersistOnlinePaymentData";
+                    }
+                    var iframeUrl = _paymobService.GetPaymentIframeUrl(order.PaymentToken!);
+                    await transaction.CommitAsync();
+                    return iframeUrl;
+                }
+                await transaction.RollbackAsync();
+                return message;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Log.Error("Error in placed order: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "ErrorInPlacedOrder";
             }
         }
 

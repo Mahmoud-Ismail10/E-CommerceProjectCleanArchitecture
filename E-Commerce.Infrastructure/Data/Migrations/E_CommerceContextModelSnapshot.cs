@@ -48,14 +48,14 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Cost")
+                    b.Property<decimal?>("Cost")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DeliveryMethod")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("DeliveryTime")
+                    b.Property<DateTimeOffset?>("DeliveryTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
@@ -245,7 +245,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-                    b.Property<Guid>("PaymentId")
+                    b.Property<Guid?>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ShippingAddressId")
@@ -267,7 +267,8 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .HasFilter("[DeliveryId] IS NOT NULL");
 
                     b.HasIndex("PaymentId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PaymentId] IS NOT NULL");
 
                     b.HasIndex("ShippingAddressId")
                         .IsUnique()
@@ -320,7 +321,7 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal?>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("TransactionId")
@@ -613,13 +614,11 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                     b.HasOne("E_Commerce.Domain.Entities.Payment", "Payment")
                         .WithOne()
                         .HasForeignKey("E_Commerce.Domain.Entities.Order", "PaymentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("E_Commerce.Domain.Entities.ShippingAddress", "ShippingAddress")
                         .WithOne()
-                        .HasForeignKey("E_Commerce.Domain.Entities.Order", "ShippingAddressId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("E_Commerce.Domain.Entities.Order", "ShippingAddressId");
 
                     b.Navigation("Customer");
 

@@ -31,7 +31,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
             builder.HasOne(o => o.ShippingAddress)
                 .WithOne()
                 .HasForeignKey<Order>(o => o.ShippingAddressId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasOne(o => o.Payment)
                 .WithOne()

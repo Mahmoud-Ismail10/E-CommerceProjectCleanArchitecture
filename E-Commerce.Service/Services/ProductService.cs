@@ -129,10 +129,31 @@ namespace E_Commerce.Service.Services
         public async Task<bool> IsNameExistExcludeSelf(string name, Guid id)
         {
             var product = await _productRepository.GetTableNoTracking()
-                                              .Where(c => c.Name!.Equals(name) & !c.Id.Equals(id))
+                                              .Where(c => c.Name!.Equals(name) && !c.Id.Equals(id))
                                               .FirstOrDefaultAsync();
             if (product != null) return true;
             return false;
+        }
+
+        public async Task<string> DiscountQuantityFromStock(List<OrderItem> orderItems)
+        {
+            if (orderItems is not null)
+            {
+                foreach (var item in orderItems)
+                {
+                    var product = await GetProductByIdAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.StockQuantity -= item.Quantity;
+                        var result = await EditProductAsync(product);
+                        if (result != "Success")
+                            return "FailedInDiscountQuantityFromStock";
+                    }
+                    return "ProductNotFound";
+                }
+                return "Success";
+            }
+            return "CartIsEmpty";
         }
         #endregion
     }

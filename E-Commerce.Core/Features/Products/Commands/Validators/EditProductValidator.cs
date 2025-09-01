@@ -28,6 +28,10 @@ namespace E_Commerce.Core.Features.Products.Commands.Validators
         #region Handle Functions
         public void ApplyValidationRoles()
         {
+            RuleFor(c => c.Id)
+                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
+                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required]);
+
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.NotEmpty])
                 .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.Required])
@@ -50,7 +54,7 @@ namespace E_Commerce.Core.Features.Products.Commands.Validators
         public void ApplyCustomValidationRoles()
         {
             RuleFor(c => c.Name)
-                .MustAsync(async (model, name, cancellation) => !await _productService.IsNameExistExcludeSelf(name, model.Id))
+                .MustAsync(async (model, name, cancellation) => !await _productService.IsNameExistExcludeSelf(name!, model.Id))
                 .WithMessage(_stringLocalizer[SharedResourcesKeys.IsExist]);
 
             RuleFor(c => c.CategoryId)

@@ -34,14 +34,39 @@ namespace E_Commerce.Service.Services
             }
         }
 
-        public Task<string> DeleteShippingAddressAsync(ShippingAddress shippingAddress)
+        public async Task<IReadOnlyList<ShippingAddress?>> GetShippingAddressListByCustomerIdAsync(Guid customerId)
         {
-            throw new NotImplementedException();
+            return await _shippingAddressRepository.GetTableNoTracking()
+                                              .Where(c => c.CustomerId.Equals(customerId))
+                                              .ToListAsync();
         }
 
-        public Task<string> EditShippingAddressAsync(ShippingAddress shippingAddress)
+        public async Task<string> DeleteShippingAddressAsync(ShippingAddress shippingAddress)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _shippingAddressRepository.DeleteAsync(shippingAddress);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error deleting shipping address : {ErrorMessage}", ex.InnerException?.Message ?? ex.Message);
+                return "FailedInDelete";
+            }
+        }
+
+        public async Task<string> EditShippingAddressAsync(ShippingAddress shippingAddress)
+        {
+            try
+            {
+                await _shippingAddressRepository.UpdateAsync(shippingAddress);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error updating shipping address: {Message}", ex.InnerException?.Message ?? ex.Message);
+                return "FailedInUpdate";
+            }
         }
 
         public async Task<ShippingAddress?> GetShippingAddressByIdAsync(Guid? id)
@@ -53,20 +78,19 @@ namespace E_Commerce.Service.Services
             return shippingAddress;
         }
 
-        public Task<IReadOnlyList<ShippingAddress?>> GetShippingAddressListAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> IsShippingAddressExist(string street, string city, string state)
         {
             return await _shippingAddressRepository.GetTableNoTracking()
                                               .AnyAsync(c => c.Street == street && c.City == city && c.State == state);
         }
 
-        public Task<bool> IsShippingAddressExistExcludeSelf(string street, string city, string state, Guid id)
+        public async Task<bool> IsShippingAddressExistExcludeSelf(string street, string city, string state, Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _shippingAddressRepository.GetTableNoTracking()
+                                              .Where(c => c.Street == street && c.City == city && c.State == state && !c.Id.Equals(id))
+                                              .FirstOrDefaultAsync();
+            if (category != null) return true;
+            return false;
         }
         #endregion
     }

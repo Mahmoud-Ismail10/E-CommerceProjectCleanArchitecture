@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace E_Commerce.Core.Bases
 {
@@ -18,9 +13,9 @@ namespace E_Commerce.Core.Bases
 
         public ApiResponse()
         {
-            
+
         }
-        public ApiResponse(T data, string message = null)
+        public ApiResponse(T data, string message = null!)
         {
             Succeeded = true;
             Message = message;

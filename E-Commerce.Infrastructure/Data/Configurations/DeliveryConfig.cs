@@ -12,18 +12,14 @@ namespace E_Commerce.Infrastructure.Data.Configurations
             builder.Property(d => d.DeliveryMethod)
                 .HasConversion(
                 DM => DM.ToString(),
-                DM => (DeliveryMethod)Enum.Parse(typeof(DeliveryMethod), DM))
+                DM => (DeliveryMethod)Enum.Parse(typeof(DeliveryMethod), DM!))
                 .IsRequired();
 
             builder.Property(d => d.Description)
                 .HasMaxLength(300);
 
-            builder.Property(d => d.DeliveryTime)
-                .IsRequired();
-
             builder.Property(d => d.Cost)
-                .HasColumnType("decimal(18,2)")
-                .IsRequired();
+                .HasColumnType("decimal(18,2)");
         }
     }
 }

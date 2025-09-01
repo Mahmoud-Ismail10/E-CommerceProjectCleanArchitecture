@@ -1,16 +1,15 @@
 ﻿
-using X.Paymob.CashIn.Models.Callback;
+using E_Commerce.Domain.Entities;
+using E_Commerce.Domain.Responses;
 
 namespace E_Commerce.Service.Services.Contract
 {
     public interface IPaymobService
     {
         string ComputeHmacSHA512(string data, string secret);
-        Task<string> CreateOrUpdatePaymentAsync(Guid cartId);
         string GetPaymentIframeUrl(string paymentToken);
-        Task<string> ProcessPaymentForOrderAsync(Guid orderId);
-        Task<string> ProcessTransactionCallback(CashInCallbackTransaction callback);
-        Task<string> UpdateOrderFailed(string paymentIntentId);
-        Task<string> UpdateOrderSuccessAsync(string paymentIntentId);
+        //Task<string> CreateOrUpdatePaymentAsync(Guid cartId);
+        Task<(Order?, string)> ProcessPaymentForOrderAsync(Order order);
+        Task<string> ProcessTransactionCallbackAsync(CustomCashInCallbackTransaction callback, Guid orderId);
     }
 }
