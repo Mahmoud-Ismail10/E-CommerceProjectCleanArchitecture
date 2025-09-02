@@ -78,12 +78,6 @@ This layered design ensures **separation of concerns**, **testability**, and **m
 
 ---
 
-## 🔗 Check GitHub
-
-[E-Commerce Web API Repository](https://github.com/Mahmoud-Ismail10/E-CommerceProjectCleanArchitecture)
-
----
-
 ## 🏷 Tags
 
 `.NET 9` `.AspNetCore` `.WebAPI` `.CSharp` `.CleanArchitecture` `.JWT` `.CQRS` `.EFCore` `.FluentValidation` `.Paymob` `.MailKit` `.Serilog` `.Redis` `.SoftwareEngineering` `.ECommerce` `.BackendDevelopment` `.MultiLayeredArchitecture` `.DatabaseDesign`
