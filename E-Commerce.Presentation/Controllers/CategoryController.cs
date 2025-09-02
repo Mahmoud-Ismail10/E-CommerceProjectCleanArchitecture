@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Presentation.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class CategoryController : AppControllerBase
     {
+        [AllowAnonymous]
         [HttpGet(Router.CategoryRouting.GetAll)]
         public async Task<IActionResult> GetCategoryList()
         {
@@ -17,6 +18,7 @@ namespace E_Commerce.Presentation.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(Router.CategoryRouting.Paginated)]
         public async Task<IActionResult> GetCategoryPaginatedList([FromQuery] GetCategoryPaginatedListQuery query)
         {
@@ -24,12 +26,14 @@ namespace E_Commerce.Presentation.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(Router.CategoryRouting.GetById)]
         public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
         {
             return NewResult(await Mediator.Send(new GetCategoryByIdQuery(id)));
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         [HttpPost(Router.CategoryRouting.Create)]
         public async Task<IActionResult> CreateCategory([FromBody] AddCategoryCommand command)
         {
@@ -37,6 +41,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         [HttpPut(Router.CategoryRouting.Edit)]
         public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand command)
         {
@@ -44,6 +49,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete(Router.CategoryRouting.Delete)]
         public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {

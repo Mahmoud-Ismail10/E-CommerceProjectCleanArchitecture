@@ -2,12 +2,15 @@
 using E_Commerce.Core.Features.Authentication.Queries.Models;
 using E_Commerce.Domain.AppMetaData;
 using E_Commerce.Presentation.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Presentation.Controllers
 {
+    [Authorize]
     public class AuthenticationController : AppControllerBase
     {
+        [AllowAnonymous]
         [HttpPost(Router.Authentication.SignIn)]
         public async Task<IActionResult> SignIn([FromForm] SignInCommand command)
         {
@@ -15,6 +18,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [AllowAnonymous]
         [HttpPost(Router.Authentication.RefreshToken)]
         public async Task<IActionResult> RefreshToken([FromForm] RefreshTokenCommand command)
         {
@@ -29,6 +33,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(Router.Authentication.ConfirmEmail)]
         public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailQuery query)
         {
@@ -36,6 +41,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [AllowAnonymous]
         [HttpPost(Router.Authentication.SendResetPasswordCode)]
         public async Task<IActionResult> SendResetPasswordCode([FromQuery] SendResetPasswordCommand command)
         {
@@ -43,6 +49,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [AllowAnonymous]
         [HttpGet(Router.Authentication.ConfirmResetPasswordCode)]
         public async Task<IActionResult> ConfirmResetPasswordCode([FromQuery] ConfirmResetPasswordQuery query)
         {
@@ -50,6 +57,7 @@ namespace E_Commerce.Presentation.Controllers
             return NewResult(response);
         }
 
+        [AllowAnonymous]
         [HttpPost(Router.Authentication.ResetPassword)]
         public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordCommand command)
         {
