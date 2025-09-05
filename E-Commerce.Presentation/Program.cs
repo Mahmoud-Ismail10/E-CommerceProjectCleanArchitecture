@@ -5,6 +5,7 @@ using E_Commerce.Core.Middleware;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Infrastructure;
 using E_Commerce.Infrastructure.Seeder;
+using E_Commerce.Presentation.Senders;
 using E_Commerce.Service;
 using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
@@ -84,6 +85,7 @@ namespace E_Commerce.Presentation
             #endregion
 
             builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            builder.Services.AddScoped<INotificationSender, NotificationSender>();
             builder.Services.AddTransient<IUrlHelper>(x =>
             {
                 var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
