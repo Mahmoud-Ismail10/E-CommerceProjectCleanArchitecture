@@ -25,6 +25,7 @@ namespace E_Commerce.Service
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IEmailsService, EmailsService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<INotificationsService, NotificationsService>();
             services.AddScoped<ICartService, CartService>();
             services.AddPaymobCashIn(options =>
             {

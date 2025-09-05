@@ -5,8 +5,10 @@ using E_Commerce.Core.Middleware;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Infrastructure;
 using E_Commerce.Infrastructure.Seeder;
+using E_Commerce.Presentation.Hubs;
 using E_Commerce.Presentation.Senders;
 using E_Commerce.Service;
+using E_Commerce.Service.Services.Contract;
 using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
 using Microsoft.AspNetCore.Identity;
@@ -85,6 +87,7 @@ namespace E_Commerce.Presentation
             #endregion
 
             builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            builder.Services.AddSignalR();
             builder.Services.AddScoped<INotificationSender, NotificationSender>();
             builder.Services.AddTransient<IUrlHelper>(x =>
             {
@@ -143,6 +146,8 @@ namespace E_Commerce.Presentation
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapHub<NotificationsHub>("/hubs/notifications");
 
             app.Run();
 
