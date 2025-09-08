@@ -6,7 +6,7 @@ namespace E_Commerce.Service.Services.Contract
     public interface INotificationsService
     {
         Task AddNotificationAsync(NotificationResponse notification);
-        List<NotificationResponse> GetNotifications(string receiverId, NotificationReceiverType type);
+        IQueryable<NotificationResponse?> GetNotifications(string receiverId, NotificationReceiverType type);
         void MarkAllAsRead(string receiverId, NotificationReceiverType type);
         void MarkAsRead(string notificationId, string receiverId, NotificationReceiverType type);
     }

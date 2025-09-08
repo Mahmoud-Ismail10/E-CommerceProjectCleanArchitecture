@@ -44,8 +44,8 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
             if (user is null) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.UserNameIsNotExist]);
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (!signInResult.Succeeded) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.InvalidPassword]);
             if (!user.EmailConfirmed) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.EmailIsNotConfirmed]);
+            if (!signInResult.Succeeded) return BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.InvalidPassword]);
 
             var result = await _authenticationService.GetJWTTokenAsync(user);
             return Success(result);

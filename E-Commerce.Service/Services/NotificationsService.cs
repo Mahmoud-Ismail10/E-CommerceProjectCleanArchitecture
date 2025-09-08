@@ -2,6 +2,7 @@
 using E_Commerce.Domain.Responses;
 using E_Commerce.Infrastructure.Repositories.Contract;
 using E_Commerce.Service.Services.Contract;
+using Serilog;
 
 namespace E_Commerce.Service.Services
 {
@@ -20,14 +21,16 @@ namespace E_Commerce.Service.Services
 
         public async Task AddNotificationAsync(NotificationResponse notification)
         {
-            _notificationStore.AddNotification(notification);
-
-            await _notificationSender.SendToUserAsync(notification.ReceiverId!, notification.Message!);
+            var result = await _notificationStore.AddNotification(notification);
+            if (result == "Success")
+                await _notificationSender.SendToUserAsync(notification.ReceiverId!, notification.Message!);
+            else
+                Log.Warning("Failed to add notification for ReceiverId: {ReceiverId}", notification.ReceiverId);
         }
 
-        public List<NotificationResponse> GetNotifications(string receiverId, NotificationReceiverType type)
+        public IQueryable<NotificationResponse?> GetNotifications(string receiverId, NotificationReceiverType type)
         {
-            return _notificationStore.GetNotifications(receiverId, type);
+            return _notificationStore.GetNotifications(receiverId, type).AsQueryable();
         }
 
         public void MarkAsRead(string notificationId, string receiverId, NotificationReceiverType type)

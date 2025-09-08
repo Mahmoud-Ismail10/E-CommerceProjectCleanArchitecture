@@ -1,7 +1,9 @@
 ﻿using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Enums;
 using E_Commerce.Domain.Enums.Sorting;
+using E_Commerce.Domain.Helpers;
 using E_Commerce.Infrastructure.Repositories.Contract;
+using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -12,16 +14,22 @@ namespace E_Commerce.Service.Services
     {
         #region Fields
         private readonly IOrderRepository _orderRepository;
+        private readonly INotificationsService _notificationsService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IProductService _productService;
         private readonly IPaymobService _paymobService;
         #endregion
 
         #region Constructors
         public OrderService(IOrderRepository orderRepository,
+            INotificationsService notificationsService,
+            ICurrentUserService currentUserService,
             IProductService productService,
             IPaymobService paymobService)
         {
             _orderRepository = orderRepository;
+            _notificationsService = notificationsService;
+            _currentUserService = currentUserService;
             _productService = productService;
             _paymobService = paymobService;
         }
@@ -84,6 +92,8 @@ namespace E_Commerce.Service.Services
                         return "FailedToPersistOnlinePaymentData";
                     }
                     var iframeUrl = _paymobService.GetPaymentIframeUrl(order.PaymentToken!);
+                    var currentUserId = _currentUserService.GetUserId().ToString();
+                    await _notificationsService.AddNotificationAsync(NotificationFactory.OrderPlaced(currentUserId, order.Id.ToString()));
                     await transaction.CommitAsync();
                     return iframeUrl;
                 }

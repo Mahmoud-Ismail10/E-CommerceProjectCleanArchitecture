@@ -53,56 +53,6 @@ namespace E_Commerce.Service.Services
         #endregion
 
         #region Handle Functions
-        // Create a payment request in Paymob by the user's cart information
-        //public async Task<string> CreateOrUpdatePaymentAsync(Guid cartId)
-        //{
-        //    using var transaction = await _paymentRepository.BeginTransactionAsync();
-        //    try
-        //    {
-        //        // Get cart from repository
-        //        var cartKey = GetCartKey();
-        //        var cart = await _cartService.GetCartByKeyAsync(cartKey);
-
-        //        if (cart is null || !cart.CartItems.Any())
-        //            return "CartIsEmptyOrDoesNotExist";
-
-        //        // Update cart item prices from current product prices
-        //        foreach (var item in cart.CartItems)
-        //        {
-        //            var product = await _productService.GetProductByIdAsync(item.ProductId);
-        //            if (product != null)
-        //                item.Price = product.Price;
-        //        }
-
-        //        // Convert amount to cents as required by Paymob (100 piasters = 1 EGP)
-        //        var amountCents = (int)(cart.TotalAmount! * 100);
-
-        //        // Create Paymob order
-        //        var orderRequest = CashInCreateOrderRequest.CreateOrder(amountCents);
-        //        var orderResponse = await _broker.CreateOrderAsync(orderRequest);
-
-        //        // Add payment intent ID to the cart for tracking
-        //        cart.PaymentIntentId = orderResponse.Id.ToString();
-
-        //        // Update cart in repository
-        //        var result = await _cartService.AddOrEditCartAsync(cart);
-        //        if (result is null)
-        //        {
-        //            await transaction.RollbackAsync();
-        //            Log.Error("Error updating cart: {Message}", result);
-        //            return "FailedToUpdateOrderAfterPaymentCreation";
-        //        }
-        //        await transaction.CommitAsync();
-        //        return "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        Log.Error("Error adding order: {Message}", ex.InnerException?.Message ?? ex.Message);
-        //        return "FailedToCreatePaymentOrder";
-        //    }
-        //}
-
         public async Task<(Order?, string)> ProcessPaymentForOrderAsync(Order order)
         {
             try
@@ -258,7 +208,6 @@ namespace E_Commerce.Service.Services
             var payment = await _paymentRepository.GetPaymentByTransactionId(callback.Id!.ToString());
             if (payment is null)
             {
-                //var orderId = Guid.Parse(callback.Order.Id.ToString());
                 payment = await _paymentRepository.GetPaymentByOrderId(orderId);
 
                 if (payment is null)

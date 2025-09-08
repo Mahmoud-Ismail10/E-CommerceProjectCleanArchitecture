@@ -146,5 +146,11 @@
             public const string Edit = Prefix + "edit";
             public const string Delete = Prefix + SingleRoute;
         }
+
+        public static class NotificationsRouting
+        {
+            public const string Prefix = Rule + "notifications/";
+            public const string Paginated = Prefix + "paginated";
+        }
     }
 }

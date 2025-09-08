@@ -16,13 +16,21 @@ namespace E_Commerce.Infrastructure.Repositories
             _redisDb = redis.GetDatabase();
         }
 
-        public void AddNotification(NotificationResponse notification)
+        public async Task<string> AddNotification(NotificationResponse notification)
         {
-            var key = $"{NotificationKeyPrefix}{notification.ReceiverType}:{notification.ReceiverId}";
-            var serialized = JsonSerializer.Serialize(notification);
+            try
+            {
+                var key = $"{NotificationKeyPrefix}{notification.ReceiverType}:{notification.ReceiverId}";
+                var serialized = JsonSerializer.Serialize(notification);
 
-            // ListLeftPush = Add to start of Redis List
-            _redisDb.ListLeftPush(key, serialized);
+                // ListLeftPush = Add to start of Redis List
+                await _redisDb.ListLeftPushAsync(key, serialized);
+                return "Success";
+            }
+            catch (Exception)
+            {
+                return "Failed";
+            }
         }
 
         public List<NotificationResponse> GetNotifications(string? receiverId, NotificationReceiverType type)
@@ -37,7 +45,7 @@ namespace E_Commerce.Infrastructure.Repositories
                 .ToList()!;
         }
 
-        public void MarkAsRead(string notificationId, string receiverId, NotificationReceiverType type)
+        public async Task MarkAsRead(string notificationId, string receiverId, NotificationReceiverType type)
         {
             var key = $"{NotificationKeyPrefix}{type}:{receiverId}";
             var values = _redisDb.ListRange(key);
@@ -50,14 +58,14 @@ namespace E_Commerce.Infrastructure.Repositories
                     notification.IsRead = true;
 
                     // Remove old version & push updated one
-                    _redisDb.ListRemove(key, v);
+                    await _redisDb.ListRemoveAsync(key, v);
                     _redisDb.ListLeftPush(key, JsonSerializer.Serialize(notification));
                     break;
                 }
             }
         }
 
-        public void MarkAllAsRead(string receiverId, NotificationReceiverType type)
+        public async Task MarkAllAsRead(string receiverId, NotificationReceiverType type)
         {
             var key = $"{NotificationKeyPrefix}{type}:{receiverId}";
             var values = _redisDb.ListRange(key);
@@ -69,8 +77,8 @@ namespace E_Commerce.Infrastructure.Repositories
                 {
                     notification.IsRead = true;
 
-                    _redisDb.ListRemove(key, v);
-                    _redisDb.ListLeftPush(key, JsonSerializer.Serialize(notification));
+                    await _redisDb.ListRemoveAsync(key, v);
+                    await _redisDb.ListLeftPushAsync(key, JsonSerializer.Serialize(notification));
                 }
             }
         }
