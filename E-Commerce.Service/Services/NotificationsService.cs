@@ -33,9 +33,18 @@ namespace E_Commerce.Service.Services
             return _notificationStore.GetNotifications(receiverId, type).AsQueryable();
         }
 
-        public void MarkAsRead(string notificationId, string receiverId, NotificationReceiverType type)
+        public async Task<string> MarkAsRead(string notificationId, string receiverId, NotificationReceiverType type)
         {
-            _notificationStore.MarkAsRead(notificationId, receiverId, type);
+            try
+            {
+                await _notificationStore.MarkAsRead(notificationId, receiverId, type);
+                return "Success";
+            }
+            catch (Exception)
+            {
+                Log.Warning("Failed to mark notification as read for ReceiverId: {ReceiverId}", receiverId);
+                return "Failed";
+            }
         }
 
         public void MarkAllAsRead(string receiverId, NotificationReceiverType type)

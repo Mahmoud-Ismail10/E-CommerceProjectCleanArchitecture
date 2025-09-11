@@ -125,6 +125,7 @@
         public const string CategoryNotFound = "CategoryNotFound";
         public const string Id = "Id";
         public const string ReviewNotFound = "ReviewNotFound";
+        public const string FailedToMarkNotifyAsRead = "FailedToMarkNotifyAsRead";
 
     }
 }

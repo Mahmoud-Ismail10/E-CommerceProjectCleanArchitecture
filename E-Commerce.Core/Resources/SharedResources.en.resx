@@ -486,4 +486,7 @@
   <data name="ReviewNotFound" xml:space="preserve">
     <value>This Review Is Not Found</value>
   </data>
+  <data name="FailedToMarkNotifyAsRead" xml:space="preserve">
+    <value>FailedToMarkNotifyAsRead</value>
+  </data>
 </root>

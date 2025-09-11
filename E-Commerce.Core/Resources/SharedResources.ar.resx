@@ -486,4 +486,7 @@
   <data name="ReviewNotFound" xml:space="preserve">
     <value>لم يتم العثور على هذه المراجعة</value>
   </data>
+  <data name="FailedToMarkNotifyAsRead" xml:space="preserve">
+    <value>فشل في جعل الاشعار مقروء</value>
+  </data>
 </root>

@@ -59,7 +59,7 @@ namespace E_Commerce.Infrastructure.Repositories
 
                     // Remove old version & push updated one
                     await _redisDb.ListRemoveAsync(key, v);
-                    _redisDb.ListLeftPush(key, JsonSerializer.Serialize(notification));
+                    await _redisDb.ListLeftPushAsync(key, JsonSerializer.Serialize(notification));
                     break;
                 }
             }
