@@ -152,6 +152,7 @@
             public const string Prefix = Rule + "notifications/";
             public const string Paginated = Prefix + "paginated";
             public const string MarkAsRead = Prefix + "markAsRead/" + SingleRoute;
+            public const string MarkAllAsRead = Prefix + "markAllAsRead";
         }
     }
 }

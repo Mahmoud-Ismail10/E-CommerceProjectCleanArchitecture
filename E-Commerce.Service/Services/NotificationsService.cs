@@ -47,9 +47,18 @@ namespace E_Commerce.Service.Services
             }
         }
 
-        public void MarkAllAsRead(string receiverId, NotificationReceiverType type)
+        public async Task<string> MarkAllAsRead(string receiverId, NotificationReceiverType type)
         {
-            _notificationStore.MarkAllAsRead(receiverId, type);
+            try
+            {
+                await _notificationStore.MarkAllAsRead(receiverId, type);
+                return "Success";
+            }
+            catch (Exception)
+            {
+                Log.Warning("Failed to mark all notification as read for ReceiverId: {ReceiverId}", receiverId);
+                return "Failed";
+            }
         }
     }
 }

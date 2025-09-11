@@ -489,4 +489,7 @@
   <data name="FailedToMarkNotifyAsRead" xml:space="preserve">
     <value>فشل في جعل الاشعار مقروء</value>
   </data>
+  <data name="FailedToMarkAllNotificationsAsRead" xml:space="preserve">
+    <value>فشل في جعل جميع الاشعارات مقروءة</value>
+  </data>
 </root>

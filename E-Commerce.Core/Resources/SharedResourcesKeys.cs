@@ -126,6 +126,7 @@
         public const string Id = "Id";
         public const string ReviewNotFound = "ReviewNotFound";
         public const string FailedToMarkNotifyAsRead = "FailedToMarkNotifyAsRead";
+        public const string FailedToMarkAllNotificationsAsRead = "FailedToMarkAllNotificationsAsRead";
 
     }
 }

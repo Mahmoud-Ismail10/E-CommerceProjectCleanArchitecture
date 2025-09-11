@@ -18,9 +18,16 @@ namespace E_Commerce.Presentation.Controllers
         }
 
         [HttpPut(Router.NotificationsRouting.MarkAsRead)]
-        public async Task<IActionResult> EditProduct([FromRoute] string id)
+        public async Task<IActionResult> MarkAsRead([FromRoute] string id)
         {
             var response = await Mediator.Send(new EditSingleNotificationToAsReadCommand(id));
+            return NewResult(response);
+        }
+
+        [HttpPut(Router.NotificationsRouting.MarkAllAsRead)]
+        public async Task<IActionResult> MarkAllAsRead()
+        {
+            var response = await Mediator.Send(new EditAllNotificationsToAsReadCommand());
             return NewResult(response);
         }
     }
