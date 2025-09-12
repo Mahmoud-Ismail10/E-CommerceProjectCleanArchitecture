@@ -16,7 +16,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
             builder.Property(o => o.Status)
                 .HasConversion(
                 Sts => Sts.ToString(),
-                Sts => (Status)Enum.Parse(typeof(Status), Sts))
+                Sts => (Status)Enum.Parse(typeof(Status), Sts!))
                 .IsRequired();
 
             builder.Property(o => o.TotalAmount)

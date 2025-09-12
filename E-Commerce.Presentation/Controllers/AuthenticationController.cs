@@ -19,6 +19,14 @@ namespace E_Commerce.Presentation.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost(Router.Authentication.SignInViaGoogle)]
+        public async Task<IActionResult> SignInViaGoogle([FromBody] GoogleLoginCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        [AllowAnonymous]
         [HttpPost(Router.Authentication.RefreshToken)]
         public async Task<IActionResult> RefreshToken([FromForm] RefreshTokenCommand command)
         {

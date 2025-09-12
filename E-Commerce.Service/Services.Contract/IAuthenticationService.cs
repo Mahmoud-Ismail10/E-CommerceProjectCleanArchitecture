@@ -15,5 +15,6 @@ namespace E_Commerce.Service.Services.Contract
         Task<string> SendResetPasswordCodeAsync(string email);
         Task<string> ConfirmResetPasswordAsync(string code, string email);
         Task<string> ResetPasswordAsync(string email, string newPassword);
+        RefreshToken GetRefreshToken(string userName);
     }
 }

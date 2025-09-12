@@ -41,11 +41,11 @@ namespace E_Commerce.Service.Services
             try
             {
                 //Check if the user email already exists
-                var userEmailIsExistResult = await _userManager.FindByEmailAsync(user.Email);
+                var userEmailIsExistResult = await _userManager.FindByEmailAsync(user.Email!);
                 if (userEmailIsExistResult != null) return "EmailIsExist";
 
                 //Check if the user name already exists
-                var userByUserName = await _userManager.FindByNameAsync(user.UserName);
+                var userByUserName = await _userManager.FindByNameAsync(user.UserName!);
                 if (userByUserName != null) return "UserNameIsExist";
 
                 var createResult = await _userManager.CreateAsync(user, password);
@@ -70,7 +70,7 @@ namespace E_Commerce.Service.Services
 
                 //Send confirmation email
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var resquestAccessor = _httpContextAccessor.HttpContext.Request;
+                var resquestAccessor = _httpContextAccessor.HttpContext!.Request;
 
                 var returnUrl = resquestAccessor.Scheme + "://" + resquestAccessor.Host
                     + _urlHelper.Action("ConfirmEmail", "Authentication", new { userId = user.Id, code = code });
@@ -79,13 +79,13 @@ namespace E_Commerce.Service.Services
                 //var message = $"To Confirm Email Click Link: <a href='{returnUrl}'>Link Of Confirmation</a>";
 
                 //Message or body
-                var sendEmailResult = await _emailsService.SendEmailAsync(user.Email, returnUrl, EmailType.ConfirmEmail);
+                var sendEmailResult = await _emailsService.SendEmailAsync(user.Email!, returnUrl, EmailType.ConfirmEmail);
                 if (sendEmailResult == "Failed") return "SendEmailFailed";
 
                 await trans.CommitAsync();
                 return "Success";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await trans.RollbackAsync();
                 return "Failed";

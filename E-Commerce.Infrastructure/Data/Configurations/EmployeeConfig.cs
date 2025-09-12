@@ -23,7 +23,7 @@ namespace E_Commerce.Infrastructure.Data.Configurations
             builder.Property(e => e.Gender)
                 .HasConversion(
                 Gndr => Gndr.ToString(),
-                Gndr => (Gender)Enum.Parse(typeof(Gender), Gndr));
+                Gndr => (Gender)Enum.Parse(typeof(Gender), Gndr!));
 
             builder.Property(e => e.Email)
                 .HasMaxLength(150)

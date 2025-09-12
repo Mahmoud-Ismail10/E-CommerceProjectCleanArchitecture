@@ -4,5 +4,5 @@ using MediatR;
 
 namespace E_Commerce.Core.Features.Authentication.Commands.Models
 {
-    public record SignInCommand(string UserName, string Password) : IRequest<ApiResponse<JwtAuthResponse>>;
+    public record GoogleLoginCommand(string IdToken) : IRequest<ApiResponse<JwtAuthResponse>>;
 }

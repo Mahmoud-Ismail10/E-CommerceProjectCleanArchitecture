@@ -2,6 +2,7 @@
 using E_Commerce.Service.AuthService.Services.Contract;
 using E_Commerce.Service.Services;
 using E_Commerce.Service.Services.Contract;
+using Ecommerce.DataAccess.Services.OAuth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using X.Paymob.CashIn;
@@ -22,6 +23,7 @@ namespace E_Commerce.Service
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IAuthorizationService, AuthorizationService>();
+            services.AddTransient<IAuthGoogleService, AuthGoogleService>();
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IEmailsService, EmailsService>();
             services.AddTransient<IFileService, FileService>();

@@ -127,6 +127,8 @@
         public const string ReviewNotFound = "ReviewNotFound";
         public const string FailedToMarkNotifyAsRead = "FailedToMarkNotifyAsRead";
         public const string FailedToMarkAllNotificationsAsRead = "FailedToMarkAllNotificationsAsRead";
+        public const string InvalidGoogleToken = "InvalidGoogleToken";
+        public const string GoogleAuthenticationFailed = "GoogleAuthenticationFailed";
 
     }
 }

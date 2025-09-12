@@ -492,4 +492,10 @@
   <data name="FailedToMarkAllNotificationsAsRead" xml:space="preserve">
     <value>فشل في جعل جميع الاشعارات مقروءة</value>
   </data>
+  <data name="InvalidGoogleToken" xml:space="preserve">
+    <value />
+  </data>
+  <data name="GoogleAuthenticationFailed" xml:space="preserve">
+    <value />
+  </data>
 </root>

@@ -47,9 +47,8 @@ namespace E_Commerce.Service.Services
         #region Handle Functions
         public async Task<JwtAuthResponse> GetJWTTokenAsync(User user)
         {
-
             var (jwtToken, accessToken) = await GenerateJwtToken(user);
-            var refreshToken = GetRefreshToken(user.UserName);
+            var refreshToken = GetRefreshToken(user.UserName!);
             var userRefreshToken = new UserRefreshToken
             {
                 IsUsed = true,
@@ -79,7 +78,7 @@ namespace E_Commerce.Service.Services
                                                    audience: _jwtSettings.Audience,
                                                    claims: claims,
                                                    expires: DateTimeOffset.UtcNow.ToLocalTime().AddDays(_jwtSettings.AccessTokenExpireDate).DateTime,
-                                                   signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature));
+                                                   signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret!)), SecurityAlgorithms.HmacSha256Signature));
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             return (jwtToken, accessToken);
         }
@@ -89,11 +88,11 @@ namespace E_Commerce.Service.Services
             var userRoles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
+                new Claim(ClaimTypes.Name, user.UserName!),
+                new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName!),
                 new Claim(nameof(UserClaimModel.Id), user.Id.ToString()),
-                new Claim(nameof(UserClaimModel.PhoneNumber), user.PhoneNumber)
+                new Claim(nameof(UserClaimModel.PhoneNumber), user.PhoneNumber!)
             };
             foreach (var role in userRoles)
             {
@@ -104,7 +103,7 @@ namespace E_Commerce.Service.Services
             return claims;
         }
 
-        private RefreshToken GetRefreshToken(string userName)
+        public RefreshToken GetRefreshToken(string userName)
         {
             var refreshToken = new RefreshToken
             {
@@ -133,10 +132,9 @@ namespace E_Commerce.Service.Services
 
             var refreshTokenResult = new RefreshToken();
             var userNameClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.UserName));
-            refreshTokenResult.UserName = userNameClaim?.Value ?? user.UserName;
-            //refreshTokenResult.UserName = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.UserName)).Value;
+            refreshTokenResult.UserName = userNameClaim?.Value ?? user.UserName!;
             refreshTokenResult.TokenString = refreshToken;
-            refreshTokenResult.ExpireAt = (DateTimeOffset)expiryDate;
+            refreshTokenResult.ExpireAt = (DateTimeOffset)expiryDate!;
 
             response.RefreshToken = refreshTokenResult;
             return response;
@@ -161,7 +159,7 @@ namespace E_Commerce.Service.Services
                 ValidateIssuer = _jwtSettings.ValidateIssuer,
                 ValidIssuers = new[] { _jwtSettings.Issuer },
                 ValidateIssuerSigningKey = _jwtSettings.ValidateIssuerSigningKey,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret!)),
                 ValidAudience = _jwtSettings.Audience,
                 ValidateAudience = _jwtSettings.ValidateAudience,
                 ValidateLifetime = _jwtSettings.ValidateLifeTime,
@@ -189,7 +187,7 @@ namespace E_Commerce.Service.Services
                 return ("TokenIsNotExpired", null);
 
             //Get User
-            var userId = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.Id)).Value;
+            var userId = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(UserClaimModel.Id))!.Value;
             var userRefreshToken = await _refreshTokenRepository.GetTableNoTracking()
                                                                 .FirstOrDefaultAsync(x => x.Token == accessToken &&
                                                                                     x.RefreshToken == refreshToken &&
@@ -213,8 +211,8 @@ namespace E_Commerce.Service.Services
         {
             if (userId is null || string.IsNullOrEmpty(code))
                 return "UserOrCodeIsNullOrEmpty";
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            var confirmEmailResult = await _userManager.ConfirmEmailAsync(user, code);
+            var user = await _userManager.FindByIdAsync(userId.ToString()!);
+            var confirmEmailResult = await _userManager.ConfirmEmailAsync(user!, code);
             if (!confirmEmailResult.Succeeded)
                 return string.Join(",", confirmEmailResult.Errors.Select(x => x.Description).ToList());
             return "Success";
@@ -241,12 +239,12 @@ namespace E_Commerce.Service.Services
                     return "ErrorInUpdateUser";
 
                 //Send Code To Email 
-                var sendEmailResult = await _emailsService.SendEmailAsync(user.Email, user.Code, EmailType.ResetPassword);
+                var sendEmailResult = await _emailsService.SendEmailAsync(user.Email!, user.Code, EmailType.ResetPassword);
                 if (sendEmailResult == "Failed") return "SendEmailFailed";
                 await trans.CommitAsync();
                 return "Success";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await trans.RollbackAsync();
                 return "Failed";
@@ -284,7 +282,7 @@ namespace E_Commerce.Service.Services
                 await trans.CommitAsync();
                 return "Success";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await trans.RollbackAsync();
                 return "Failed";

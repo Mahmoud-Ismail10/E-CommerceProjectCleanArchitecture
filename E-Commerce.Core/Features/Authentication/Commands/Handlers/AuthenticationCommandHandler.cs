@@ -4,6 +4,7 @@ using E_Commerce.Core.Resources;
 using E_Commerce.Domain.Entities.Identity;
 using E_Commerce.Domain.Helpers;
 using E_Commerce.Service.Services.Contract;
+using Ecommerce.DataAccess.Services.OAuth;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
@@ -14,12 +15,14 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
         IRequestHandler<SignInCommand, ApiResponse<JwtAuthResponse>>,
         IRequestHandler<RefreshTokenCommand, ApiResponse<JwtAuthResponse>>,
         IRequestHandler<SendResetPasswordCommand, ApiResponse<string>>,
-        IRequestHandler<ResetPasswordCommand, ApiResponse<string>>
+        IRequestHandler<ResetPasswordCommand, ApiResponse<string>>,
+        IRequestHandler<GoogleLoginCommand, ApiResponse<JwtAuthResponse>>
     {
         #region Fields
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthGoogleService _authGoogleService;
         private readonly IStringLocalizer<SharedResources> _stringLocalizer;
         #endregion
 
@@ -27,12 +30,13 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
         public AuthenticationCommandHandler(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IAuthenticationService authenticationService,
-
+            IAuthGoogleService authGoogleService,
             IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _authenticationService = authenticationService;
+            _authGoogleService = authGoogleService;
             _stringLocalizer = stringLocalizer;
         }
         #endregion
@@ -77,8 +81,8 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
             var resetPasswordResult = await _authenticationService.SendResetPasswordCodeAsync(request.Email);
             return resetPasswordResult switch
             {
-                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
                 "Success" => Success(""),
+                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
                 _ => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.TryAgainLater])
             };
         }
@@ -88,9 +92,23 @@ namespace E_Commerce.Core.Features.Authentication.Commands.Handlers
             var resetPasswordResult = await _authenticationService.ResetPasswordAsync(request.Email, request.NewPassword);
             return resetPasswordResult switch
             {
-                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
                 "Success" => Success(""),
+                "UserNotFound" => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.UserNotFound]),
                 _ => BadRequest<string>(_stringLocalizer[SharedResourcesKeys.InvaildCode])
+            };
+        }
+
+        public async Task<ApiResponse<JwtAuthResponse>> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
+        {
+            var (response, message) = await _authGoogleService.AuthenticateWithGoogleAsync(request.IdToken);
+            return message switch
+            {
+                "Success" => Success(response),
+                "InvalidGoogleToken" => BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.InvalidGoogleToken]),
+                "FailedToAddNewRoles" => BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewRoles]),
+                "FailedToAddNewClaims" => BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.FailedToAddNewClaims]),
+                "GoogleAuthenticationFailed" => BadRequest<JwtAuthResponse>(_stringLocalizer[SharedResourcesKeys.GoogleAuthenticationFailed]),
+                _ => BadRequest<JwtAuthResponse>(message),
             };
         }
         #endregion

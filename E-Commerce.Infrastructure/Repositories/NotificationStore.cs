@@ -25,6 +25,8 @@ namespace E_Commerce.Infrastructure.Repositories
 
                 // ListLeftPush = Add to start of Redis List
                 await _redisDb.ListLeftPushAsync(key, serialized);
+                // Set expiration to 30 days
+                await _redisDb.KeyExpireAsync(key, TimeSpan.FromDays(30));
                 return "Success";
             }
             catch (Exception)

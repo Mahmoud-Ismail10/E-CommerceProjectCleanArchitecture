@@ -54,14 +54,17 @@ namespace E_Commerce.Infrastructure
             var jwtSettings = new JwtSettings();
             var emailSettings = new EmailSettings();
             var paymobSettings = new PaymobSettings();
+            var googleAuthSettings = new GoogleAuthSettings();
 
             configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
             configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
             configuration.GetSection("Paymob").Bind(paymobSettings);
+            configuration.GetSection("Authorization:Google").Bind(googleAuthSettings);
 
             services.AddSingleton(jwtSettings);
             services.AddSingleton(emailSettings);
             services.AddSingleton(paymobSettings);
+            services.AddSingleton(googleAuthSettings);
 
             services.AddAuthentication(x =>
             {

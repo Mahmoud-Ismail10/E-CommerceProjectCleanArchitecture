@@ -18,6 +18,7 @@
         {
             public const string Prefix = Rule + "authenticate/";
             public const string SignIn = Prefix + "signIn";
+            public const string SignInViaGoogle = Prefix + "signInViaGoogle";
             public const string RefreshToken = Prefix + "refreshToken";
             public const string ValidateToken = Prefix + "validateToken";
             public const string SendResetPasswordCode = Prefix + "sendResetPasswordCode";
